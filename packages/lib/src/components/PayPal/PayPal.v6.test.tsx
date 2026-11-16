@@ -42,7 +42,7 @@ describe('PayPal v6', () => {
         jest.clearAllMocks();
         PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
         PayPalServiceMock.prototype.refresh.mockResolvedValue(undefined);
-        PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
+        PayPalServiceMock.prototype.isFundingSourceEligibilityReady.mockResolvedValue(undefined);
         PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
             isEligible: isEligibleMock
         } as unknown as PayPalEligiblePaymentMethods);
@@ -402,7 +402,7 @@ describe('PayPal v6', () => {
             const paypal = new Paypal(core);
 
             await expect(paypal.isAvailable()).resolves.toBeUndefined();
-            expect(PayPalServiceMock.prototype.isSdkLoaded).not.toHaveBeenCalled();
+            expect(PayPalServiceMock.prototype.isFundingSourceEligibilityReady).not.toHaveBeenCalled();
         });
 
         test('should wait for the SDK and resolve when PayPal is eligible', async () => {
@@ -411,7 +411,7 @@ describe('PayPal v6', () => {
 
             await expect(paypal.isAvailable()).resolves.toBeUndefined();
 
-            expect(PayPalServiceMock.prototype.isSdkLoaded).toHaveBeenCalledTimes(1);
+            expect(PayPalServiceMock.prototype.isFundingSourceEligibilityReady).toHaveBeenCalledTimes(1);
             expect(isEligibleMock).toHaveBeenCalledWith('paypal');
         });
 
@@ -424,7 +424,7 @@ describe('PayPal v6', () => {
         });
 
         test('should reject when the SDK fails to load', async () => {
-            PayPalServiceMock.prototype.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+            PayPalServiceMock.prototype.isFundingSourceEligibilityReady.mockRejectedValue(new Error('PayPal SDK not loaded'));
             const paypal = new Paypal(core, { payPalV6Configuration: {} });
 
             await expect(paypal.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
@@ -788,6 +788,40 @@ describe('PayPal v6', () => {
 
             expect(paypal.data).not.toHaveProperty('browserInfo');
         });
+
+        test('should add payerSelected to the payment method data when it is set in the state', () => {
+            const paypal = new Paypal(core, { payPalV6Configuration: {} });
+            paypal.setState({ payerSelected: 'venmo' });
+
+            expect(paypal.data.paymentMethod).toMatchObject({ type: 'paypal', payerSelected: 'venmo' });
+        });
+
+        test('should not add payerSelected to the payment method data when no button was clicked', () => {
+            const paypal = new Paypal(core, { payPalV6Configuration: {} });
+
+            expect(paypal.data.paymentMethod).not.toHaveProperty('payerSelected');
+        });
+    });
+
+    describe('onSubmit', () => {
+        test.each([['paypal'], ['paylater'], ['credit'], ['venmo']])(
+            'should store "%s" as payerSelected and make the payments call when the button is clicked',
+            fundingSource => {
+                const paypal = new Paypal(core, { payPalV6Configuration: {} });
+                const makePaymentsCallSpy = jest
+                    .spyOn(paypal as unknown as { makePaymentsCall: () => Promise<unknown> }, 'makePaymentsCall')
+                    .mockReturnValue(new Promise(() => {}));
+                render(paypal.render());
+
+                const { onSubmit } = mockPayPalComponentV6.mock.calls[0][0];
+
+                void onSubmit(fundingSource);
+
+                expect(paypal.state.payerSelected).toBe(fundingSource);
+                expect(paypal.data.paymentMethod.payerSelected).toBe(fundingSource);
+                expect(makePaymentsCallSpy).toHaveBeenCalledTimes(1);
+            }
+        );
     });
 
     describe('componentToRender', () => {

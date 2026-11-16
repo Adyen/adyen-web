@@ -397,6 +397,71 @@ describe('PayPalService', () => {
 
             await expect(service.isSdkLoaded()).resolves.toBeUndefined();
         });
+
+        test('should resolve once the SDK instance is created, without waiting for the eligible payment methods', async () => {
+            findEligibleMethodsMock.mockReturnValueOnce(new Promise(() => {}));
+            const service = new PayPalService(createConfig());
+
+            void service.initialize();
+
+            await expect(service.isSdkLoaded()).resolves.toBeUndefined();
+            expect(service.getInstance()).toBe(sdkInstance);
+            expect(service.getEligiblePaymentMethods()).toBeUndefined();
+        });
+
+        test('should reject when the SDK instance creation fails', async () => {
+            createInstanceMock.mockRejectedValueOnce(new Error('Instance creation failed'));
+            const service = new PayPalService(createConfig());
+
+            await expect(service.initialize()).rejects.toThrow('Instance creation failed');
+            await expect(service.isSdkLoaded()).rejects.toThrow('PayPal SDK not loaded');
+        });
+
+        test('should stay resolved when only the eligible payment methods check fails', async () => {
+            findEligibleMethodsMock.mockRejectedValueOnce(new Error('Eligibility failed'));
+            const service = new PayPalService(createConfig());
+
+            await expect(service.initialize()).rejects.toThrow('Eligibility failed');
+            await expect(service.isSdkLoaded()).resolves.toBeUndefined();
+        });
+    });
+
+    describe('isFundingSourceEligibilityReady()', () => {
+        test('should reject when initialize() has not been called', async () => {
+            const service = new PayPalService(createConfig());
+
+            await expect(service.isFundingSourceEligibilityReady()).rejects.toThrow('PayPal eligible payment methods not checked');
+        });
+
+        test('should resolve once the eligible payment methods are checked', async () => {
+            // The Promise executor runs synchronously, so the resolver is always assigned before it is used
+            let resolveEligibleMethods!: (methods: PayPalEligiblePaymentMethods) => void;
+            findEligibleMethodsMock.mockReturnValueOnce(new Promise(resolve => (resolveEligibleMethods = resolve)));
+            const service = new PayPalService(createConfig());
+
+            void service.initialize();
+
+            let isFundingSourceEligibilityReadyResolved = false;
+            void service.isFundingSourceEligibilityReady().then(() => (isFundingSourceEligibilityReadyResolved = true));
+            await service.isSdkLoaded();
+            await new Promise(process.nextTick);
+
+            expect(isFundingSourceEligibilityReadyResolved).toBe(false);
+
+            resolveEligibleMethods(eligibleMethods);
+            await new Promise(process.nextTick);
+
+            expect(isFundingSourceEligibilityReadyResolved).toBe(true);
+            expect(service.getEligiblePaymentMethods()).toBe(eligibleMethods);
+        });
+
+        test('should reject when the eligible payment methods check fails', async () => {
+            findEligibleMethodsMock.mockRejectedValueOnce(new Error('Eligibility failed'));
+            const service = new PayPalService(createConfig());
+
+            await expect(service.initialize()).rejects.toThrow('Eligibility failed');
+            await expect(service.isFundingSourceEligibilityReady()).rejects.toThrow('PayPal eligible payment methods not checked');
+        });
     });
 
     describe('getInstance() / getEligiblePaymentMethods()', () => {

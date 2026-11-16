@@ -75,6 +75,7 @@ declare module 'preact' {
             };
             'paypal-message': {
                 id?: string;
+                class?: string;
                 amount?: string;
                 ref?: MutableRef<PayPalMessageElement>;
             };

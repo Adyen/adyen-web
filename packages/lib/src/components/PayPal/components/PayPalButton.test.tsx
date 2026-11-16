@@ -84,6 +84,15 @@ describe('PayPalButton', () => {
         await waitFor(() => expect(saveSession.start).toHaveBeenCalled());
     });
 
+    test('should call onSubmit with the paypal funding source on click', async () => {
+        const { props } = setup();
+
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
+
+        await waitFor(() => expect(props.onSubmit).toHaveBeenCalledWith('paypal'));
+    });
+
     test('should start the session with the auto presentation mode', async () => {
         const { oneTimeSession } = setup();
 

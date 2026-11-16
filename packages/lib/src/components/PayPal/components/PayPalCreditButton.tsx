@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import type { PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
@@ -19,11 +19,14 @@ export const PayPalCreditButton = ({
     onError,
     onSubmit
 }: Readonly<Omit<PayPalComponentV6Props, 'style' | 'setComponentRef'>>) => {
+    const fundingSource = 'credit';
     const [countryCode, setCountryCode] = useState<string>('');
 
     const payPalSDKInstance = useMemo(() => paypalService.getInstance(), [paypalService]);
 
     const { isZeroAuth } = useAmount();
+
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit, fundingSource]);
 
     const { oneTimeSessionOptions, saveSessionOptions } = usePayPalSessionOptions({
         paypalService,
@@ -40,10 +43,10 @@ export const PayPalCreditButton = ({
         useMemo(
             () => ({
                 createSession: () => payPalSDKInstance.createPayPalCreditOneTimePaymentSession(oneTimeSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError]
+            [payPalSDKInstance, oneTimeSessionOptions, handleSubmit, onError]
         )
     );
 
@@ -51,19 +54,19 @@ export const PayPalCreditButton = ({
         useMemo(
             () => ({
                 createSession: () => payPalSDKInstance.createPayPalCreditSavePaymentSession(saveSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, onSubmit, onError]
+            [payPalSDKInstance, saveSessionOptions, handleSubmit, onError]
         )
     );
 
-    const { isEligible } = usePayPalButtonEligibility(paypalService, 'credit');
+    const { isEligible } = usePayPalButtonEligibility(paypalService, fundingSource);
 
     useEffect(() => {
         if (!isEligible) return;
 
-        const details = paypalService.getEligiblePaymentMethods().getDetails('credit');
+        const details = paypalService.getEligiblePaymentMethods().getDetails(fundingSource);
         setCountryCode(details?.countryCode);
     }, [isEligible, paypalService]);
 

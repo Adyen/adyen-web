@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import type { PayPalVenmoButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
@@ -25,9 +25,12 @@ export const VenmoButton = ({
         style: PayPalVenmoButtonStyle;
     }
 >) => {
+    const fundingSource = 'venmo';
     const payPalSDKInstance = useMemo(() => paypalService.getInstance(), [paypalService]);
 
     const { isZeroAuth } = useAmount();
+
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit, fundingSource]);
 
     const { oneTimeSessionOptions, saveSessionOptions } = usePayPalSessionOptions({
         paypalService,
@@ -47,10 +50,10 @@ export const VenmoButton = ({
             () => ({
                 sandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, sandboxSupport]
+            [payPalSDKInstance, oneTimeSessionOptions, handleSubmit, onError, sandboxSupport]
         )
     );
 
@@ -59,14 +62,14 @@ export const VenmoButton = ({
             () => ({
                 sandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, sandboxSupport]
+            [payPalSDKInstance, saveSessionOptions, handleSubmit, onError, sandboxSupport]
         )
     );
 
-    const { isEligible } = usePayPalButtonEligibility(paypalService, 'venmo');
+    const { isEligible } = usePayPalButtonEligibility(paypalService, fundingSource);
 
     if (!isEligible) {
         return null;
