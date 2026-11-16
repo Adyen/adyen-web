@@ -71,7 +71,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
-        this.onComplete = this.onComplete.bind(this);
+        this.onActionComplete = this.onActionComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
@@ -370,7 +370,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
-    protected onComplete(state: AdditionalDetailsData): void {
+    protected onActionComplete(state: AdditionalDetailsData): void {
         this.handleAdditionalDetails(state);
     }
 
