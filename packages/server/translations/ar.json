@@ -479,7 +479,7 @@
     "upi.intent.apps.dropdown.placeholder": "يُرجى اختيار التطبيق المفضل.",
     "emi.subtitle": "خطط التقسيط على بطاقات الائتمان",
     "emi.title": "خطة الدفع على أقساط متساوية",
-    "emi.instructions": "اختر الخيار الأنسب لك من القائمة أدناه، واضغط زر الإدخال لإدخال بيانات بطاقتك",
+    "emi.instructions": "اختر المجموعة الأنسب لك من الخيارات المدرجة أدناه، ثم تابع لإدخال بيانات بطاقتك",
     "emi.provider": "المزود",
     "emi.plan": "الخطة",
     "emi.planSummary": "ملخص الخطة",
@@ -494,6 +494,11 @@
     "emi.lowCost": "تكلفة منخفضة",
     "emi.discountAvailable": "يتوفر خصم",
     "emi.perAnnum": "سنويًا",
-    "emi.cardDetailsInstructions": "يُرجى استخدام زر الإدخال لإدخال بيانات البطاقة المرتبطة ببطاقة %{provider}",
-    "emi.cardDetails": "بيانات البطاقة"
+    "emi.cardDetailsInstructions": "أدخل بيانات البطاقة المرتبطة ببطاقة %{provider}",
+    "emi.cardDetails": "بيانات البطاقة",
+    "emi.terms": "بالمتابعة، فإنك توافق على",
+    "emi.termsLink": "الشروط والأحكام",
+    "emi.interestDiscount": "خصم الفائدة",
+    "emi.instantDiscount": "خصم فوري",
+    "emi.additionalDiscountAvailable": "يتوفر خصم إضافي بقيمة %{amount}"
 }

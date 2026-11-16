@@ -495,5 +495,10 @@
     "emi.discountAvailable": "korting beschikbaar",
     "emi.perAnnum": "p.a.",
     "emi.cardDetailsInstructions": "Voer kaartgegevens in die gekoppeld zijn aan een %{provider}-kaart",
-    "emi.cardDetails": "Kaartgegevens"
+    "emi.cardDetails": "Kaartgegevens",
+    "emi.terms": "Door verder te gaan gaat u akkoord met de",
+    "emi.termsLink": "algemene voorwaarden",
+    "emi.interestDiscount": "Rentekorting",
+    "emi.instantDiscount": "Directe korting",
+    "emi.additionalDiscountAvailable": "Extra korting van %{amount} beschikbaar"
 }
