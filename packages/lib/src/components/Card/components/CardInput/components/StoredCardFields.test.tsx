@@ -5,6 +5,9 @@ import { CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/cons
 import StoredCardFields from './StoredCardFields';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import type { StoredCardFieldsProps } from './types';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const storedCardPropsWithoutExpiry: StoredCardFieldsProps = {
     brand: 'visa',
@@ -25,7 +28,7 @@ const storedCardProps: StoredCardFieldsProps = {
 
 const renderWithCoreProvider = ui => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             {ui}
         </CoreProvider>
     );
