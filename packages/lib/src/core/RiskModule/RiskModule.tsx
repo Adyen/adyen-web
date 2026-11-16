@@ -42,7 +42,8 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         this.setState({ data: riskElements });
 
         if (this.props.risk.enabled === true) {
-            const riskNode = this.props.risk.node == null ? null : document.querySelector(this.props.risk.node);
+            const { node } = this.props.risk;
+            const riskNode = node && document.querySelector(node);
             if (riskNode) {
                 const nodeRiskContainer = document.createElement('div');
                 this.nodeRiskContainer = nodeRiskContainer;

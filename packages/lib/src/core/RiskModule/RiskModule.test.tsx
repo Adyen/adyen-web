@@ -36,6 +36,17 @@ describe('RiskModule', () => {
             expect(riskElement.riskData).toBeNull();
         });
 
+        test('should call risk.onError once with the node-not-found message when risk.node is an empty string', () => {
+            const onError = jest.fn();
+
+            const riskElement = new RiskElement(core, { risk: { enabled: true, node: '', onError } });
+
+            expect(onError).toHaveBeenCalledTimes(1);
+            expect(onError).toHaveBeenCalledWith(NODE_NOT_FOUND_ERROR);
+            expect(appendChildSpy).not.toHaveBeenCalled();
+            expect(riskElement.riskData).toBeNull();
+        });
+
         test('should not throw from the constructor when risk.node is not found and risk.onError is undefined', () => {
             let riskElement: RiskElement | undefined;
 
