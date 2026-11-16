@@ -52,7 +52,7 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
                     clientKey={this.props.clientKey}
                     paymentData={this.props.paymentData}
                     onError={this.props.onError}
-                    onComplete={this.onComplete}
+                    onComplete={this.onActionComplete}
                     brandLogo={this.icon}
                     brandName={this.displayName}
                     type={config.type}

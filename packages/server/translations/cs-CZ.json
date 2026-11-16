@@ -495,5 +495,10 @@
     "emi.discountAvailable": "k dispozici je sleva",
     "emi.perAnnum": "p. a.",
     "emi.cardDetailsInstructions": "Zadejte karetní údaje spojené s kartou %{provider}",
-    "emi.cardDetails": "Údaje o kartě"
+    "emi.cardDetails": "Údaje o kartě",
+    "emi.terms": "Pokračováním souhlasíte s podmínkami, viz",
+    "emi.termsLink": "smluvní podmínky",
+    "emi.interestDiscount": "Sleva na úroku",
+    "emi.instantDiscount": "Okamžitá sleva",
+    "emi.additionalDiscountAvailable": "Je k dispozici další sleva ve výši %{amount}"
 }

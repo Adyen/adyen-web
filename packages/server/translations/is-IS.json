@@ -495,5 +495,10 @@
     "emi.discountAvailable": "afsláttur í boði",
     "emi.perAnnum": "á ári",
     "emi.cardDetailsInstructions": "Sláðu inn kortupplýsingar sem eru tengdar við %{provider}-kort",
-    "emi.cardDetails": "Kortaupplýsingar"
+    "emi.cardDetails": "Kortaupplýsingar",
+    "emi.terms": "Með því að halda áfram samþykkir þú",
+    "emi.termsLink": "skilmálar",
+    "emi.interestDiscount": "Vaxtaafsláttur",
+    "emi.instantDiscount": "Tafarlaus afsláttur",
+    "emi.additionalDiscountAvailable": "Viðbótarafsláttur að upphæð %{amount} í boði"
 }

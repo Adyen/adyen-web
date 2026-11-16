@@ -495,5 +495,10 @@
     "emi.discountAvailable": "Rabat tilgængelig",
     "emi.perAnnum": "pr. år",
     "emi.cardDetailsInstructions": "Indtast oplysningerne for dit kort fra %{provider}",
-    "emi.cardDetails": "Kortoplysninger"
+    "emi.cardDetails": "Kortoplysninger",
+    "emi.terms": "Ved at fortsætte accepterer du",
+    "emi.termsLink": "vilkår og betingelser",
+    "emi.interestDiscount": "Renterabat",
+    "emi.instantDiscount": "Øjeblikkelig rabat",
+    "emi.additionalDiscountAvailable": "Mulighed for yderligere %{amount} rabat"
 }

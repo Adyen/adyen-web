@@ -316,7 +316,7 @@ export interface CoreConfiguration {
      * @param component - Component submitting details. It is undefined when using checkout.submitDetails()
      * @param actions
      */
-    onAdditionalDetails?(state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions): void;
+    onAdditionalDetails?(state: AdditionalDetailsData, component: UIElement | undefined, actions: AdditionalDetailsActions): void;
 
     /**
      * Callback invoked when the user is redirected back, and an `action` is included in the response (either `/details` or `/paymentDetails`).

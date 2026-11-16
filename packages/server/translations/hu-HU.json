@@ -495,5 +495,10 @@
     "emi.discountAvailable": "kedvezmény érhető el",
     "emi.perAnnum": "évente",
     "emi.cardDetailsInstructions": "Adja meg %{provider} kártyájának adatait",
-    "emi.cardDetails": "Kártya adatai"
+    "emi.cardDetails": "Kártya adatai",
+    "emi.terms": "A folytatással elfogadja az",
+    "emi.termsLink": "általános szerződési feltételeit",
+    "emi.interestDiscount": "Kamatkedvezmény",
+    "emi.instantDiscount": "Azonnali kedvezmény",
+    "emi.additionalDiscountAvailable": "További %{amount} kedvezmény érhető el"
 }

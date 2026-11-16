@@ -478,7 +478,7 @@
     "upi.intent.apps.dropdown.label": "UPI 앱",
     "upi.intent.apps.dropdown.placeholder": "선호하는 앱 선택",
     "emi.subtitle": "신용카드 할부 결제 제공",
-    "emi.title": "EMI 요금제",
+    "emi.title": "EMI 할부 플랜",
     "emi.instructions": "아래에서 원하는 조합을 선택하고 카드 정보를 입력하세요.",
     "emi.provider": "카드사",
     "emi.plan": "요금제",
@@ -490,10 +490,15 @@
     "emi.upcomingMonthlyPayment": "월 납부 예정",
     "emi.discount": "할인",
     "emi.discountApplied": "%{provider} 사용에 대해 %{amount} 할인 혜택 적용",
-    "emi.noCost": "무료",
+    "emi.noCost": "무이자",
     "emi.lowCost": "낮은 비용",
     "emi.discountAvailable": "할인 가능",
     "emi.perAnnum": "p.a",
     "emi.cardDetailsInstructions": "%{provider} 카드와 연결된 카드 정보를 입력하세요",
-    "emi.cardDetails": "카드 정보"
+    "emi.cardDetails": "카드 정보",
+    "emi.terms": "계속 진행 시 다음에 동의하는 것으로 간주됩니다:",
+    "emi.termsLink": "이용약관",
+    "emi.interestDiscount": "이자 할인",
+    "emi.instantDiscount": "즉시 할인",
+    "emi.additionalDiscountAvailable": "%{amount} 추가 할인 가능"
 }

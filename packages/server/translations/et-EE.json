@@ -495,5 +495,10 @@
     "emi.discountAvailable": "allahindlus saadaval",
     "emi.perAnnum": "aastas",
     "emi.cardDetailsInstructions": "Sisestage kaardiandmed, mis on seotud %{provider} kaardiga",
-    "emi.cardDetails": "Kaardi andmed"
+    "emi.cardDetails": "Kaardi andmed",
+    "emi.terms": "Jätkates nõustute",
+    "emi.termsLink": "tingimustega",
+    "emi.interestDiscount": "Intressisoodustus",
+    "emi.instantDiscount": "Kohene soodustus",
+    "emi.additionalDiscountAvailable": "%{amount} lisasoodustus saadaval"
 }

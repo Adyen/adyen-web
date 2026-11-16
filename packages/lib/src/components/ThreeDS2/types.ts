@@ -166,16 +166,16 @@ export type ThreeDS2FlowProps = {
 export type ThreeDS2ConfigProps = {
     // Props common to both flows
     readonly core: ICore;
-    readonly token: string;
-    readonly paymentData: string;
+    readonly token?: string;
+    readonly paymentData?: string;
     readonly onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     readonly on3DS2RedirectFlowComplete?: (state: ChallengeResolveData | FingerprintResolveData, component: UIElement) => void;
     readonly onAdditionalDetails?: (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => void;
     readonly onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     readonly isDropin?: boolean;
     readonly loadingContext?: string;
-    readonly clientKey: string;
-    readonly paymentMethodType: string;
+    readonly clientKey?: string;
+    readonly paymentMethodType?: string;
     readonly challengeWindowSize?: ChallengeWindowSize;
     /**
      * @internal Visa Passkey only. Requires isMDFlow.

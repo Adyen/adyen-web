@@ -34,7 +34,7 @@ class Session {
     public configuration: SessionConfiguration;
     private _sessionsDonationInitiated: boolean;
 
-    constructor(rawSession: Partial<CheckoutSession>, clientKey: string, loadingContext: string) {
+    constructor(rawSession: Partial<CheckoutSession>, clientKey: string | undefined, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
 
         if (!clientKey) throw new Error('No clientKey available');

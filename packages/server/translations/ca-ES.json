@@ -495,5 +495,10 @@
     "emi.discountAvailable": "descompte disponible",
     "emi.perAnnum": "anual",
     "emi.cardDetailsInstructions": "Introduïu les dades de la targeta associades a %{provider}",
-    "emi.cardDetails": "Detalls de la targeta"
+    "emi.cardDetails": "Detalls de la targeta",
+    "emi.terms": "En continuar, accepteu el",
+    "emi.termsLink": "termes i condicions",
+    "emi.interestDiscount": "Descompte d’interessos",
+    "emi.instantDiscount": "Descompte instantani",
+    "emi.additionalDiscountAvailable": "Descompte addicional del %{amount} disponible"
 }

@@ -495,5 +495,10 @@
     "emi.discountAvailable": "reducere disponibilă",
     "emi.perAnnum": "p.a",
     "emi.cardDetailsInstructions": "Introduceți detaliile asociate unui card %{provider}",
-    "emi.cardDetails": "Detalii card"
+    "emi.cardDetails": "Detalii card",
+    "emi.terms": "Continuând, sunteți de acord cu",
+    "emi.termsLink": "termene și condiții",
+    "emi.interestDiscount": "Reducere la dobândă",
+    "emi.instantDiscount": "Reducere instantanee",
+    "emi.additionalDiscountAvailable": "Este disponibilă o reducere suplimentară de %{amount}"
 }

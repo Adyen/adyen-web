@@ -12,7 +12,7 @@ export const filterUnsupportedPaymentMethod = (paymentMethod: PaymentMethod | St
     !UNSUPPORTED_PAYMENT_METHODS.includes(paymentMethod.type);
 
 // filter payment methods that we support (that are in the paymentMethods/index dictionary)
-export const filterPresent = paymentMethod => !!paymentMethod;
+export const filterPresent = <T>(paymentMethod: T | null | undefined): paymentMethod is T => !!paymentMethod;
 
 // filter payment methods that are available to the user
 export const filterAvailable = (elements: UIElement[]) => {

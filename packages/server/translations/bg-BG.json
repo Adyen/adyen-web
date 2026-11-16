@@ -495,5 +495,10 @@
     "emi.discountAvailable": "налична отстъпка",
     "emi.perAnnum": "годишно",
     "emi.cardDetailsInstructions": "Въведете данните на картата %{provider}",
-    "emi.cardDetails": "Подробности за картата"
+    "emi.cardDetails": "Подробности за картата",
+    "emi.terms": "Като продължите, вие се съгласявате с",
+    "emi.termsLink": "правила и условия",
+    "emi.interestDiscount": "Отстъпка от лихвата",
+    "emi.instantDiscount": "Моментална отстъпка",
+    "emi.additionalDiscountAvailable": "Налична е допълнителна отстъпка от %{amount}"
 }

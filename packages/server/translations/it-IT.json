@@ -495,5 +495,10 @@
     "emi.discountAvailable": "sconto disponibile",
     "emi.perAnnum": "annuale",
     "emi.cardDetailsInstructions": "Immettere i dettagli della carta associati a una carta %{provider}",
-    "emi.cardDetails": "Dettagli Carta"
+    "emi.cardDetails": "Dettagli Carta",
+    "emi.terms": "Continuando, accetti i",
+    "emi.termsLink": "termini e condizioni",
+    "emi.interestDiscount": "Sconto sugli interessi",
+    "emi.instantDiscount": "Sconto immediato",
+    "emi.additionalDiscountAvailable": "Sconto aggiuntivo di %{amount} disponibile"
 }

@@ -495,5 +495,10 @@
     "emi.discountAvailable": "dostępna zniżka",
     "emi.perAnnum": "rocznie",
     "emi.cardDetailsInstructions": "Wprowadź szczegóły karty powiązane z kartą %{provider}",
-    "emi.cardDetails": "Dane karty"
+    "emi.cardDetails": "Dane karty",
+    "emi.terms": "Kontynuując, akceptujesz",
+    "emi.termsLink": "warunki",
+    "emi.interestDiscount": "Zniżka odsetkowa",
+    "emi.instantDiscount": "Zniżka błyskawiczna",
+    "emi.additionalDiscountAvailable": "Dostępny dodatkowy rabat %{amount}"
 }
