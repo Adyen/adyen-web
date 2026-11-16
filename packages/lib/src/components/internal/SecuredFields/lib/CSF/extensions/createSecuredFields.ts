@@ -193,9 +193,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             fieldType,
             extraFieldData,
             uid,
-            cvcPolicy,
+            cvcPolicy: cvcPolicy ?? CVC_POLICY_REQUIRED,
             holderEl: pItem,
-            expiryDatePolicy,
+            expiryDatePolicy: expiryDatePolicy ?? DATE_POLICY_REQUIRED,
             txVariant: this.state.type,
             // from this.config (calculated)
             cardGroupTypes: this.config.cardGroupTypes,
@@ -254,7 +254,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
 
                 // Clear timeout since the securedField has configured
                 clearTimeout(sf.loadToConfigTimeout);
-                sf.loadToConfigTimeout = null;
+                sf.loadToConfigTimeout = undefined;
 
                 resolve(pFeedbackObj);
             })

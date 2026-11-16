@@ -77,7 +77,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
 
     // For number field - add the 8 digit issuerBin to the encryption object
     if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.issuerBin)) {
-        callbackObjectsArr[0].issuerBin = +pFeedbackObj.issuerBin;
+        callbackObjectsArr[0].issuerBin = Number(pFeedbackObj.issuerBin);
     }
 
     // Add expiryDate to "encryptedExpiryYear" field. It will only be present if the correct config has been sent to SF
