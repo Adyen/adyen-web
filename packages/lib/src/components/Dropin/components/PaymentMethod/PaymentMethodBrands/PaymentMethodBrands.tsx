@@ -1,15 +1,15 @@
 import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import { BrandConfiguration } from '../../../../Card/types';
 import PaymentMethodIcon from '../PaymentMethodIcon';
 import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { BrandIcons } from '../../../../internal/BrandIcons/BrandIcons';
 import { getMaxBrandsToShow } from './utils';
+import type { PaymentMethodBrand } from '../../../../../types/global-types';
 
 interface PaymentMethodBrandsProps {
-    brands: Array<BrandConfiguration>;
+    brands: Array<PaymentMethodBrand>;
     excludedUIBrands?: Array<string>;
     isPaymentMethodSelected: boolean;
     keepBrandsVisible?: boolean;
