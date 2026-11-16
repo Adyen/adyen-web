@@ -77,7 +77,7 @@ export interface SFPProps {
     showContextualElement?: boolean;
 }
 
-export type SFPErrorMap = Partial<Record<SFFieldType, string>>;
+export type SFPErrorMap = Partial<Record<SFFieldType, string | null>>;
 
 export interface SFPState {
     status?: string;
@@ -89,7 +89,7 @@ export interface SFPState {
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressData;
-    detectedUnsupportedBrands?: string[];
+    detectedUnsupportedBrands?: string[] | null;
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
     expiryDatePolicy?: DatePolicyType;

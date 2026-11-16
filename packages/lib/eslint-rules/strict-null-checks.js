@@ -78,26 +78,11 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/utils/clipboard.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    'src/components/internal/SecuredFields/binLookup/extensions.ts',
-    'src/components/internal/SecuredFields/lib/CSF/CSF.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/createSecuredFields.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleBrandFromBinLookup.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleEncryption.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleIOSTouchEvents.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleTab.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleBinValue.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleFocus.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleIframeConfigFeedback.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/isConfigured.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/postMessageToAllIframes.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/processAutoComplete.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/processBrand.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/setFocusOnFrame.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/validateForm.ts',
-    'src/components/internal/SecuredFields/lib/securedField/SecuredField.ts',
-    'src/components/internal/SecuredFields/SFP/SecuredFieldsProvider.ts',
-    'src/components/internal/SecuredFields/SFP/SecuredFieldsProviderHandlers.ts',
-    'src/components/internal/SecuredFields/SFP/SFPUtils.ts',
 
     // ── Ticket 4: Shared form fields (92 errors) ──
 

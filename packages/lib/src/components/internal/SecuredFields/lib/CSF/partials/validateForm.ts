@@ -32,5 +32,5 @@ export default function validateForm({ csfState, csfProps, csfCallbacks }: CSFTh
     const callbackObj: CardAllValidData = { allValid: isValid, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
     // BROADCAST VALID STATE OF THE FORM AS A WHOLE
-    csfCallbacks.onAllValid(callbackObj);
+    csfCallbacks.onAllValid?.(callbackObj);
 }

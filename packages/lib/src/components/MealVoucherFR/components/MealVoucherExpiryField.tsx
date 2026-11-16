@@ -10,7 +10,7 @@ export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocu
         <Field
             label={i18n.get('giftcard.expiryDate.label')}
             classNameModifiers={['expireDate', '50']}
-            errorMessage={sfpState.errors?.encryptedExpiryDate && i18n.get(sfpState.errors.encryptedExpiryDate)}
+            errorMessage={sfpState.errors?.encryptedExpiryDate ? i18n.get(sfpState.errors.encryptedExpiryDate) : undefined}
             focused={focusedElement === 'encryptedExpiryDate'}
             onFocusField={() => setFocusOn('encryptedExpiryDate')}
             dir={'ltr'}

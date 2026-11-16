@@ -17,7 +17,7 @@ abstract class AbstractSecuredField {
     public loadToConfigTimeout: number;
     // From getters/setters with the same name
     protected _isValid: boolean;
-    protected _iframeContentWindow: Window;
+    protected _iframeContentWindow: Window | null;
     protected _numKey: number;
     protected _isEncrypted: boolean;
     protected _hasError: boolean;
