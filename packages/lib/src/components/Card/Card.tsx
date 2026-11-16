@@ -30,8 +30,13 @@ import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytic
 import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
 import { AddressModeOptions, CardInputRef } from './components/CardInput/types';
 
+type CardProps = CardConfiguration &
+    Required<Pick<CardConfiguration, 'environment' | 'i18n' | 'modules' | 'clickToPayConfiguration' | 'loadingContext'>>;
+
 export class CardElement extends UIElement<CardConfiguration> {
     public static readonly type: TxVariants = TxVariants.scheme;
+
+    declare public props: CardProps;
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -83,7 +88,10 @@ export class CardElement extends UIElement<CardConfiguration> {
     // Alternatives would be to override getPaymentMethodConfigFromResponse and change it's signature
     protected override getPaymentMethodConfigFromResponse(componentProps: CardConfiguration) {
         if (componentProps?.fundingSource) {
-            return this.core.paymentMethodsResponse?.findByFundingSource(componentProps.type, componentProps.fundingSource);
+            return this.core.paymentMethodsResponse?.findByFundingSource(
+                componentProps.type || this.constructor['type'],
+                componentProps.fundingSource
+            );
         }
 
         return super.getPaymentMethodConfigFromResponse(componentProps);
@@ -137,7 +145,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             billingAddressMode: props.onAddressLookup ? CardInputDefaultProps.billingAddressMode : props.billingAddressMode,
             /** props.brand will be specified in the case of a StoredCard or a Bancontact component, for a regular Card we default it to 'card' */
             brand: props.brand ?? TxVariants.card,
-            countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
+            countryCode: props.countryCode ? props.countryCode.toLowerCase() : undefined,
             // Required for transition period (until configuration object becomes the norm)
             // - if merchant has defined value directly in props, use this instead
             configuration: {
@@ -295,8 +303,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     public onBinValue = triggerBinLookUp(this);
 
     get storePaymentMethodPayload() {
-        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
-        if (isStoredCard) {
+        if (this.isStoredCard) {
             return {};
         }
 
@@ -330,7 +337,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         const { brands, brandsConfiguration } = this.props;
         if (brands) {
             return brands.map(brand => {
-                const brandIcon = brandsConfiguration?.[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
+                const brandIcon = brandsConfiguration?.[brand]?.icon ?? this.resources.getImage()(brand);
                 return { icon: brandIcon, name: brand };
             });
         }
@@ -351,7 +358,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId
-                ? ' ' + this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
+                ? ' ' + this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour ?? '')
                 : '')
         );
     }
@@ -360,15 +367,18 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
+    private get isStoredCard() {
+        return !!this.props.storedPaymentMethodId;
+    }
+
     protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         const isZeroAuth = this.props.amount?.value === 0;
-        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
         return (
             <PayButton
                 {...props}
                 showPayButton={this.props.showPayButton}
                 disclaimerMessage={this.props.disclaimerMessage}
-                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
+                label={isZeroAuth && !this.isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
                 onClick={this.submit}
                 showReview={!!this.props.onReview}
             />
