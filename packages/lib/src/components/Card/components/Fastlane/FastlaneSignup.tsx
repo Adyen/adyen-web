@@ -131,6 +131,8 @@ const FastlaneSignup = ({
         onSubmitAnalytics(event);
     }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics, type]);
 
+    // The links are added to the check here for TypesScript reasons.
+    // They are guaranteed to be defined when isFastlaneConfigurationValid is true
     if (!shouldDisplaySignup || !isFastlaneConfigurationValid || !termsAndConditionsLink || !privacyPolicyLink) {
         return null;
     }
