@@ -189,7 +189,7 @@ export interface CardFocusData {
     fieldType: string;
     rootNode: HTMLElement;
     type: string;
-    currentFocusObject: string;
+    currentFocusObject: string | null;
 }
 
 export interface CardLoadData {

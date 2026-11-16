@@ -42,7 +42,7 @@ export const getAddressHandler = (setFormData: CardSetFormData, setFormValid: Ca
 export const getFocusHandler = (setFocusedElement: Dispatch<StateUpdater<string>>, onFocus: OnFieldFocus, onBlur: OnFieldFocus) => {
     // Return Handler fn:
     return (e: CardFocusData) => {
-        setFocusedElement(e.currentFocusObject);
+        setFocusedElement(e.currentFocusObject ?? '');
         e.focus === true ? onFocus(e.fieldType, e) : onBlur(e.fieldType, e);
     };
 };

@@ -78,15 +78,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/utils/clipboard.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleBinValue.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleFocus.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleIframeConfigFeedback.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/isConfigured.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/postMessageToAllIframes.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/processAutoComplete.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/processBrand.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/setFocusOnFrame.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/validateForm.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/cardType.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/processErrors.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioCreditCard.ts',

@@ -16,12 +16,12 @@ interface DestructuredFeedbackObj {
 export function handleBinValue({ csfState, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
     const { binValue, encryptedBin, uuid }: DestructuredFeedbackObj = pFeedbackObj;
 
-    const callbacksObj: CardBinValueData = { binValue, type: csfState.type };
+    const callbacksObj: CardBinValueData = { binValue: binValue ?? '', type: csfState.type };
 
     if (encryptedBin) {
         callbacksObj.encryptedBin = encryptedBin;
         callbacksObj.uuid = uuid;
     }
 
-    csfCallbacks.onBinValue(callbacksObj);
+    csfCallbacks.onBinValue?.(callbacksObj);
 }
