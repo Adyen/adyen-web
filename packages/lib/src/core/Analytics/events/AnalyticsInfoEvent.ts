@@ -135,7 +135,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         }
 
         // Some of the more generic validation error codes required combination with target to retrieve a specific code
-        if (this.type === InfoEventType.validationError) {
+        if (this.type === InfoEventType.validationError && this.validationErrorCode) {
             this.validationErrorCode = mapErrorCodesForAnalytics(this.validationErrorCode, this.target);
         }
     }

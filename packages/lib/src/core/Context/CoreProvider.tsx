@@ -18,7 +18,7 @@ type ContextValue = {
     i18n: Language;
     loadingContext: string;
     resources: Resources;
-    analytics: IAnalytics;
+    analytics?: IAnalytics;
 };
 
 const CoreContext = createContext<ContextValue | undefined>(undefined);
