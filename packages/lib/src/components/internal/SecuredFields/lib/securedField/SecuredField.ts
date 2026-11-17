@@ -312,19 +312,23 @@ class SecuredField extends AbstractSecuredField {
                 // (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
                 this.submitFeedbackErrorAnalytics(
                     feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
-                    `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
+                    `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`
                 );
                 break;
 
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
             case 'insecureMerchantDomain': {
-                const fallbackCode =
-                    feedbackObj.action === 'invalidHosting'
-                        ? ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING
-                        : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
+                const isInvalidHosting = feedbackObj.action === 'invalidHosting';
+                const fallbackCode = isInvalidHosting
+                    ? ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING
+                    : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
+                const fallbackErrorMsg = isInvalidHosting ? 'Invalid hosting' : 'Insecure merchant domain';
 
-                this.submitFeedbackErrorAnalytics(feedbackObj.code ?? fallbackCode, `${feedbackObj.error}. Field=${this.sfConfig.fieldType}`);
+                this.submitFeedbackErrorAnalytics(
+                    feedbackObj.code ?? fallbackCode,
+                    `${feedbackObj.error ?? fallbackErrorMsg}. Field=${this.sfConfig.fieldType}`
+                );
                 break;
             }
 
@@ -334,12 +338,14 @@ class SecuredField extends AbstractSecuredField {
                 // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
                 this.destroy(false);
 
-                // Get the last logged step
-                const { configLog } = feedbackObj;
+                // Get the last logged step and the error
+                const { configLog, error } = feedbackObj;
+
+                const errorMsg = error ?? 'Iframe config failure';
 
                 this.submitFeedbackErrorAnalytics(
                     feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
-                    `${feedbackObj.error}. Field=${this.sfConfig.fieldType}.${configLog ? ` Log=${JSON.stringify(configLog)}` : ''}`
+                    `${errorMsg}. Field=${this.sfConfig.fieldType}.${configLog ? ` Log=${JSON.stringify(configLog)}` : ''}`
                 );
                 break;
             }
