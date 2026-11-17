@@ -43,6 +43,7 @@ test.describe('EMI - CardEmi (native pay button)', () => {
             planType: 'lowCost',
             tenureMonths: 3,
             interestRateBps: 750,
+            token: 'string-3',
             appliedOfferIds: ['offer-icici-lowcost']
         });
         expect(paymentMethod).toEqual(

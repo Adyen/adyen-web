@@ -27,6 +27,7 @@ type EmiPlanMock = {
         message: string;
     };
     offers?: { offerId: string }[];
+    token: string;
 };
 
 type EmiIssuerMock = {
@@ -35,7 +36,7 @@ type EmiIssuerMock = {
     fundingSource: string;
     availablePlanTypes: string[];
     bestOffer?: Amount;
-    termLink?: string;
+    termsAndConditionsUrl?: string;
     plans: EmiPlanMock[];
 };
 
@@ -74,12 +75,13 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
             fundingSource: 'credit',
             availablePlanTypes: ['noCost', 'standard'],
             bestOffer: { value: 1958255, currency: 'INR' },
-            termLink: 'https://www.hdfc.bank.in/easyemi/credit-card',
+            termsAndConditionsUrl: 'https://www.hdfc.bank.in/easyemi/credit-card',
             plans: [
                 {
                     type: 'noCost',
                     tenureMonths: 3,
                     interestRateBps: 1800,
+                    token: 'string-1',
                     transactionAmounts: {
                         authorizationAmount: { value: 13541645, currency: 'INR' },
                         totalPayableAmount: { value: 13949910, currency: 'INR' },
@@ -96,6 +98,7 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
                     type: 'standard',
                     tenureMonths: 6,
                     interestRateBps: 1550,
+                    token: 'string-2',
                     transactionAmounts: {
                         authorizationAmount: { value: 15499900, currency: 'INR' },
                         monthlyPayableAmount: { value: 2816650, currency: 'INR' },
@@ -112,12 +115,13 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
             fundingSource: 'credit',
             availablePlanTypes: ['lowCost', 'standard'],
             bestOffer: { value: 210050, currency: 'INR' },
-            termLink: 'https://www.icici.bank.in/personal-banking/cards/credit-card/emi-products/instant-emi/terms-and-condition',
+            termsAndConditionsUrl: 'https://www.icici.bank.in/personal-banking/cards/credit-card/emi-products/instant-emi/terms-and-condition',
             plans: [
                 {
                     type: 'lowCost',
                     tenureMonths: 3,
                     interestRateBps: 750,
+                    token: 'string-3',
                     transactionAmounts: {
                         authorizationAmount: { value: 15079800, currency: 'INR' },
                         monthlyPayableAmount: { value: 5236650, currency: 'INR' },
@@ -133,6 +137,7 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
                     type: 'standard',
                     tenureMonths: 9,
                     interestRateBps: 1599,
+                    token: 'string-4',
                     transactionAmounts: {
                         authorizationAmount: { value: 15499900, currency: 'INR' },
                         monthlyPayableAmount: { value: 1933322, currency: 'INR' },
@@ -153,6 +158,7 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
                     type: 'standard',
                     tenureMonths: 3,
                     interestRateBps: 1550,
+                    token: 'string-5',
                     transactionAmounts: {
                         authorizationAmount: { value: 15499900, currency: 'INR' },
                         monthlyPayableAmount: { value: 5410233, currency: 'INR' },
@@ -174,6 +180,7 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
                     type: 'standard',
                     tenureMonths: 12,
                     interestRateBps: 1200,
+                    token: 'string-6',
                     transactionAmounts: {
                         authorizationAmount: { value: 15499900, currency: 'INR' },
                         monthlyPayableAmount: { value: 1450000, currency: 'INR' },
