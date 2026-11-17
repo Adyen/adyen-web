@@ -63,16 +63,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
     'src/components/internal/IbanInput/validate.ts',
 
-    // ── Ticket 6: Drop-in (48 errors) ──
-    'src/components/Dropin/components/DropinComponent.tsx',
-    'src/components/Dropin/components/PaymentMethod/OrderPaymentMethods.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodBrands/PaymentMethodBrands.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodItem/PaymentMethodItem.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodList.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodsContainer.tsx',
-    'src/components/Dropin/Dropin.tsx',
-    'src/components/Dropin/elements/createElements.ts',
-
     // ── No ticket yet (316 errors) ──
     // src/components/Ach (19 errors)
     'src/components/Ach/Ach.tsx',
