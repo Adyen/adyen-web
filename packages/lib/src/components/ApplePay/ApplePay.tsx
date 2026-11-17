@@ -247,7 +247,6 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                         this.handleResponse(paymentResponse);
                     })
                     .catch((paymentResponse?: RawPaymentResponse | CancelError) => {
-                        // 'beforeSubmit' was rejected by the merchant: no payment was made, so it did not fail
                         if (paymentResponse instanceof CancelError) {
                             reject({ status: ApplePaySession.STATUS_FAILURE });
                             this.setElementStatus('ready');
