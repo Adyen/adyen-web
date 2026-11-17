@@ -1,7 +1,7 @@
 import type { UIElementProps } from '../internal/UIElement/types';
 import type { AddressData, PaymentAmount } from '../../types/global-types';
 import type { KlarnaShippingConfig } from './klarna-web-sdk-types';
-import type KlarnaNetwork from './KlarnaNetwork';
+import type KlarnaNetworkExpress from './KlarnaNetworkExpress';
 
 /**
  * Line item in the same shape as the `/payments` request `lineItems`.
@@ -44,33 +44,40 @@ export interface KlarnaNetworkShippingAddressChangeData {
 }
 
 export interface KlarnaNetworkShippingOptionSelectedData {
+    /** Klarna only sends the reference of the selected option, not its amount or description. */
     selectedDeliveryMethod: {
         reference: string;
-        description?: string;
-        amount: PaymentAmount;
     };
 }
 
+export interface KlarnaNetworkAuthorizeResult {
+    paymentRequestId?: string;
+}
+
+/** Regular checkout: the standalone component and Drop-in. */
 export interface KlarnaNetworkConfiguration extends UIElementProps {
     clientId: string;
     partnerAccountId?: string;
     paymentAccountId?: string;
+}
 
+/** Express Checkout: KlarnaNetworkExpress. */
+export interface KlarnaNetworkExpressConfiguration extends KlarnaNetworkConfiguration {
     /**
-     * Lets the shopper edit the shipping address inside Klarna (Express flow).
-     * Not sent to Klarna yet: Klarna has not shared how to pass it through the initiate callback.
+     * Lets the shopper edit the shipping address inside Klarna.
+     * Returned with the `paymentRequestId` from the button `initiate` callback.
      */
     shippingConfig?: KlarnaShippingConfig;
 
     onShippingAddressChange?(
         data: KlarnaNetworkShippingAddressChangeData,
         actions: KlarnaNetworkShippingActions<KlarnaNetworkShippingUpdate>,
-        component: KlarnaNetwork
+        component: KlarnaNetworkExpress
     ): void;
 
     onShippingOptionSelected?(
         data: KlarnaNetworkShippingOptionSelectedData,
         actions: KlarnaNetworkShippingActions<Omit<KlarnaNetworkShippingUpdate, 'deliveryMethods'>>,
-        component: KlarnaNetwork
+        component: KlarnaNetworkExpress
     ): void;
 }

@@ -5,7 +5,7 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { useAmount } from '../../../../core/Context/AmountProvider';
 import { loadKlarnaSdk } from '../../utils/load-klarna-sdk';
-import './KlarnaNetworkContainer.scss';
+import '../KlarnaContainer.scss';
 
 import type {
     KlarnaInitiateParams,
@@ -13,37 +13,33 @@ import type {
     KlarnaPayment,
     KlarnaPaymentError,
     KlarnaPaymentOption,
-    KlarnaShippingAddressChangeHandler,
-    KlarnaShippingOptionSelectHandler,
     KlarnaUIElement
 } from '../../klarna-web-sdk-types';
+import type { KlarnaNetworkAuthorizeResult } from '../../types';
 
-export interface KlarnaNetworkAuthorizeResult {
-    paymentRequestId?: string;
-}
-
-export interface KlarnaNetworkContainerProps {
+/**
+ * Regular checkout (standalone component and Drop-in).
+ * Button API: Payment.presentation() -> paymentOption.message + paymentOption.paymentButton.
+ * Shipping: none.
+ */
+export interface KlarnaPresentationContainerProps {
     onAuthorize(params: KlarnaInitiateParams): Promise<KlarnaNetworkAuthorizeResult>;
     onError(error: AdyenCheckoutError): void;
     onKlarnaError(error: KlarnaPaymentError | Error, paymentRequest?: unknown): void;
-    onShippingAddressChange?: KlarnaShippingAddressChangeHandler;
-    onShippingOptionSelect?: KlarnaShippingOptionSelectHandler;
 
     clientId: string;
     partnerAccountId?: string;
     paymentAccountId?: string;
 }
 
-export function KlarnaNetworkContainer({
+export function KlarnaPresentationContainer({
     onAuthorize,
     onError,
     onKlarnaError,
-    onShippingAddressChange,
-    onShippingOptionSelect,
     clientId,
     partnerAccountId,
     paymentAccountId
-}: Readonly<KlarnaNetworkContainerProps>) {
+}: Readonly<KlarnaPresentationContainerProps>) {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
     const currency = amount?.currency;
@@ -84,13 +80,7 @@ export function KlarnaNetworkContainer({
             if (!isActive) return;
 
             payment = klarna.Payment;
-            console.log('Klarna SDK initialised available klarna props', klarna);
-            console.info('Klarna SDK initialised available props in payment', {
-                payment
-            });
             payment.on('error', onKlarnaError);
-            if (onShippingAddressChange) payment.on('shippingaddresschange', onShippingAddressChange);
-            if (onShippingOptionSelect) payment.on('shippingoptionselect', onShippingOptionSelect);
 
             const presentation = await payment.presentation({
                 amount: value,
@@ -114,8 +104,6 @@ export function KlarnaNetworkContainer({
         return () => {
             isActive = false;
             payment?.off('error', onKlarnaError);
-            if (onShippingAddressChange) payment?.off('shippingaddresschange', onShippingAddressChange);
-            if (onShippingOptionSelect) payment?.off('shippingoptionselect', onShippingOptionSelect);
         };
     }, [clientId, partnerAccountId, paymentAccountId, value, currency]);
 
@@ -154,4 +142,4 @@ export function KlarnaNetworkContainer({
     );
 }
 
-export default KlarnaNetworkContainer;
+export default KlarnaPresentationContainer;

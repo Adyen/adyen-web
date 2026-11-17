@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { mapShippingUpdateToKlarna } from '../utils/klarna-mappers';
-import { EXPRESS_CURRENCY, createMerchantCallbacks } from './klarna-express-stories-utils';
+import { createMerchantCallbacks } from './klarna-express-stories-utils';
 
 import type { KlarnaExpressLog } from './klarna-express-stories-utils';
 import type { KlarnaNetworkShippingActions, KlarnaNetworkShippingUpdate } from '../types';
-import type KlarnaNetwork from '../KlarnaNetwork';
+import type KlarnaNetworkExpress from '../KlarnaNetworkExpress';
 
 interface LogEntry {
     id: number;
@@ -34,7 +34,7 @@ type MerchantCallbacks = ReturnType<typeof createMerchantCallbacks>;
 type ShippingActions = KlarnaNetworkShippingActions<KlarnaNetworkShippingUpdate>;
 
 // Previews call the demo callbacks outside a mounted component; they never read it
-const NO_COMPONENT = null as unknown as KlarnaNetwork;
+const NO_COMPONENT = null as unknown as KlarnaNetworkExpress;
 
 const PREVIEWS: ReadonlyArray<{ title: string; run(callbacks: MerchantCallbacks, actions: ShippingActions): void }> = [
     {
@@ -57,33 +57,11 @@ const PREVIEWS: ReadonlyArray<{ title: string; run(callbacks: MerchantCallbacks,
     },
     {
         title: 'Select Express',
-        run: (callbacks, actions) =>
-            callbacks.onShippingOptionSelected(
-                {
-                    selectedDeliveryMethod: {
-                        reference: 'express',
-                        description: 'Express Shipping',
-                        amount: { value: 1599, currency: EXPRESS_CURRENCY }
-                    }
-                },
-                actions,
-                NO_COMPONENT
-            )
+        run: (callbacks, actions) => callbacks.onShippingOptionSelected({ selectedDeliveryMethod: { reference: 'express' } }, actions, NO_COMPONENT)
     },
     {
         title: 'Select Teleport (reject)',
-        run: (callbacks, actions) =>
-            callbacks.onShippingOptionSelected(
-                {
-                    selectedDeliveryMethod: {
-                        reference: 'teleport',
-                        description: 'Teleport Shipping Ultra fast',
-                        amount: { value: 5000, currency: EXPRESS_CURRENCY }
-                    }
-                },
-                actions,
-                NO_COMPONENT
-            )
+        run: (callbacks, actions) => callbacks.onShippingOptionSelected({ selectedDeliveryMethod: { reference: 'teleport' } }, actions, NO_COMPONENT)
     }
 ];
 

@@ -1,5 +1,11 @@
 import type { AddressData } from '../../../types/global-types';
-import type { KlarnaLineItem, KlarnaShippingAddress, KlarnaShippingOption, KlarnaShippingUpdatePayload } from '../klarna-web-sdk-types';
+import type {
+    KlarnaLineItem,
+    KlarnaSelectedShippingOption,
+    KlarnaShippingAddress,
+    KlarnaShippingOption,
+    KlarnaShippingUpdatePayload
+} from '../klarna-web-sdk-types';
 import type { KlarnaNetworkDeliveryMethod, KlarnaNetworkShippingOptionSelectedData, KlarnaNetworkShippingUpdate, LineItem } from '../types';
 
 const DEFAULT_SHIPPING_TYPE = 'TO_DOOR';
@@ -56,12 +62,7 @@ export function mapKlarnaAddressToAdyen(address: KlarnaShippingAddress = {}): Pa
 }
 
 export function mapKlarnaShippingOptionToAdyen(
-    option: KlarnaShippingOption,
-    currency: string
+    option: KlarnaSelectedShippingOption
 ): KlarnaNetworkShippingOptionSelectedData['selectedDeliveryMethod'] {
-    return {
-        reference: option.shippingOptionReference,
-        ...(option.displayName && { description: option.displayName }),
-        amount: { value: option.amount, currency }
-    };
+    return { reference: option.shippingOptionReference };
 }

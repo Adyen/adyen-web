@@ -1,28 +1,27 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import { TxVariants } from '../tx-variants';
-import { KlarnaNetworkContainer } from './components/KlarnaNetworkContainer/KlarnaNetworkContainer';
-import { mapKlarnaAddressToAdyen, mapKlarnaShippingOptionToAdyen, mapShippingUpdateToKlarna } from './utils/klarna-mappers';
+import { KlarnaPresentationContainer } from './components/KlarnaPresentationContainer/KlarnaPresentationContainer';
 
+import type { ICore } from '../../core/types';
 import type { RawPaymentResponse } from '../../types/global-types';
-import type { KlarnaNetworkConfiguration, KlarnaNetworkShippingUpdate } from './types';
-import type {
-    KlarnaInitiateParams,
-    KlarnaPaymentError,
-    KlarnaShippingAddress,
-    KlarnaShippingOption,
-    KlarnaShippingRejection,
-    KlarnaShippingUpdatePayload
-} from './klarna-web-sdk-types';
-import type { KlarnaNetworkAuthorizeResult } from './components/KlarnaNetworkContainer/KlarnaNetworkContainer';
+import type { KlarnaNetworkAuthorizeResult, KlarnaNetworkConfiguration } from './types';
+import type { KlarnaInitiateParams, KlarnaPaymentError } from './klarna-web-sdk-types';
 
-const DEFAULT_ADDRESS_REJECTION = 'UNSUPPORTED_SHIPPING_ADDRESS';
-const DEFAULT_OPTION_REJECTION = 'UNSUPPORTED_SHIPPING_OPTION';
-
-class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
+/**
+ * Regular checkout: the standalone component and Drop-in.
+ * KlarnaNetworkExpress extends this class for Express Checkout.
+ */
+class KlarnaNetwork<P extends KlarnaNetworkConfiguration = KlarnaNetworkConfiguration> extends UIElement<P> {
     public static readonly type = TxVariants.klarna_network;
 
     private klarnaNetworkSessionToken?: string;
+
+    // NoInfer keeps P on its default; otherwise `new KlarnaNetwork(checkout, credentials)` infers P from the argument
+    // and the instance stops being assignable to UIElement<UIElementProps>.
+    constructor(checkout: ICore, props?: NoInfer<P>) {
+        super(checkout, props);
+    }
 
     public override get isValid(): boolean {
         return true;
@@ -44,7 +43,7 @@ class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
         };
     }
 
-    private readonly authorize = async ({ klarnaNetworkSessionToken }: KlarnaInitiateParams): Promise<KlarnaNetworkAuthorizeResult> => {
+    protected readonly authorize = async ({ klarnaNetworkSessionToken }: KlarnaInitiateParams): Promise<KlarnaNetworkAuthorizeResult> => {
         this.klarnaNetworkSessionToken = klarnaNetworkSessionToken;
 
         const response = (await this.makePaymentsCall()) as RawPaymentResponse;
@@ -56,58 +55,23 @@ class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
         return { paymentRequestId };
     };
 
-    private readonly handleKlarnaShippingAddressChange = async (
-        _paymentRequest: unknown,
-        address: KlarnaShippingAddress
-    ): Promise<KlarnaShippingUpdatePayload | KlarnaShippingRejection> => {
-        const { onShippingAddressChange } = this.props;
-        if (!onShippingAddressChange) return { rejectionReason: DEFAULT_ADDRESS_REJECTION };
-
-        try {
-            const update = await new Promise<KlarnaNetworkShippingUpdate>((resolve, reject) =>
-                onShippingAddressChange({ shippingAddress: mapKlarnaAddressToAdyen(address) }, { resolve, reject }, this)
-            );
-            return mapShippingUpdateToKlarna(update);
-        } catch (reason: unknown) {
-            return { rejectionReason: typeof reason === 'string' && reason ? reason : DEFAULT_ADDRESS_REJECTION };
-        }
-    };
-
-    private readonly handleKlarnaShippingOptionSelect = async (
-        _paymentRequest: unknown,
-        option: KlarnaShippingOption
-    ): Promise<KlarnaShippingUpdatePayload | KlarnaShippingRejection> => {
-        const { onShippingOptionSelected } = this.props;
-        if (!onShippingOptionSelected) return { rejectionReason: DEFAULT_OPTION_REJECTION };
-
-        try {
-            const currency = this.props.amount?.currency ?? '';
-            const update = await new Promise<Omit<KlarnaNetworkShippingUpdate, 'deliveryMethods'>>((resolve, reject) =>
-                onShippingOptionSelected({ selectedDeliveryMethod: mapKlarnaShippingOptionToAdyen(option, currency) }, { resolve, reject }, this)
-            );
-            return mapShippingUpdateToKlarna(update);
-        } catch (reason: unknown) {
-            return { rejectionReason: typeof reason === 'string' && reason ? reason : DEFAULT_OPTION_REJECTION };
-        }
-    };
-
-    private readonly handleKlarnaError = (error: KlarnaPaymentError | Error, paymentRequest?: unknown): void => {
+    protected readonly handleKlarnaError = (error: KlarnaPaymentError | Error, paymentRequest?: unknown): void => {
         const { errorCode, errorMessage } = error as KlarnaPaymentError;
         console.error('Adyen Web Catch wrapper for Klarna SDK error', { errorCode, errorMessage, error, paymentRequest });
         this.setElementStatus('ready');
     };
 
     protected override componentToRender(): h.JSX.Element {
-        const { onShippingAddressChange, onShippingOptionSelected, ...rest } = this.props;
+        const { clientId, partnerAccountId, paymentAccountId } = this.props;
 
         return (
-            <KlarnaNetworkContainer
-                {...rest}
+            <KlarnaPresentationContainer
+                clientId={clientId}
+                partnerAccountId={partnerAccountId}
+                paymentAccountId={paymentAccountId}
                 onAuthorize={this.authorize}
                 onError={this.handleError}
                 onKlarnaError={this.handleKlarnaError}
-                {...(onShippingAddressChange && { onShippingAddressChange: this.handleKlarnaShippingAddressChange })}
-                {...(onShippingOptionSelected && { onShippingOptionSelect: this.handleKlarnaShippingOptionSelect })}
             />
         );
     }

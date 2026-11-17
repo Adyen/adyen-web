@@ -131,13 +131,8 @@ describe('klarna-mappers', () => {
     });
 
     describe('mapKlarnaShippingOptionToAdyen', () => {
-        test('should map a Klarna shipping option to an Adyen delivery method', () => {
-            expect(
-                mapKlarnaShippingOptionToAdyen(
-                    { shippingOptionReference: 'express', displayName: 'Express', amount: 1599, shippingType: 'TO_DOOR' },
-                    'USD'
-                )
-            ).toEqual({ reference: 'express', description: 'Express', amount: { value: 1599, currency: 'USD' } });
+        test('should map the selected Klarna shipping option reference', () => {
+            expect(mapKlarnaShippingOptionToAdyen({ shippingOptionReference: 'express' })).toEqual({ reference: 'express' });
         });
     });
 });

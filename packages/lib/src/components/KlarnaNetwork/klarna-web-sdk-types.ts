@@ -21,7 +21,8 @@ export interface KlarnaInitiateParams {
  * Shapes the Klarna SDK accepts back from the 'initiate' callback, see
  * https://docs.klarna.com/websdk/v2/types/payment.InitiateCallback.html
  */
-export type KlarnaInitiateResult = { paymentRequestUrl: string } | { paymentRequestId: string } | { returnUrl?: string };
+export type KlarnaInitiateResult =
+    { paymentRequestUrl: string } | { paymentRequestId: string; shippingConfig?: KlarnaShippingConfig } | { returnUrl?: string };
 
 export type KlarnaInitiateCallback = (params: KlarnaInitiateParams) => Promise<KlarnaInitiateResult>;
 
@@ -52,6 +53,8 @@ export type KlarnaShippingMode = 'EDITABLE' | 'READ_ONLY';
 
 export interface KlarnaShippingConfig {
     mode: KlarnaShippingMode;
+    /** ISO 3166-1 alpha-2 codes. When omitted, Klarna allows every country it supports. */
+    supportedCountries?: string[];
 }
 
 export interface KlarnaShippingAddress {
@@ -71,6 +74,11 @@ export interface KlarnaShippingOption {
     description?: string;
     amount: number;
     shippingType: string;
+}
+
+/** What Klarna passes to the 'shippingoptionselect' handler. */
+export interface KlarnaSelectedShippingOption {
+    shippingOptionReference: string;
 }
 
 export interface KlarnaLineItem {
@@ -101,7 +109,7 @@ export type KlarnaShippingHandlerResult = Promise<KlarnaShippingUpdatePayload | 
 
 export type KlarnaShippingAddressChangeHandler = (paymentRequest: unknown, address: KlarnaShippingAddress) => KlarnaShippingHandlerResult;
 
-export type KlarnaShippingOptionSelectHandler = (paymentRequest: unknown, option: KlarnaShippingOption) => KlarnaShippingHandlerResult;
+export type KlarnaShippingOptionSelectHandler = (paymentRequest: unknown, option: KlarnaSelectedShippingOption) => KlarnaShippingHandlerResult;
 
 export interface KlarnaPayment {
     presentation(data: { amount?: number; currency: string; locale?: string; intent?: string }): Promise<PaymentPresentation | undefined>;

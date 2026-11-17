@@ -2,7 +2,7 @@
  * We are handling delivery methods update, validations, and final amount calculation on the UI side for DEMO purposes.
  * This must be implemented on the backend side by the merchant for safety reasons.
  */
-import type { KlarnaNetworkConfiguration, KlarnaNetworkDeliveryMethod, KlarnaNetworkShippingUpdate, LineItem } from '../types';
+import type { KlarnaNetworkExpressConfiguration, KlarnaNetworkDeliveryMethod, KlarnaNetworkShippingUpdate, LineItem } from '../types';
 
 export type KlarnaExpressLog = (step: string, payload?: unknown) => void;
 
@@ -72,7 +72,7 @@ export function buildShippingUpdate(country: string, selectedRef: string): Requi
 
 export function createMerchantCallbacks(
     log: KlarnaExpressLog
-): Required<Pick<KlarnaNetworkConfiguration, 'onShippingAddressChange' | 'onShippingOptionSelected'>> {
+): Required<Pick<KlarnaNetworkExpressConfiguration, 'onShippingAddressChange' | 'onShippingOptionSelected'>> {
     let shippingCountry = SUPPORTED_SHIPPING_COUNTRY;
 
     return {
@@ -81,8 +81,8 @@ export function createMerchantCallbacks(
             const country = data.shippingAddress.country;
 
             if (country !== SUPPORTED_SHIPPING_COUNTRY) {
-                log('onShippingAddressChange: rejected', { reason: 'UNSUPPORTED_SHIPPING_ADDRESS', country });
-                actions.reject('UNSUPPORTED_SHIPPING_ADDRESS');
+                log('onShippingAddressChange: rejected', { reason: 'COUNTRY_NOT_SUPPORTED', country });
+                actions.reject('COUNTRY_NOT_SUPPORTED');
                 return;
             }
 
@@ -97,8 +97,8 @@ export function createMerchantCallbacks(
             const { reference } = data.selectedDeliveryMethod;
 
             if (reference === UNSUPPORTED_DELIVERY_METHOD) {
-                log('onShippingOptionSelected: rejected', { reason: 'UNSUPPORTED_SHIPPING_OPTION', reference });
-                actions.reject('UNSUPPORTED_SHIPPING_OPTION');
+                log('onShippingOptionSelected: rejected', { reason: 'INVALID_OPTION', reference });
+                actions.reject('INVALID_OPTION');
                 return;
             }
 
