@@ -36,14 +36,14 @@ const useSRPanelForACHErrors = ({ errors, data, isValidating }: UseSRPanelForErr
     // Get the previous value (Relates to onBlur errors)
     const previousSortedErrors = usePrevious(sortedErrorList);
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
-    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
+    const setSRMessages: SetSRMessagesReturnFn | undefined = setSRMessagesFromObjects?.({});
 
     // Fixed layout for the ACH comp
     const layout = ['selectedAccountType', 'ownerName', 'routingNumber', 'accountNumber', 'accountNumberVerification'];
 
     useEffect(() => {
         try {
-            const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: isValidating.current, layout });
+            const srPanelResp: SetSRMessagesReturnObject | undefined = setSRMessages?.({ errors, isValidating: isValidating.current, layout });
 
             // Relates to onBlur errors
             const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
@@ -79,10 +79,10 @@ const useSRPanelForACHErrors = ({ errors, data, isValidating }: UseSRPanelForErr
 
                         // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                        setSRMessagesFromStrings(latestSRError);
+                        setSRMessagesFromStrings?.(latestSRError);
                     } else {
                         // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
-                        clearSRPanel();
+                        clearSRPanel?.();
                     }
                     break;
                 }

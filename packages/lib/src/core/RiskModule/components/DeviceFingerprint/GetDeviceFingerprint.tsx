@@ -45,7 +45,9 @@ class GetDeviceFingerprint extends Component<GetDeviceFingerprintProps> {
             });
     }
 
-    render({ dfpURL }) {
+    render() {
+        const { dfpURL } = this.props;
+
         return (
             <div className="adyen-checkout-risk__device-fingerprint">
                 <Iframe name={iframeName} src={dfpURL} allow={allowProperties} title="devicefingerprinting iframe" />
