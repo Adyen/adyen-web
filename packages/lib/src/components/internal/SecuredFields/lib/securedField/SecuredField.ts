@@ -171,11 +171,10 @@ class SecuredField extends AbstractSecuredField {
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
-        // postMessageToIframe(configObj, window, this.loadingContext); // TODO:For testing - to force the configFail on the SF
         //--
 
         // Callback to say iframe loaded
-        this.onIframeLoadedCallback();
+        // this.onIframeLoadedCallback();
     }
 
     postMessageListenerFn(event: MessageEvent): void {
