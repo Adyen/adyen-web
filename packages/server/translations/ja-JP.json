@@ -482,7 +482,7 @@
     "emi.instructions": "以下のオプションからお好みの組み合わせを選び、カードの詳細を入力してください",
     "emi.provider": "プロバイダー",
     "emi.plan": "プラン",
-    "emi.planSummary": "計画概要",
+    "emi.planSummary": "プランの概要",
     "emi.itemPrice": "アイテムの価格",
     "emi.amountReservedOnCard": "カードに確保された金額",
     "emi.interestChargedByBank": "銀行から請求される利息 %{interest}",
@@ -495,5 +495,10 @@
     "emi.discountAvailable": "割引が利用可能",
     "emi.perAnnum": "/年",
     "emi.cardDetailsInstructions": "%{provider}カードに関連付けられたカード情報を入力",
-    "emi.cardDetails": "カードの詳細"
+    "emi.cardDetails": "カードの詳細",
+    "emi.terms": "続行すると、",
+    "emi.termsLink": "利用規約",
+    "emi.interestDiscount": "利息割引",
+    "emi.instantDiscount": "即時割引",
+    "emi.additionalDiscountAvailable": "追加で%{amount}の割引をご利用いただけます"
 }

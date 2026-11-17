@@ -1,12 +1,22 @@
 import { selectOne } from '../../utilities/dom';
 import ua from '../utils/userAgent';
 import { on, off } from '../../../../../../utils/listenerUtils';
+import type { SecuredFields } from '../../types';
 
 const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
-    if ('selectionStart' in pNode) {
-        return pNode.selectionStart;
+    try {
+        if ('selectionStart' in pNode) {
+            return pNode.selectionStart ?? 0;
+        }
+    } catch {
+        // selectionStart throws on input types that don't support text selection (e.g. number, email)
     }
     return 0;
+};
+
+const hasSecuredFieldFocus = (securedFields: SecuredFields): boolean => {
+    const { activeElement } = document;
+    return Object.values(securedFields).some(field => field.iframeRef === activeElement);
 };
 
 /**
@@ -20,7 +30,7 @@ const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
  * @param e -
  */
 function touchendListener(e: Event): void {
-    const targetEl: EventTarget = e.target;
+    const targetEl: EventTarget | null = e.target;
 
     // If other element is Input or TextArea
     if (targetEl instanceof HTMLInputElement || (HTMLTextAreaElement && targetEl instanceof HTMLTextAreaElement)) {
@@ -66,7 +76,7 @@ function touchendListener(e: Event): void {
          * Workaround for iOS/Safari bug where keypad doesn't retract when SF paymentMethod is no longer active
          */
         const hasKeypadFix: boolean = this.config.keypadFix; // to avoid linting no-lonely-if
-        if (hasKeypadFix) {
+        if (hasKeypadFix && hasSecuredFieldFocus(this.state.securedFields)) {
             // Create an input we can add focus to.
             // Otherwise 2nd & sub times the caret gets left in the SF even though it has lost focus and cannot be typed into
             const rootNode: HTMLElement = this.props.rootNode;
@@ -98,7 +108,7 @@ function touchendListener(e: Event): void {
  */
 function touchstartListener(e: Event): void {
     this.hasGenuineTouchEvents = true;
-    const targetEl: EventTarget = e.target;
+    const targetEl: EventTarget | null = e.target;
     // If other element is Input or Span (i.e. label text) TODO apply to other types of el?
     if (targetEl instanceof HTMLInputElement || targetEl instanceof HTMLSpanElement) {
         this.postMessageToAllIframes({ fieldType: 'webInternalElement', checkoutTouchEvent: true });

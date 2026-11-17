@@ -7,10 +7,14 @@ jest.mock('../utils/iframes/postMessageToIframe');
 
 const mockedPostMessageToIframe = postMessageToIframe as jest.Mock;
 
-const csfState = { brand: { brand: null, cvcPolicy: 'required' }, type: null, securedFields: { encryptedSecurityCode: { numKey: 654321 } } };
+const csfState = {
+    brand: { brand: null, cvcPolicy: 'required' },
+    type: null as string | null,
+    securedFields: { encryptedSecurityCode: { numKey: 654321 } }
+};
 const csfProps = { rootNode: 'div' };
 const csfConfig = {};
-const csfCallbacks = { onBrand: null };
+const csfCallbacks: { onBrand: jest.Mock | null } = { onBrand: null };
 
 const CSFObj = {
     csfState,
@@ -27,7 +31,7 @@ const sfFeedbackObj: SFFeedbackObj = {
     cvcPolicy: 'required',
     expiryDatePolicy: 'required',
     showSocialSecurityNumber: false,
-    type: null
+    type: undefined
 };
 
 const expectedPostMsgDataObj = {
@@ -41,6 +45,7 @@ const expectedPostMsgDataObj = {
 const expectedCallbackObj = {
     brand: 'amex',
     cvcPolicy: 'required',
+    cvcText: '',
     expiryDatePolicy: 'required',
     showSocialSecurityNumber: false,
     type: 'card',
@@ -116,5 +121,26 @@ describe('Testing processBrand fny', () => {
         expect(postMessageToIframeMock).not.toHaveBeenCalled();
 
         expect(csfCallbacks.onBrand).not.toHaveBeenCalled();
+    });
+
+    test('Calling processBrand with an undefined cvcPolicy on the feedback object should fall back to CVC_POLICY_REQUIRED in the postMessage payload', () => {
+        csfState.type = 'card';
+        sfFeedbackObj.brand = 'visa';
+        sfFeedbackObj.cvcPolicy = undefined;
+
+        callProcessBrand();
+
+        expect(postMessageToIframeMock).toHaveBeenCalledWith(expect.objectContaining({ brand: 'visa', cvcPolicy: 'required' }));
+    });
+
+    test('Calling processBrand with an undefined cvcPolicy and cvcText on the feedback object should fall back to CVC_POLICY_REQUIRED and an empty string in the onBrand callback object', () => {
+        csfState.type = 'card';
+        sfFeedbackObj.brand = 'mc';
+        sfFeedbackObj.cvcPolicy = undefined;
+        sfFeedbackObj.cvcText = undefined;
+
+        callProcessBrand();
+
+        expect(csfCallbacks.onBrand).toHaveBeenCalledWith(expect.objectContaining({ brand: 'mc', cvcPolicy: 'required', cvcText: '' }));
     });
 });

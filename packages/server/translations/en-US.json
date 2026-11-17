@@ -495,5 +495,10 @@
     "emi.discountAvailable": "discount available",
     "emi.perAnnum": "p.a",
     "emi.cardDetailsInstructions": "Enter card details that are associated with a %{provider} card",
-    "emi.cardDetails": "Card details"
+    "emi.cardDetails": "Card details",
+    "emi.terms": "By continuing you agree to the",
+    "emi.termsLink": "terms and conditions",
+    "emi.interestDiscount": "Interest discount",
+    "emi.instantDiscount": "Instant discount",
+    "emi.additionalDiscountAvailable": "Additional %{amount} discount available"
 }

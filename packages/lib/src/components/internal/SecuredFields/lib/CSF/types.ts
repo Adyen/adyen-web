@@ -12,7 +12,7 @@ export interface CSFReturnObject {
     setFocusOnFrame: (pFieldType: SFFieldType) => void;
     isValidated: (pFieldType: SFFieldType, code: string) => void;
     destroy: () => void;
-    brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject) => void;
+    brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject | null) => void;
     hasUnsupportedCard: (pFieldType: SFFieldType, code: string) => void;
     addSecuredField: (pFieldType: SFFieldType) => void;
     removeSecuredField: (pFieldType: SFFieldType) => void;
@@ -96,22 +96,23 @@ export interface CSFCallbacksConfig {
 export interface CSFStateObject {
     type: string;
     brand: BrandStorageObject;
-    allValid: boolean;
+    // undefined initially, so the first validation broadcasts onAllValid even when it starts out invalid (see validateForm.ts)
+    allValid: boolean | undefined;
     numIframes: number;
     originalNumIframes: number;
     iframeCount: number;
     iframeConfigCount: number;
     isConfigured: boolean;
     hasSeparateDateFields: boolean;
-    currentFocusObject: string;
+    currentFocusObject: string | null;
     registerFieldForIos: boolean;
     securedFields: SecuredFields;
     isKCP: boolean;
 }
 
 export interface CSFThisObject {
-    csfState?: CSFStateObject;
-    csfConfig?: CSFConfigObject;
-    csfProps?: CSFSetupObject;
-    csfCallbacks?: CSFCallbacksConfig;
+    csfState: CSFStateObject;
+    csfConfig: CSFConfigObject;
+    csfProps: CSFSetupObject;
+    csfCallbacks: CSFCallbacksConfig;
 }

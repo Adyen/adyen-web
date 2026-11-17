@@ -495,5 +495,10 @@
     "emi.discountAvailable": "pieejama atlaide",
     "emi.perAnnum": "p.a",
     "emi.cardDetailsInstructions": "Ievadiet kartes datus, kas ir saistīti ar %{provider} karti",
-    "emi.cardDetails": "Kartes informācija"
+    "emi.cardDetails": "Kartes informācija",
+    "emi.terms": "Turpinot, jūs piekrītat",
+    "emi.termsLink": "noteikumi un nosacījumi",
+    "emi.interestDiscount": "Procentu atlaide",
+    "emi.instantDiscount": "Tūlītēja atlaide",
+    "emi.additionalDiscountAvailable": "Pieejama papildu %{amount} atlaide"
 }

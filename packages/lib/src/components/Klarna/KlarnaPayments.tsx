@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { TxVariants } from '../tx-variants';
-import type { KlarnaAction, KlarnaAdditionalDetailsData, KlarnaComponentRef, KlarnaConfiguration } from './types';
+import type { KlarnaAction, KlarnaComponentRef, KlarnaConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
@@ -20,7 +20,6 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
     constructor(checkout: ICore, props?: KlarnaConfiguration) {
         super(checkout, props);
 
-        this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);
         this.submit = this.submit.bind(this);
         this.onLoaded = this.onLoaded.bind(this);
@@ -72,17 +71,13 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         this.componentRef.reinitializeWidget();
     }
 
-    protected onComplete(details: KlarnaAdditionalDetailsData): void {
-        this.handleAdditionalDetails(details);
-    }
-
     protected override componentToRender(): h.JSX.Element {
         return (
             <KlarnaContainer
                 {...this.props}
                 setComponentRef={this.setComponentRef}
                 displayName={this.displayName}
-                onComplete={this.onComplete}
+                onComplete={this.onActionComplete}
                 onError={this.props.onError}
                 payButton={this.payButton}
                 onLoaded={this.onLoaded}

@@ -479,7 +479,7 @@
     "upi.intent.apps.dropdown.placeholder": "Välj önskad app",
     "emi.subtitle": "Avbetalningsplaner för kreditkort",
     "emi.title": "EMI-plan",
-    "emi.instructions": "Välj din föredragna kombination från alternativen nedan och fortsätt med att bekräfta dina kortuppgifter",
+    "emi.instructions": "Välj din föredragna kombination från alternativen nedan och fortsätt med att ange dina kortuppgifter",
     "emi.provider": "Leverantör",
     "emi.plan": "Plan",
     "emi.planSummary": "Plansammanfattning",
@@ -494,6 +494,11 @@
     "emi.lowCost": "Låg kostnad",
     "emi.discountAvailable": "rabatt tillgänglig",
     "emi.perAnnum": "på årsbasis",
-    "emi.cardDetailsInstructions": "Bekräfta kortuppgifter som är kopplade till ett %{provider}-kort",
-    "emi.cardDetails": "Kortuppgifter"
+    "emi.cardDetailsInstructions": "Ange kortuppgifter som är kopplade till ett %{provider}-kort",
+    "emi.cardDetails": "Kortuppgifter",
+    "emi.terms": "Genom att fortsätta godkänner du",
+    "emi.termsLink": "villkoren",
+    "emi.interestDiscount": "Ränterabatt",
+    "emi.instantDiscount": "Omedelbar rabatt",
+    "emi.additionalDiscountAvailable": "Ytterligare %{amount} rabatt tillgängligt"
 }

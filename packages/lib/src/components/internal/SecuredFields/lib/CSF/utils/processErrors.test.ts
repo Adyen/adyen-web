@@ -16,7 +16,7 @@ const mockState = {
 
 let callbackFnCalled = false;
 
-const rootNode = null;
+const rootNode = document.createElement('div');
 
 const onError = () => {
     callbackFnCalled = true;
@@ -59,6 +59,13 @@ const errorObj_incompleteField = {
 
 const noErrorObj = {
     error: '',
+    action: 'dateKeyPressed',
+    fieldType: 'encryptedCardNumber',
+    numKey: 3522473789
+} as SFFeedbackObj;
+
+const undefinedErrorObj = {
+    error: undefined,
     action: 'dateKeyPressed',
     fieldType: 'encryptedCardNumber',
     numKey: 3522473789
@@ -142,6 +149,17 @@ describe('A suite of tests for processError (errors sent from securedFields) - f
             expect(callbackFnCalled).toBe(false);
         }
     );
+
+    // #4b
+    test('Should do nothing when error is undefined && field is not already in error (treated like an empty string)', () => {
+        const field = mockState.securedFields.encryptedCardNumber as SecuredField;
+
+        const dataObj = processErrors(undefinedErrorObj, field, 'card', rootNode, onError);
+
+        expect(dataObj).toBe(null);
+        expect(callbackFnCalled).toBe(false);
+        expect(field).toHaveProperty('hasError', false);
+    });
 
     // #5
     test('Should set an error normally, on a date field', () => {

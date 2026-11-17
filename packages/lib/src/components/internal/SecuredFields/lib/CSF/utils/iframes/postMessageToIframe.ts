@@ -1,4 +1,4 @@
-const postMessageToIframe = (pDataObj: object, pIframeObj: Window, pLoadingContext: string): void => {
+const postMessageToIframe = (pDataObj: object, pIframeObj: Window | null, pLoadingContext: string): void => {
     // Check that an iframe object exists for this fieldType... in some cases the iframe might not exist
     // e.g. bcmc which has no cvc field so e.g. a call to setFocus on the cvc field is not possible
     if (pIframeObj) {
