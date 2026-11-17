@@ -1,6 +1,6 @@
-import { ApplePayConfiguration } from './types';
+import type { ApplePayConfiguration } from './types';
 
-const defaultProps: ApplePayConfiguration = {
+const defaultProps = {
     isExpress: false,
     amount: { currency: 'USD', value: 0 },
     totalPriceStatus: 'final',
@@ -10,6 +10,6 @@ const defaultProps: ApplePayConfiguration = {
     buttonType: 'plain',
     buttonColor: 'black',
     onClick: resolve => resolve()
-};
+} satisfies ApplePayConfiguration;
 
 export default defaultProps;

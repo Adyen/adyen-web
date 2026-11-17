@@ -118,7 +118,13 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.selected, target: UiTarget.instantPaymentButton });
             this.submitAnalytics(event);
         }
-        void this.startSession();
+        try {
+            void this.startSession();
+        } catch (error: unknown) {
+            this.handleError(
+                error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError('ERROR', 'Apple Pay - Could not start session', { cause: error })
+            );
+        }
     };
 
     public get isValid(): boolean {
@@ -200,8 +206,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         const version = this.applePayVersionNumber;
 
         if (!version) {
-            this.handleError(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
-            return Promise.resolve();
+            throw new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device');
         }
 
         const paymentRequest = preparePaymentRequest({
@@ -209,6 +214,10 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             countryCode: this.core.options.countryCode,
             ...this.props
         });
+
+        if (!onValidateMerchant && (!this.props.configuration?.merchantName || !this.props.configuration?.merchantId)) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Apple Pay - Missing configuration.merchantName or configuration.merchantId');
+        }
 
         const session = new ApplePayService(paymentRequest, {
             version,
@@ -274,7 +283,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }
         });
 
-        return new Promise<void>((resolve, reject) => (this.props.onClick ?? defaultProps.onClick)?.(resolve, reject))
+        return new Promise<void>((resolve, reject) => (this.props.onClick ?? defaultProps.onClick)(resolve, reject))
             .then(() => {
                 session.begin();
             })
@@ -352,7 +361,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         const request: ApplePaySessionRequest = {
             displayName: merchantName,
             domainName: domainName || hostname,
-            initiative: initiative ?? 'web',
+            initiative: initiative ?? defaultProps.initiative,
             merchantIdentifier: merchantId
         };
 
@@ -378,8 +387,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
         return (
             <ApplePayButton
-                buttonStyle={this.props.buttonColor ?? 'black'}
-                buttonType={this.props.buttonType ?? 'plain'}
+                buttonStyle={this.props.buttonColor ?? defaultProps.buttonColor}
+                buttonType={this.props.buttonType ?? defaultProps.buttonType}
                 buttonLocale={this.props.buttonLocale ?? this.i18n.locale}
                 onClick={this.submit}
             />

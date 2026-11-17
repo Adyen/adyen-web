@@ -32,10 +32,6 @@ export const preparePaymentRequest = (
     const merchantCapabilities = props.merchantCapabilities ?? defaultProps.merchantCapabilities;
     const supportedNetworks = props.supportedNetworks ?? defaultProps.supportedNetworks;
 
-    if (!merchantCapabilities || !supportedNetworks) {
-        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Apple Pay - Missing merchantCapabilities or supportedNetworks');
-    }
-
     const formattedAmount = formatAmount(amount);
 
     return {
