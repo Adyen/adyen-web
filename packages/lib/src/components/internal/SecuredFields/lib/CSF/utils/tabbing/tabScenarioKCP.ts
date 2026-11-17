@@ -12,8 +12,8 @@ import { SFFieldType, ShiftTabObject } from '../../../types';
 // KCP scenario: Regular credit card but with additional fields -
 // an encrypted pin/password field preceded by a form field of a non-SF type (d.o.b/taxRefNum)
 export function shiftTabKCP(fieldType: SFFieldType, rootNode: HTMLElement, hasSeparateDateFields: boolean): ShiftTabObject {
-    let additionalField: HTMLElement;
-    let fieldToFocus: SFFieldType;
+    let additionalField: HTMLElement | undefined = undefined;
+    let fieldToFocus: SFFieldType | undefined = undefined;
 
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:

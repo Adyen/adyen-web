@@ -5,7 +5,7 @@ const getPreviousTabbableEl = (matchEl, getPrevious = true) => {
         '*[data-cse], a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), ' +
         'button:not([disabled]), object, embed, *[tabindex], *[contenteditable]';
     const allPotentialTabEls = Array.prototype.slice.call(select(document, selStr));
-    const actualTabEls = [];
+    const actualTabEls: HTMLElement[] = [];
 
     allPotentialTabEls.forEach(potentialTabEl => {
         const tabIndex = potentialTabEl.getAttribute('tabindex');

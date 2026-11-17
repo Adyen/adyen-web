@@ -66,14 +66,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
     'src/core/RiskModule/RiskModule.tsx',
 
-    // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    'src/components/internal/SecuredFields/lib/CSF/utils/cardType.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/processErrors.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioCreditCard.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioGiftCard.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioKCP.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/utils.ts',
-
     // ── Ticket 4: Shared form fields (92 errors) ──
 
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged

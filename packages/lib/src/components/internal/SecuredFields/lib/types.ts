@@ -233,8 +233,8 @@ export interface EncryptionObj {
 }
 
 export interface ShiftTabObject {
-    fieldToFocus: string;
-    additionalField: HTMLElement;
+    fieldToFocus?: string;
+    additionalField?: HTMLElement;
 }
 
 export interface SendBrandObject {
