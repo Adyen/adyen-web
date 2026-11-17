@@ -174,7 +174,7 @@ class SecuredField extends AbstractSecuredField {
         //--
 
         // Callback to say iframe loaded
-        // this.onIframeLoadedCallback();
+        this.onIframeLoadedCallback();
     }
 
     postMessageListenerFn(event: MessageEvent): void {
