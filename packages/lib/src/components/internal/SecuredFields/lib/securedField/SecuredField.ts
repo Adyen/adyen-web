@@ -255,7 +255,7 @@ class SecuredField extends AbstractSecuredField {
         }
 
         // Check for the numKey linked to this particular securedFields OR for one indicating a stalled config
-        if (this.numKey !== feedbackObj.numKey && feedbackObj.numKey !== 999999) {
+        if (this.numKey !== feedbackObj.numKey && feedbackObj.numKey !== STALLED_CONFIG_NUMKEY) {
             if (this.sfConfig.showWarnings) {
                 logger.warn(
                     'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
