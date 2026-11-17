@@ -41,6 +41,7 @@ will be charged — and the SDK has no authority to make them.
                     "type": "noCost",
                     "tenureMonths": 3,
                     "interestRateBps": 1550,
+                    "token": "string",
                     "transactionAmounts": {
                         "authorizationAmount": { "value": 15099900, "currency": "INR" },
                         "monthlyPayableAmount": { "value": 5033300, "currency": "INR" },
@@ -62,6 +63,7 @@ will be charged — and the SDK has no authority to make them.
                     "type": "standard",
                     "tenureMonths": 6,
                     "interestRateBps": 1550,
+                    "token": "string",
                     "transactionAmounts": {
                         "authorizationAmount": { "value": 15499900, "currency": "INR" },
                         "monthlyPayableAmount": { "value": 2816650, "currency": "INR" },
@@ -114,6 +116,7 @@ render. An empty `issuers` list is the same outcome as an amount with no plans: 
         "fundingSource": "credit",
         "planType": "noCost",
         "interestRateBps": 1550,
+        "token": "string",
         "appliedOfferIds": ["offer-hdfc-nocost"]
     },
     "browserInfo": { "...": "..." },
@@ -128,6 +131,8 @@ The SDK builds `emiPlan` from the selected issuer and plan:
 - `issuerCode` is copied unchanged (`HDFC`, not `HDFC Bank`), because the backend matches it against the card
   BIN by string equality.
 - `planType` is copied unchanged, in the lookup's spelling (`noCost`).
+- `token` is the signed token of the selected plan, copied unchanged. The SDK never reads, alters, or reports
+  it to analytics; the payment request is invalid without it.
 - `appliedOfferIds` is every `offerId` of the plan's `offers`, in the order they arrived, and is omitted when
   the plan carries none. The SDK chooses nothing: everything the plan lists was priced into its amounts.
 
@@ -201,11 +206,12 @@ display order, and the SDK consumes it directly.
 | Plan discount and summary             | API   | `transactionAmounts.additionalDiscountAmount` and `interestDiscountAmount` |
 | Amount reserved on the card           | API   | `transactionAmounts.authorizationAmount`                                   |
 | `appliedOfferIds` sent to `/payments` | SDK   | Every `offerId` of `plan.offers`, unchanged                                |
+| `token` sent to `/payments`           | API   | `plan.token` of the selected plan, unchanged                               |
 | Issuer and plan display order         | API   | Response order, plans ascending by `tenureMonths`                          |
 | Default issuer and plan               | SDK   | The first issuer, and that issuer's first plan                             |
 | Which issuers are offered             | API   | Every issuer of `issuers`, unfiltered                                      |
 | Labels and amount formatting          | SDK   | `i18n`                                                                     |
-| Terms and conditions page of the bank | API   | `issuer.termLink`, linked only when it is an `https` URL                   |
+| Terms and conditions page of the bank | API   | `issuer.termsAndConditionsUrl`, linked only when it is an `https` URL      |
 
 #### Response Contract
 
@@ -224,6 +230,8 @@ display order, and the SDK consumes it directly.
   `offers` is what says the offer applies. The SDK never chooses among them and never derives a discount from
   them, because the amounts are authoritative; it echoes every `offerId` to `/payments` unchanged.
 - An offer carries only its `offerId`: no amount, type, or description.
+- Every plan carries a `token`, a signed string the SDK treats as opaque and echoes to `/payments` with the
+  selected plan.
 - Issuer and plan identity tuples are unique within one response.
 - Amounts are minor units and every plan in one response is quoted in the request's currency.
 - New enum values are additive. The SDK passes unknown selected values to `/payments` unchanged.
@@ -284,8 +292,8 @@ The Phase 2 derivations listed at the top are deleted rather than reworked:
 `getDefaultSelection` stays. Preselecting the first row is a presentation rule, and keeping it on the SDK
 means the API expresses the default by ordering rather than by a flag that would need its own validation.
 
-`ISSUER_TERMS_URLS` goes too. The terms copy links `issuer.termLink` when the issuer carries an `https` URL, and
-renders unlinked otherwise, so the link appears without an SDK release once the backend returns it.
+`ISSUER_TERMS_URLS` goes too. The terms copy links `issuer.termsAndConditionsUrl` when the issuer carries an
+`https` URL, and renders unlinked otherwise, so the link appears without an SDK release once the backend returns it.
 
 The `plans` and `supportedPaymentMethods` configuration props go. The SDK fetches the plans itself, in both
 flows, so merchants no longer proxy the Checkout API lookup, and reads the supported payment methods and the
@@ -379,5 +387,5 @@ Tracked in the backend review of the checkoutShopper endpoint, and none of them 
   wraps: it is dropped only when no `supportedPaymentMethods` survive the allow and block lists;
 - whether `/payments` honours several applied offers on one plan, now that the SDK sends every id rather
   than the largest one;
-- when the backend starts returning `issuer.termLink`;
+- when the backend starts returning `issuer.termsAndConditionsUrl`;
 - the rework of `processingAmounts.message`, which the SDK renders verbatim until then.

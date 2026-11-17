@@ -22,6 +22,7 @@ describe('buildEmiPlanPayload', () => {
             fundingSource: 'credit',
             planType: 'noCost',
             interestRateBps: 1800,
+            token: 'string-1',
             appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
         });
     });
@@ -49,6 +50,12 @@ describe('buildEmiPlanPayload', () => {
         expect(buildEmiPlanPayload(icici, iciciStandard)).toEqual(
             expect.objectContaining({ tenureMonths: iciciStandard.tenureMonths, interestRateBps: iciciStandard.interestRateBps })
         );
+    });
+
+    test('should forward the signed token of the selected plan unchanged', () => {
+        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).token).toBe(hdfcNoCost.token);
+        expect(buildEmiPlanPayload(hdfc, hdfcStandard).token).toBe(hdfcStandard.token);
+        expect(buildEmiPlanPayload(icici, iciciLowCost).token).toBe(iciciLowCost.token);
     });
 
     test('should send the tenure and the rate as JSON numbers', () => {
@@ -86,7 +93,8 @@ describe('buildEmiPlanPayload', () => {
             'interestRateBps',
             'issuerCode',
             'planType',
-            'tenureMonths'
+            'tenureMonths',
+            'token'
         ]);
     });
 
@@ -97,6 +105,7 @@ describe('buildEmiPlanPayload', () => {
 
         payloads.forEach(payload => {
             expect(payload.issuerCode).not.toHaveLength(0);
+            expect(payload.token).not.toHaveLength(0);
             expect(payload.tenureMonths).toBeGreaterThan(0);
             expect(payload.interestRateBps).toBeGreaterThan(0);
             expect(payload.fundingSource).toBe('credit');

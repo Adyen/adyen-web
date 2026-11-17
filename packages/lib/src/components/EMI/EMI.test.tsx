@@ -741,6 +741,7 @@ describe('EMI', () => {
                 fundingSource: 'credit',
                 planType: 'noCost',
                 interestRateBps: 1800,
+                token: 'string-1',
                 appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
             });
         });
@@ -795,7 +796,8 @@ describe('EMI', () => {
                 issuerCode: 'HDFC',
                 fundingSource: 'credit',
                 planType: 'standard',
-                interestRateBps: 1550
+                interestRateBps: 1550,
+                token: 'string-2'
             });
         });
 
@@ -815,6 +817,7 @@ describe('EMI', () => {
                 fundingSource: 'credit',
                 planType: 'lowCost',
                 interestRateBps: 750,
+                token: 'string-3',
                 appliedOfferIds: ['offer-icici-lowcost']
             });
         });
@@ -949,6 +952,20 @@ describe('EMI', () => {
                         selectedValue: '6'
                     })
                 );
+            });
+
+            test('should never send a plan token to analytics', async () => {
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
+                await user.click(screen.getByLabelText('Plan'));
+                await user.click(
+                    within(screen.getAllByRole('listbox')[1]).getByRole('option', {
+                        name: /6 months/i
+                    })
+                );
+
+                const sent = JSON.stringify(sendAnalytics.mock.calls);
+                hdfc.plans.forEach(plan => expect(sent).not.toContain(plan.token));
             });
 
             test('should report a provider the shopper picks exactly once', async () => {

@@ -130,7 +130,10 @@ function EMIPlans({
                         {i18n.get('emi.planSummary')}
                     </h3>
                     <EMIPlanSummary plan={selection.plan} labelledBy={planSummaryId} />
-                    <EMITerms termLink={selection.issuer.termLink} processingMessage={selection.plan.processingAmounts?.message} />
+                    <EMITerms
+                        termsAndConditionsUrl={selection.issuer.termsAndConditionsUrl}
+                        processingMessage={selection.plan.processingAmounts?.message}
+                    />
 
                     <h3 className={styles.emiTitle}>
                         {selection.issuer.issuerName} {i18n.get('emi.cardDetails')}

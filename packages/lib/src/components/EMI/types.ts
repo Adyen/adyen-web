@@ -56,6 +56,7 @@ export interface EmiPlan {
     transactionAmounts: EmiTransactionAmounts;
     processingAmounts: EmiProcessingAmounts;
     offers?: EmiOffer[];
+    token: string;
 }
 
 export interface EmiIssuer {
@@ -64,7 +65,7 @@ export interface EmiIssuer {
     fundingSource: EmiIssuerFundingSource;
     availablePlanTypes: EmiPlanTypeKey[];
     bestOffer?: PaymentAmount;
-    termLink?: string;
+    termsAndConditionsUrl?: string;
     plans: EmiPlan[];
 }
 
@@ -86,6 +87,7 @@ export interface EmiPlanPayload {
     planType: EmiPlanTypeKey;
     interestRateBps: number;
     appliedOfferIds?: string[];
+    token: string;
 }
 
 export interface EMIPaymentData extends PaymentData {

@@ -5,13 +5,13 @@ import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import styles from './EMITerms.module.scss';
 
 interface EMITermsProps {
-    termLink?: string;
+    termsAndConditionsUrl?: string;
     processingMessage?: string;
 }
 
-export function EMITerms({ termLink, processingMessage }: Readonly<EMITermsProps>): h.JSX.Element {
+export function EMITerms({ termsAndConditionsUrl, processingMessage }: Readonly<EMITermsProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
-    const termsUrl = isValidHttpUrl(termLink) ? termLink : undefined;
+    const termsUrl = isValidHttpUrl(termsAndConditionsUrl) ? termsAndConditionsUrl : undefined;
     const termsLink = i18n.get('emi.termsLink');
 
     return (

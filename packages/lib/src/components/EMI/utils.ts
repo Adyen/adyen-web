@@ -15,6 +15,7 @@ export const buildEmiPlanPayload = (issuer: EmiIssuer, plan: EmiPlan): EmiPlanPa
         fundingSource: issuer.fundingSource,
         planType: plan.type,
         interestRateBps: plan.interestRateBps,
+        token: plan.token,
         ...(appliedOfferIds?.length && { appliedOfferIds })
     };
 };
