@@ -49,6 +49,12 @@ describe('GooglePayService', () => {
         );
     });
 
+    test('should reject the payment when the request configuration is invalid', async () => {
+        const service = new GooglePayService('test', mockAnalytics, {});
+
+        await expect(service.initiatePayment({ allowedAuthMethods: undefined }, 'US')).rejects.toMatchObject({ name: 'IMPLEMENTATION_ERROR' });
+    });
+
     test('should not include nonce in Script attributes or PaymentOptions when nonce is omitted', async () => {
         const service = new GooglePayService('test', mockAnalytics, {});
         await service.paymentsClient;

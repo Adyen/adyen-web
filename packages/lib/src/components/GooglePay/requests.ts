@@ -1,6 +1,7 @@
 import { getDecimalAmount } from '../../utils/amount-util';
 import config from './config';
 import { GooglePaymentDataRequest, GooglePayConfiguration } from './types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 /**
  * Configure your site's support for payment methods supported by the Google Pay API.
@@ -16,6 +17,9 @@ export function isReadyToPayRequest({
     GooglePayConfiguration,
     'allowedAuthMethods' | 'allowedCardNetworks' | 'existingPaymentMethodRequired'
 >): google.payments.api.IsReadyToPayRequest {
+    if (!allowedAuthMethods || !allowedCardNetworks) {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'GooglePay - Missing allowedAuthMethods or allowedCardNetworks');
+    }
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
@@ -48,6 +52,9 @@ export function getTransactionInfo({
     totalPriceStatus = 'FINAL',
     ...props
 }: GooglePayConfiguration): google.payments.api.TransactionInfo {
+    if (!amount) {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'GooglePay - Missing amount');
+    }
     const formattedPrice = String(getDecimalAmount(amount.value, amount.currency));
 
     return {
@@ -59,13 +66,24 @@ export function getTransactionInfo({
     };
 }
 
-export function initiatePaymentRequest({ configuration, ...props }: GooglePayConfiguration, countryCode: string): GooglePaymentDataRequest {
+export function initiatePaymentRequest({ configuration, ...props }: GooglePayConfiguration, countryCode?: string): GooglePaymentDataRequest {
+    if (!configuration) {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'GooglePay - Missing merchant configuration');
+    }
+    const { merchantId } = configuration;
+    if (merchantId === undefined) {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'GooglePay - Missing merchantId');
+    }
+    const { allowedAuthMethods, allowedCardNetworks } = props;
+    if (!allowedAuthMethods || !allowedCardNetworks) {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'GooglePay - Missing allowedAuthMethods or allowedCardNetworks');
+    }
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
         transactionInfo: getTransactionInfo({ countryCode, ...props }),
         merchantInfo: {
-            merchantId: configuration.merchantId,
+            merchantId,
             merchantName: configuration.merchantName,
             ...(configuration.merchantOrigin ? { merchantOrigin: configuration.merchantOrigin } : {}),
             ...(configuration.authJwt ? { authJwt: configuration.authJwt } : {})
@@ -81,8 +99,8 @@ export function initiatePaymentRequest({ configuration, ...props }: GooglePayCon
                     }
                 },
                 parameters: {
-                    allowedAuthMethods: props.allowedAuthMethods,
-                    allowedCardNetworks: props.allowedCardNetworks,
+                    allowedAuthMethods,
+                    allowedCardNetworks,
                     assuranceDetailsRequired: props.assuranceDetailsRequired,
                     allowPrepaidCards: props.allowPrepaidCards,
                     allowCreditCards: props.allowCreditCards,
