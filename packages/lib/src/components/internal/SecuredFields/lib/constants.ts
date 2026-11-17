@@ -17,6 +17,8 @@ export const GIFT_CARD = 'giftcard';
 
 export const SF_VERSION = '6.5.1';
 
+export const STALLED_CONFIG_NUMKEY = 999999;
+
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
 export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = [GIFT_CARD]; // Maybe, sometime in the future will include 'sepa' & 'sepadirectdebit'
