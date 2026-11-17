@@ -4,8 +4,8 @@ import { SFFieldType, ShiftTabObject } from '../../../types';
 
 // GIFT CARD scenario: SecurityCode preceded by CardNumber
 export function shiftTabGiftCard(fieldType: SFFieldType, rootNode: HTMLElement): ShiftTabObject {
-    let additionalField: HTMLElement;
-    let fieldToFocus: SFFieldType;
+    let additionalField: HTMLElement | undefined = undefined;
+    let fieldToFocus: SFFieldType | undefined = undefined;
 
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:

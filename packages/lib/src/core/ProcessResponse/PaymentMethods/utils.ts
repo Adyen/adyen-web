@@ -52,7 +52,7 @@ function generatePaymentMethodId(paymentMethod: RawPaymentMethod): PaymentMethod
 }
 
 export const processPaymentMethods = (
-    paymentMethods: RawPaymentMethod[],
+    paymentMethods: RawPaymentMethod[] | undefined,
     { allowPaymentMethods = [], removePaymentMethods = [] }
 ): PaymentMethod[] => {
     if (!paymentMethods) return [];
@@ -64,7 +64,7 @@ export const processPaymentMethods = (
 };
 
 export const processStoredPaymentMethods = (
-    storedPaymentMethods: RawStoredPaymentMethod[],
+    storedPaymentMethods: RawStoredPaymentMethod[] | undefined,
     { allowPaymentMethods = [], removePaymentMethods = [] },
     paymentMethods: RawPaymentMethod[] = []
 ): StoredPaymentMethod[] => {
@@ -78,7 +78,7 @@ export const processStoredPaymentMethods = (
         .map(storedPM => processStoredPaymentMethod(storedPM, paymentMethods));
 };
 
-export const checkPaymentMethodsResponse = (paymentMethodsResponse: PaymentMethodsResponse) => {
+export const checkPaymentMethodsResponse = (paymentMethodsResponse?: PaymentMethodsResponse) => {
     if (typeof paymentMethodsResponse === 'string') {
         throw new Error(
             'paymentMethodsResponse was provided but of an incorrect type (should be an object but a string was provided).' +

@@ -41,7 +41,7 @@ export interface SecuredFields {
 }
 
 export interface BrandStorageObject {
-    brand: string;
+    brand: string | null;
     cvcPolicy: CVCPolicyType;
     expiryDatePolicy: DatePolicyType;
     showSocialSecurityNumber?: boolean;
@@ -189,7 +189,7 @@ export interface CardFocusData {
     fieldType: string;
     rootNode: HTMLElement;
     type: string;
-    currentFocusObject: string;
+    currentFocusObject: string | null;
 }
 
 export interface CardLoadData {
@@ -234,8 +234,8 @@ export interface EncryptionObj {
 }
 
 export interface ShiftTabObject {
-    fieldToFocus: string;
-    additionalField: HTMLElement;
+    fieldToFocus?: string;
+    additionalField?: HTMLElement;
 }
 
 export interface SendBrandObject {

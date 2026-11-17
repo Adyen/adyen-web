@@ -495,5 +495,10 @@
     "emi.discountAvailable": "alennus saatavilla",
     "emi.perAnnum": "vuodessa",
     "emi.cardDetailsInstructions": "Syötä %{provider}-kortin tiedot",
-    "emi.cardDetails": "Kortin tiedot"
+    "emi.cardDetails": "Kortin tiedot",
+    "emi.terms": "Jatkamalla hyväksyt",
+    "emi.termsLink": "tilausehdot",
+    "emi.interestDiscount": "Korkoalennus",
+    "emi.instantDiscount": "Välitön alennus",
+    "emi.additionalDiscountAvailable": "Lisäksi saatavilla %{amount} alennus"
 }

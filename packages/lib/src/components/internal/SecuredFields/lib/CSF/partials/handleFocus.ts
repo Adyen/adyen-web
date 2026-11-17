@@ -9,9 +9,14 @@ import { CSFThisObject } from '../types';
  * @param csfProps - comes from initial, partial, implementation
  * @param csfCallbacks - comes from initial, partial, implementation
  *
+ * @param handleIOSTouchEvents - bound touchend handler, called to register the iOS-specific focus workaround
  * @param pFeedbackObj -
  */
-export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject, handleIOSTouchEvents, pFeedbackObj: SFFeedbackObj): void {
+export function handleFocus(
+    { csfState, csfProps, csfCallbacks }: CSFThisObject,
+    handleIOSTouchEvents: () => void,
+    pFeedbackObj: SFFeedbackObj
+): void {
     const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
 
     delete feedbackObj.numKey;
@@ -41,7 +46,15 @@ export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject,
     }
 
     // Call callback (SecuredFieldsProviderHandlers > onFocus)
-    const callbackObj: CardFocusData = feedbackObj as CardFocusData;
-    callbackObj.currentFocusObject = csfState.currentFocusObject;
-    csfCallbacks.onFocus(callbackObj);
+    const callbackObj: CardFocusData = {
+        fieldType: feedbackObj.fieldType,
+        rootNode: feedbackObj.rootNode,
+        type: feedbackObj.type,
+        action: feedbackObj.action ?? '',
+        focus: feedbackObj.focus ?? false,
+        numChars: feedbackObj.numChars ?? 0,
+        currentFocusObject: csfState.currentFocusObject
+    };
+
+    csfCallbacks.onFocus?.(callbackObj);
 }

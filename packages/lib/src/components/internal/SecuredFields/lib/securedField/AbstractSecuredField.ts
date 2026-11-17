@@ -14,10 +14,10 @@ abstract class AbstractSecuredField {
     protected loadingContext: string;
     protected holderEl: HTMLElement;
     protected iframeRef: HTMLElement;
-    public loadToConfigTimeout: number;
+    public loadToConfigTimeout: number | undefined;
     // From getters/setters with the same name
     protected _isValid: boolean;
-    protected _iframeContentWindow: Window;
+    protected _iframeContentWindow: Window | null;
     protected _numKey: number;
     protected _isEncrypted: boolean;
     protected _hasError: boolean;

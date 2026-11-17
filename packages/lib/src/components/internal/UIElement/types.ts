@@ -36,6 +36,7 @@ export type UIElementProps = {
         environment?: string;
         session?: Session;
 
+        /** @deprecated Retained for backwards compatibility. Will be removed in v7. */
         onComplete?: (state: BaseElementState, element: UIElement) => void;
 
         isInstantPayment?: boolean;

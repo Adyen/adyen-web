@@ -495,5 +495,10 @@
     "emi.discountAvailable": "dostupná zľava",
     "emi.perAnnum": "ročne",
     "emi.cardDetailsInstructions": "Zadajte údaje o karte, ktoré sú spojené s kartou poskytovateľa %{provider}",
-    "emi.cardDetails": "Detaily karty"
+    "emi.cardDetails": "Detaily karty",
+    "emi.terms": "Pokračovaním súhlasíte s",
+    "emi.termsLink": "obchodnými podmienkami",
+    "emi.interestDiscount": "Úroková zľava",
+    "emi.instantDiscount": "Okamžitá zľava",
+    "emi.additionalDiscountAvailable": "K dispozícii je dodatočná zľava vo výške %{amount}"
 }

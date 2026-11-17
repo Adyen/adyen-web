@@ -59,51 +59,12 @@ const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName :
 // ══════════════════════════════════════════════════════════
 const STRICT_NULL_CHECKS_BACKLOG = [
     // ── Ticket 2: Core, utils and hooks (89 errors) ──
-    'src/core/Analytics/Analytics.ts',
-    'src/core/Analytics/events/AnalyticsInfoEvent.ts',
-    'src/core/Analytics/utils.ts',
-    'src/core/Context/AmountProvider.tsx',
-    'src/core/Context/CoreProvider.tsx',
-    'src/core/core.registry.ts',
-    'src/core/core.ts',
-    'src/core/Environment/Environment.ts',
     'src/core/Errors/SRPanel.tsx',
     'src/core/Errors/SRPanelContext.ts',
     'src/core/Errors/utils.ts',
-    'src/core/ProcessResponse/PaymentAction/actionTypes.ts',
-    'src/core/ProcessResponse/PaymentMethods/PaymentMethods.ts',
     'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
     'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
     'src/core/RiskModule/RiskModule.tsx',
-    'src/utils/clipboard.ts',
-
-    // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    'src/components/internal/SecuredFields/binLookup/extensions.ts',
-    'src/components/internal/SecuredFields/lib/CSF/CSF.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/createSecuredFields.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleBrandFromBinLookup.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleEncryption.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleIOSTouchEvents.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleTab.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleBinValue.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleFocus.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/handleIframeConfigFeedback.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/isConfigured.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/postMessageToAllIframes.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/processAutoComplete.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/processBrand.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/setFocusOnFrame.ts',
-    'src/components/internal/SecuredFields/lib/CSF/partials/validateForm.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/cardType.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/processErrors.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioCreditCard.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioGiftCard.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioKCP.ts',
-    'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/utils.ts',
-    'src/components/internal/SecuredFields/lib/securedField/SecuredField.ts',
-    'src/components/internal/SecuredFields/SFP/SecuredFieldsProvider.ts',
-    'src/components/internal/SecuredFields/SFP/SecuredFieldsProviderHandlers.ts',
-    'src/components/internal/SecuredFields/SFP/SFPUtils.ts',
 
     // ── Ticket 4: Shared form fields (92 errors) ──
 
@@ -129,16 +90,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/components/Fastlane/USOnlyPhoneInput.tsx',
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
-
-    // ── Ticket 6: Drop-in (48 errors) ──
-    'src/components/Dropin/components/DropinComponent.tsx',
-    'src/components/Dropin/components/PaymentMethod/OrderPaymentMethods.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodBrands/PaymentMethodBrands.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodItem/PaymentMethodItem.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodList.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodsContainer.tsx',
-    'src/components/Dropin/Dropin.tsx',
-    'src/components/Dropin/elements/createElements.ts',
 
     // ── Ticket 8: Google Pay and Apple Pay (85 errors) ──
     'src/components/ApplePay/ApplePay.tsx',

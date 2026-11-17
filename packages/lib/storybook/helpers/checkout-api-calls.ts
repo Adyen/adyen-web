@@ -54,6 +54,11 @@ export const makePayment = async (stateData: any, paymentData: any, shopperDetai
         paymentRequest.recurringProcessingModel = paymentRequest.recurringProcessingModel ?? 'Subscription';
     }
 
+    // Checkout API v70+ requires `recurringProcessingModel` when paying with a stored payment method.
+    if (paymentRequest.paymentMethod?.storedPaymentMethodId || paymentRequest.storePaymentMethod) {
+        paymentRequest.recurringProcessingModel = paymentRequest.recurringProcessingModel ?? 'CardOnFile';
+    }
+
     return await httpPost('payments', paymentRequest);
 };
 

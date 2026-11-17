@@ -495,5 +495,10 @@
     "emi.discountAvailable": "Rabatt verfügbar",
     "emi.perAnnum": "p. a.",
     "emi.cardDetailsInstructions": "Geben Sie Kartendaten ein, die mit einer %{provider}-Karte verbunden sind",
-    "emi.cardDetails": "Kartendaten"
+    "emi.cardDetails": "Kartendaten",
+    "emi.terms": "Wenn Sie fortfahren, akzeptieren Sie die",
+    "emi.termsLink": "Allgemeinen Geschäftsbedingungen",
+    "emi.interestDiscount": "Zinsrabatt",
+    "emi.instantDiscount": "Sofortrabatt",
+    "emi.additionalDiscountAvailable": "Zusätzlicher Rabatt in Höhe von %{amount} verfügbar"
 }

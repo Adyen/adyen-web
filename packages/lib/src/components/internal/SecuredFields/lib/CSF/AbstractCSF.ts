@@ -12,7 +12,7 @@ abstract class AbstractCSF {
     protected state: Partial<CSFStateObject>;
     protected validateForm: () => void;
     protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
-    protected callbacksHandler: (callbacksObj: object) => void;
+    protected callbacksHandler: (callbacksObj?: object) => void;
     protected configHandler: (props: CSFSetupObject) => void;
     protected createCardSecuredFields: (securedFields: HTMLElement[], cvcPolicy: CVCPolicyType, expiryDatePolicy: DatePolicyType) => Promise<void>;
     protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<void>;
@@ -24,7 +24,7 @@ abstract class AbstractCSF {
     protected handleBinValue: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleEncryption: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleFocus: (pFeedbackObj: SFFeedbackObj) => void;
-    protected handleIframeConfigFeedback: (pFeedbackObj) => boolean;
+    protected handleIframeConfigFeedback: (pFeedbackObj: SFFeedbackObj) => boolean;
     protected handleValidation: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleSFShiftTab: (fieldType: string) => void;
     protected handleShiftTab: (fieldType: string) => void;
