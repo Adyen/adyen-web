@@ -387,6 +387,8 @@ class SecuredField extends AbstractSecuredField {
 
     /**
      * Returns whether the securedField is hidden OR whether it is optional and not in error
+     *
+     * Used in CSF.ts
      */
     isOptionalOrHidden(): boolean {
         if (
