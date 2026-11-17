@@ -69,7 +69,7 @@ describe('RiskModule', () => {
             const container = getAppendedContainer();
             expect(container.isConnected).toBe(true);
 
-            riskElement.onComplete({ type: 'deviceFingerprint', value: 'x' });
+            riskElement.onRiskComplete({ type: 'deviceFingerprint', value: 'x' });
 
             expect(onComplete).toHaveBeenCalledTimes(1);
             expect(onComplete).toHaveBeenCalledWith(EXPECTED_RISK_DATA);
@@ -83,7 +83,7 @@ describe('RiskModule', () => {
             const container = getAppendedContainer();
             expect(container.isConnected).toBe(true);
 
-            expect(() => riskElement.onComplete({ type: 'deviceFingerprint', value: 'x' })).not.toThrow();
+            expect(() => riskElement.onRiskComplete({ type: 'deviceFingerprint', value: 'x' })).not.toThrow();
 
             expect(container.isConnected).toBe(false);
             expect(riskElement.riskData).not.toBeNull();
