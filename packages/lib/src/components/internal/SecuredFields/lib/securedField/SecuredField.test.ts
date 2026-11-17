@@ -578,7 +578,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
                 component: 'scheme',
                 errorType: ErrorEventType.internal,
                 code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
-                message: 'Config failure. Field=encryptedSecurityCode. Log="some-config-log" '
+                message: 'Config failure. Field=encryptedSecurityCode. Log="some-config-log"'
             });
         });
 
