@@ -20,6 +20,9 @@ jobs:
           fetch-depth: 0
 
       - name: Check changeset exists for library changes
+        # Hotfix merge-back PRs (hotfix/* or merge-back/* -> main) carry a fix whose changeset
+        # was already used by the hotfix release; its entry is in CHANGELOG.md instead.
+        if: ${{ !((startsWith(github.head_ref, 'hotfix/') || startsWith(github.head_ref, 'merge-back/')) && github.base_ref == 'main') }}
         run: |
           LIB_CHANGES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'packages/lib/src/' || true)
           CHANGESETS=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD -- '.changeset/*.md' | grep -v 'README.md' || true)

@@ -15,8 +15,8 @@ export function shiftTabCreditCard(
     hasSeparateDateFields: boolean,
     numIframes: number
 ): ShiftTabObject {
-    let additionalField: HTMLElement;
-    let fieldToFocus: SFFieldType;
+    let additionalField: HTMLElement | undefined = undefined;
+    let fieldToFocus: SFFieldType | undefined = undefined;
 
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:

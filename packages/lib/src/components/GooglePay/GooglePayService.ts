@@ -2,6 +2,7 @@ import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
 import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import type { GooglePayConfiguration } from './types';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
 
@@ -10,7 +11,12 @@ class GooglePayService {
 
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(environment: string, analytics: IAnalytics, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks, nonce?: string) {
+    constructor(
+        environment: string | undefined,
+        analytics: IAnalytics,
+        paymentDataCallbacks: google.payments.api.PaymentDataCallbacks,
+        nonce?: string
+    ) {
         const googlePayEnvironment = resolveEnvironment(environment);
 
         this.analytics = analytics;
@@ -38,21 +44,25 @@ class GooglePayService {
             await script.load();
         }
 
-        return new google.payments.api.PaymentsClient(paymentOptions);
+        if (!window.google?.payments) {
+            throw new AdyenCheckoutError('ERROR', 'GooglePay - SDK is not available');
+        }
+
+        return new window.google.payments.api.PaymentsClient(paymentOptions);
     }
 
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      * @see {@link https://developers.google.com/pay/api/web/reference/client#isReadyToPay|isReadyToPay}
      */
-    isReadyToPay(props): Promise<google.payments.api.IsReadyToPayResponse> {
+    isReadyToPay(props: GooglePayConfiguration): Promise<google.payments.api.IsReadyToPayResponse> {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         if (!this.paymentsClient) return Promise.reject(new Error('Google Pay is not available'));
 
         return this.paymentsClient.then(client => client.isReadyToPay(isReadyToPayRequest(props)));
     }
 
-    prefetchPaymentData(props: GooglePayConfiguration, countryCode: string): void {
+    prefetchPaymentData(props: GooglePayConfiguration, countryCode?: string): void {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
@@ -65,12 +75,12 @@ class GooglePayService {
      * @returns paymentData response from Google Pay API after user approves payment
      * @see {@link https://developers.google.com/pay/api/web/reference/object#PaymentData|PaymentData object reference}
      */
-    initiatePayment(props: GooglePayConfiguration, countryCode: string): Promise<google.payments.api.PaymentData> {
+    initiatePayment(props: GooglePayConfiguration, countryCode?: string): Promise<google.payments.api.PaymentData> {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
-        const paymentDataRequest = initiatePaymentRequest(props, countryCode);
-        return this.paymentsClient.then(client => client.loadPaymentData(paymentDataRequest));
+        // Built inside the promise chain so configuration errors reach the caller's catch instead of throwing synchronously
+        return this.paymentsClient.then(client => client.loadPaymentData(initiatePaymentRequest(props, countryCode)));
     }
 }
 

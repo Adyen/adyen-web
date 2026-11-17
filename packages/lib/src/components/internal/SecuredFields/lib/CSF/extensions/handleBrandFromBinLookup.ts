@@ -51,7 +51,8 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
      * The number of digits in number field has dropped below threshold for BIN lookup (or the bin wasn't found in the DB)
      * - so tell SF to reset & republish the brand it detects
      */
-    if (!binLookupResponse || !Object.keys(binLookupResponse).length) {
+    // Test for: no binLookupResponse object, or an empty one, or one with no supportedBrands array
+    if (!binLookupResponse || !Object.keys(binLookupResponse).length || !binLookupResponse.supportedBrands?.length) {
         if (isGenericCard) {
             // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast
             // (which will reset cvcPolicy & expiryDatePolicy in state, here in Checkout)
@@ -102,7 +103,7 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
         // Pass brand to CardNumber SF
         const cardObj: SendBrandObject = {
             brand: passedBrand,
-            enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false,
+            enableLuhnCheck: binBrandObj.enableLuhnCheck !== false,
             // Only pass the panLength if a) we have one & b) we're not in a switching-between-dual-brands scenario
             // (because it causes unnecessary callbacks from SF which uses panLength to trigger moving focus to the expiryDate field)
             ...(binBrandObj?.panLength && !binLookupResponse.isDualBrandSelection && { panLength: binBrandObj?.panLength })

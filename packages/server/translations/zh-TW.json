@@ -482,7 +482,7 @@
     "emi.instructions": "請從下列選項中選擇偏好的組合，並繼續輸入您的卡詳細資料",
     "emi.provider": "供應商",
     "emi.plan": "方案",
-    "emi.planSummary": "計劃摘要",
+    "emi.planSummary": "方案摘要",
     "emi.itemPrice": "品項價格",
     "emi.amountReservedOnCard": "信用卡的預扣額度",
     "emi.interestChargedByBank": "銀行收取的利息 @%{interest}",
@@ -495,5 +495,10 @@
     "emi.discountAvailable": "可享折扣",
     "emi.perAnnum": "每年",
     "emi.cardDetailsInstructions": "輸入與 %{provider} 卡相關聯的卡詳細資料",
-    "emi.cardDetails": "信用卡詳細資料"
+    "emi.cardDetails": "信用卡詳細資料",
+    "emi.terms": "繼續進行操作即表示您已同意了",
+    "emi.termsLink": "條款及細則",
+    "emi.interestDiscount": "利息折扣",
+    "emi.instantDiscount": "即時折扣",
+    "emi.additionalDiscountAvailable": "另可享有 %{amount} 的折扣優惠"
 }

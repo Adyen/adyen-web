@@ -10,17 +10,17 @@ export const processErrors = (
     type: string,
     rootNode: HTMLElement,
     callbackFn: RtnType_callbackFn
-): CardErrorData => {
+): CardErrorData | null => {
     if (!hasOwnProperty(pFeedbackObj, 'error')) return null;
 
     const fieldType: string = pFeedbackObj.fieldType;
 
     const field: SecuredField = securedField;
 
-    // Initialise error callback object
-    const dataObj: CardErrorData = { rootNode, fieldType, error: null, type: null };
+    const isError: boolean = !!pFeedbackObj.error;
 
-    const isError: boolean = pFeedbackObj.error !== '';
+    // Initialise error callback object
+    const dataObj: CardErrorData = { rootNode, fieldType, error: pFeedbackObj.error || '', type };
 
     // Error is empty string && field is not already in error: do nothing - don't need to propagate this non-error if the field wasn't already in error
     // This situation arises when we encrypt a field and trigger an "error clearing" event i.e. deleting a character
@@ -28,10 +28,6 @@ export const processErrors = (
     if (!isError && !field.hasError) {
         return null;
     }
-
-    // Add props to error callback object
-    dataObj.error = isError ? pFeedbackObj.error : '';
-    dataObj.type = type;
 
     // Set error state & type on securedField instance
     field.hasError = isError;

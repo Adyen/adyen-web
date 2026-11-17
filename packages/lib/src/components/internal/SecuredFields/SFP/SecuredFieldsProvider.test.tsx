@@ -2,6 +2,7 @@ import { h, createRef } from 'preact';
 import { render, act } from '@testing-library/preact/pure';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { ENCRYPTED_PWD_FIELD } from '../lib/constants';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -301,6 +302,40 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
         }
     );
+
+    it('should reset state to the dedicated brand and notify onChange when receiving a reset object for a dedicated card component', async () => {
+        nodeHolder.innerHTML = mockNode;
+        const onChange = jest.fn();
+        renderSFP({ onChange });
+
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.processBinLookupResponse(null, { brand: 'bcmc', cvcPolicy: 'required' });
+        });
+
+        expect(sfp.state.brand).toEqual('bcmc');
+        expect(onChange).toHaveBeenCalled();
+    });
+});
+
+describe('<SecuredFieldsProvider /> sfIsOptionalOrHidden', () => {
+    it('should delegate to csf.sfIsOptionalOrHidden when csf is available', () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+        sfp.csf = { sfIsOptionalOrHidden: jest.fn(() => true) };
+
+        expect(sfp.sfIsOptionalOrHidden('encryptedCardNumber')).toBe(true);
+        expect(sfp.csf.sfIsOptionalOrHidden).toHaveBeenCalledWith('encryptedCardNumber');
+    });
+
+    it('should return false when csf is not available', () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+        sfp.csf = null;
+
+        expect(sfp.sfIsOptionalOrHidden('encryptedCardNumber')).toBe(false);
+    });
 });
 
 describe('<SecuredFieldsProvider /> mapErrorsToValidationRuleResult', () => {
@@ -342,5 +377,64 @@ describe('<SecuredFieldsProvider /> mapErrorsToValidationRuleResult', () => {
         const result = sfp.mapErrorsToValidationRuleResult();
 
         expect(result.encryptedCardNumber.errorI18n).toEqual(global.i18n.get(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD));
+    });
+});
+
+describe('<SecuredFieldsProvider /> checkForKCPFields', () => {
+    const onChange = jest.fn();
+
+    beforeEach(() => {
+        onChange.mockClear();
+        nodeHolder.innerHTML = mockNode;
+    });
+
+    it('should add the password field & notify onChange when the shopper becomes subject to Korean authentication', async () => {
+        renderSFP({ koreanAuthenticationRequired: true, onChange });
+        sfp.issuingCountryCode = 'kr';
+        sfp.csf = { addSecuredField: jest.fn(), removeSecuredField: jest.fn(), setKCPStatus: jest.fn() };
+
+        await act(() => {
+            sfp.checkForKCPFields();
+        });
+
+        expect(sfp.state.hasKoreanFields).toBe(true);
+        expect(sfp.csf.addSecuredField).toHaveBeenCalledWith(ENCRYPTED_PWD_FIELD);
+        expect(sfp.csf.setKCPStatus).toHaveBeenCalledWith(true);
+        expect(onChange).toHaveBeenCalled();
+    });
+
+    it('should remove the password field & notify onChange when the shopper is no longer subject to Korean authentication', async () => {
+        renderSFP({ koreanAuthenticationRequired: true, onChange });
+        sfp.issuingCountryCode = 'kr';
+        sfp.csf = { addSecuredField: jest.fn(), removeSecuredField: jest.fn(), setKCPStatus: jest.fn() };
+
+        await act(() => {
+            sfp.checkForKCPFields();
+        });
+
+        onChange.mockClear();
+        sfp.issuingCountryCode = 'us';
+
+        await act(() => {
+            sfp.checkForKCPFields();
+        });
+
+        expect(sfp.state.hasKoreanFields).toBe(false);
+        expect(sfp.csf.removeSecuredField).toHaveBeenCalledWith(ENCRYPTED_PWD_FIELD);
+        expect(sfp.csf.setKCPStatus).toHaveBeenCalledWith(false);
+        expect(onChange).toHaveBeenCalled();
+    });
+
+    it('should do nothing when koreanAuthenticationRequired is not set', async () => {
+        renderSFP({ onChange });
+        sfp.csf = { addSecuredField: jest.fn(), removeSecuredField: jest.fn(), setKCPStatus: jest.fn() };
+
+        await act(() => {
+            sfp.checkForKCPFields();
+        });
+
+        expect(sfp.state.hasKoreanFields).toBeFalsy();
+        expect(sfp.csf.addSecuredField).not.toHaveBeenCalled();
+        expect(sfp.csf.removeSecuredField).not.toHaveBeenCalled();
     });
 });

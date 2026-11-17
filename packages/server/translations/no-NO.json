@@ -495,5 +495,10 @@
     "emi.discountAvailable": "rabatt tilgjengelig",
     "emi.perAnnum": "per år",
     "emi.cardDetailsInstructions": "Skriv inn kortdetaljer som er knyttet til et %{provider}-kort",
-    "emi.cardDetails": "Kortdetaljer"
+    "emi.cardDetails": "Kortdetaljer",
+    "emi.terms": "Ved å fortsette godtar du",
+    "emi.termsLink": "vilkår og betingelser",
+    "emi.interestDiscount": "Renterabatt",
+    "emi.instantDiscount": "Øyeblikkelig rabatt",
+    "emi.additionalDiscountAvailable": "Ytterligere rabatt på %{amount} er tilgjengelig"
 }

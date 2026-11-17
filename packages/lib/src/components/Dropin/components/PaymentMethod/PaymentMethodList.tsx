@@ -18,7 +18,7 @@ interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'lab
         type: string;
     };
     order?: Order;
-    orderStatus?: OrderStatus;
+    orderStatus?: OrderStatus | null;
     onOrderCancel?: onOrderCancelInternalCallback;
 }
 
@@ -37,8 +37,8 @@ const PaymentMethodList = ({
 }: Readonly<PaymentMethodListProps>) => {
     const { i18n } = useCoreContext();
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
-    const hasInstantPaymentMethods = instantPaymentMethods?.length > 0;
-    const hasStoredPaymentMethods = storedPaymentMethods?.length > 0;
+    const hasInstantPaymentMethods = !!instantPaymentMethods?.length;
+    const hasStoredPaymentMethods = !!storedPaymentMethods?.length;
     const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const PaymentMethodList = ({
 
     return (
         <Fragment>
-            {orderStatus && (
+            {orderStatus && order && (
                 <OrderPaymentMethods
                     order={order}
                     orderStatus={orderStatus}

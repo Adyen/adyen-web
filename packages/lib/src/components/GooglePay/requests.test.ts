@@ -1,7 +1,25 @@
 import { isReadyToPayRequest, initiatePaymentRequest, getTransactionInfo } from './requests';
 import defaultProps from './defaultProps';
+import type { GooglePayConfiguration } from './types';
+
+// 'allowedCardNetworks' has no default; GooglePay.formatProps() always resolves it before a request is built
+const requestProps: GooglePayConfiguration = { ...defaultProps, allowedCardNetworks: ['VISA'] };
 
 describe('Google Pay Requests', () => {
+    test('should reject a missing amount with an implementation error', () => {
+        expect(() => getTransactionInfo({})).toThrow(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+    });
+
+    test('should reject missing card networks with an implementation error', () => {
+        expect(() => isReadyToPayRequest(defaultProps)).toThrow(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+    });
+
+    test('should reject missing merchant configuration with an implementation error', () => {
+        expect(() => initiatePaymentRequest({ ...requestProps, configuration: undefined }, 'US')).toThrow(
+            expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' })
+        );
+    });
+
     describe('getTransactionInfo', () => {
         test('should transform a normal currency amount', () => {
             const transactionInfo = getTransactionInfo({ amount: { value: 1234, currency: 'USD' } });
@@ -49,10 +67,10 @@ describe('Google Pay Requests', () => {
 
     describe('initiatePaymentRequest', () => {
         test('should get an initiatePaymentRequest', () => {
-            const paymentRequest = initiatePaymentRequest(defaultProps, 'US');
+            const paymentRequest = initiatePaymentRequest(requestProps, 'US');
 
             expect(paymentRequest.allowedPaymentMethods.length).toBeGreaterThan(0);
-            expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedAuthMethods).toBe(defaultProps.allowedAuthMethods);
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedAuthMethods).toBe(requestProps.allowedAuthMethods);
             expect(paymentRequest.apiVersion).toBeDefined();
             expect(paymentRequest.apiVersionMinor).toBeDefined();
         });
@@ -60,8 +78,8 @@ describe('Google Pay Requests', () => {
         test('should pass merchantOrigin correctly', () => {
             const paymentRequest = initiatePaymentRequest(
                 {
-                    ...defaultProps,
-                    configuration: { ...defaultProps.configuration, merchantOrigin: 'example.com' }
+                    ...requestProps,
+                    configuration: { gatewayMerchantId: 'gateway-id', merchantId: 'merchant-id', merchantOrigin: 'example.com' }
                 },
                 'US'
             );
@@ -70,7 +88,7 @@ describe('Google Pay Requests', () => {
         });
 
         test('should not have merchantOrigin when not in use', () => {
-            const paymentRequest = initiatePaymentRequest({ ...defaultProps }, 'US');
+            const paymentRequest = initiatePaymentRequest({ ...requestProps }, 'US');
 
             // eslint-disable-next-line no-prototype-builtins
             expect(paymentRequest.merchantInfo.hasOwnProperty('merchantOrigin')).toBe(false);
@@ -79,7 +97,7 @@ describe('Google Pay Requests', () => {
         test('should pass allowedIssuerCountryCodes correctly', () => {
             const paymentRequest = initiatePaymentRequest(
                 {
-                    ...defaultProps,
+                    ...requestProps,
                     allowedIssuerCountryCodes: ['US', 'CA']
                 },
                 'US'
@@ -91,7 +109,7 @@ describe('Google Pay Requests', () => {
         test('should pass blockedIssuerCountryCodes correctly', () => {
             const paymentRequest = initiatePaymentRequest(
                 {
-                    ...defaultProps,
+                    ...requestProps,
                     blockedIssuerCountryCodes: ['CN', 'RU']
                 },
                 'US'
@@ -101,7 +119,7 @@ describe('Google Pay Requests', () => {
         });
 
         test('should not include issuer country codes when not provided', () => {
-            const paymentRequest = initiatePaymentRequest(defaultProps, 'US');
+            const paymentRequest = initiatePaymentRequest(requestProps, 'US');
 
             expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedIssuerCountryCodes).toBeUndefined();
             expect(paymentRequest.allowedPaymentMethods[0].parameters.blockedIssuerCountryCodes).toBeUndefined();
@@ -110,7 +128,7 @@ describe('Google Pay Requests', () => {
         test('should pass both allowed and blocked issuer country codes', () => {
             const paymentRequest = initiatePaymentRequest(
                 {
-                    ...defaultProps,
+                    ...requestProps,
                     allowedIssuerCountryCodes: ['US', 'CA', 'GB'],
                     blockedIssuerCountryCodes: ['CN']
                 },
@@ -124,7 +142,7 @@ describe('Google Pay Requests', () => {
 
     describe('isReadyToPayRequest', () => {
         test('should get a readyToPayRequest', () => {
-            const readyToPayRequest = isReadyToPayRequest(defaultProps);
+            const readyToPayRequest = isReadyToPayRequest(requestProps);
 
             expect(readyToPayRequest.allowedPaymentMethods.length).toBeGreaterThan(0);
             expect(readyToPayRequest.apiVersion).toBeDefined();

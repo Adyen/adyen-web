@@ -495,5 +495,10 @@
     "emi.discountAvailable": "Galima nuolaida",
     "emi.perAnnum": "met.",
     "emi.cardDetailsInstructions": "Įveskite %{provider} kortelės duomenis",
-    "emi.cardDetails": "Kortelės duomenys"
+    "emi.cardDetails": "Kortelės duomenys",
+    "emi.terms": "Tęsdami sutinkate su",
+    "emi.termsLink": "sąlygos",
+    "emi.interestDiscount": "palūkanų nuolaida",
+    "emi.instantDiscount": "momentinė nuolaida",
+    "emi.additionalDiscountAvailable": "Siūloma papildoma %{amount} nuolaida"
 }

@@ -11,12 +11,12 @@ import { CSFThisObject } from '../types';
  * @param csfCallbacks - comes from initial, partial, implementation
  * @param validateForm - comes from initial, partial, implementation
  */
-export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, validateForm): boolean {
+export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, validateForm: () => void): boolean {
     csfState.isConfigured = true;
 
     const callbackObj: CardConfigSuccessData = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
-    csfCallbacks.onConfigSuccess(callbackObj);
+    csfCallbacks.onConfigSuccess?.(callbackObj);
 
     // If a recurring card
     if (csfState.numIframes === 1 && csfConfig.isCreditCardType) {

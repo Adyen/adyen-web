@@ -475,7 +475,7 @@
     "upi.intent.apps.title": "Опции",
     "upi.intent.apps.dropdown.label": "Приложения UPI",
     "upi.intent.apps.dropdown.placeholder": "Выберите предпочтительное приложение",
-    "emi.subtitle": "Выплата баланса карты равными частыми",
+    "emi.subtitle": "Планы рассрочки по кредитным картам",
     "emi.title": "План рассрочки (EMI)",
     "emi.instructions": "Выберите нужный вариант из списка и введите реквизиты карты.",
     "emi.provider": "Поставщик",
@@ -492,6 +492,11 @@
     "emi.lowCost": "Выгодно",
     "emi.discountAvailable": "доступна скидка",
     "emi.perAnnum": "в год",
-    "emi.cardDetailsInstructions": "Введите реквизите карты %{provider}",
-    "emi.cardDetails": "Данные карты"
+    "emi.cardDetailsInstructions": "Введите реквизиты карты %{provider}",
+    "emi.cardDetails": "Данные карты",
+    "emi.terms": "Продолжая, вы тем самым принимаете",
+    "emi.termsLink": "условия",
+    "emi.interestDiscount": "Скидка на проценты",
+    "emi.instantDiscount": "Мгновенная скидка",
+    "emi.additionalDiscountAvailable": "Доступна дополнительная скидка %{amount}"
 }
