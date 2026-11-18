@@ -77,7 +77,6 @@ interface SecuredFieldsProps {
 }
 
 const defaultProps = {
-    onChange: () => {},
     onError: () => {},
     onValidationError: () => {}
 };
