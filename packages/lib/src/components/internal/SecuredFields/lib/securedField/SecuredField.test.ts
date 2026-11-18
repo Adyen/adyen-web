@@ -794,3 +794,60 @@ describe('SecuredField isOptionalOrHidden', () => {
         expect(card.isOptionalOrHidden()).toBe(false);
     });
 });
+
+describe('SecuredField destroy', () => {
+    let holderEl: HTMLDivElement;
+    let card: SecuredField;
+
+    beforeEach(() => {
+        holderEl = document.createElement('div');
+        card = new SecuredField({ ...setupObj, holderEl }, i18n);
+
+        // Populate the listener refs that destroy() removes, without going through the full
+        // iframeOnLoadListenerFn flow (which requires an onIframeLoaded callback & a real iframe load event)
+        card.postMessageListener = jest.fn();
+        card.iframeOnLoadListener = jest.fn();
+    });
+
+    test('should remove the window "message" listener', () => {
+        const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+
+        card.destroy();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith('message', card.postMessageListener, false);
+
+        removeEventListenerSpy.mockRestore();
+    });
+
+    test('should remove the iframe "load" listener', () => {
+        // @ts-ignore iframeRef is protected, but accessible for this test
+        const iframe: HTMLIFrameElement = card.iframeRef;
+        const removeEventListenerSpy = jest.spyOn(iframe, 'removeEventListener');
+
+        card.destroy();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith('load', card.iframeOnLoadListener, false);
+    });
+
+    test('should reset iframeContentWindow to null', () => {
+        card.destroy();
+
+        expect(card.iframeContentWindow).toBeNull();
+    });
+
+    test('should remove all children from the holder element by default (fullDestroy = true)', () => {
+        expect(holderEl.childNodes.length).toBeGreaterThan(0);
+
+        card.destroy();
+
+        expect(holderEl.childNodes.length).toBe(0);
+    });
+
+    test('should not remove children from the holder element when fullDestroy is false', () => {
+        expect(holderEl.childNodes.length).toBeGreaterThan(0);
+
+        card.destroy(false);
+
+        expect(holderEl.childNodes.length).toBeGreaterThan(0);
+    });
+});
