@@ -7,6 +7,7 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
 import { ClickToPaySignup } from './ClickToPaySignup';
 import { MASTERCARD_PRIVACY_NOTICE_URL, MASTERCARD_TERMS_URL } from './constants';
+import { InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import type { ClickToPaySignupProps } from './types';
 
 jest.mock('../../../../core/Services/get-dataset');
@@ -18,7 +19,13 @@ const PHONE_PREFIXES_MOCK: { id: string; prefix: string }[] = [
 
 type SignupTestProps = Partial<ClickToPaySignupProps> & { defaultChecked?: boolean };
 
-const SignupWithState = ({ defaultChecked = false, onConsentChange, onDetailsChange, ...props }: Readonly<SignupTestProps>) => {
+const SignupWithState = ({
+    defaultChecked = false,
+    onConsentChange,
+    onDetailsChange,
+    onSubmitAnalytics = jest.fn(),
+    ...props
+}: Readonly<SignupTestProps>) => {
     const [checked, setChecked] = useState<boolean>(defaultChecked);
 
     return (
@@ -30,6 +37,7 @@ const SignupWithState = ({ defaultChecked = false, onConsentChange, onDetailsCha
                 onConsentChange?.(value);
             }}
             onDetailsChange={details => onDetailsChange?.(details)}
+            onSubmitAnalytics={onSubmitAnalytics}
         />
     );
 };
@@ -37,11 +45,17 @@ const SignupWithState = ({ defaultChecked = false, onConsentChange, onDetailsCha
 const renderSignup = (props: SignupTestProps = {}) => {
     const core = setupCoreMock();
 
-    return render(
+    const renderTree = (treeProps: SignupTestProps) => (
         <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-            <SignupWithState {...props} />
+            <SignupWithState onSubmitAnalytics={jest.fn()} {...treeProps} />
         </CoreProvider>
     );
+
+    const { rerender } = render(renderTree(props));
+
+    return {
+        rerenderWith: (newProps: SignupTestProps) => rerender(renderTree(newProps))
+    };
 };
 
 const getConsentCheckbox = () => screen.getByRole('checkbox', { name: /Save my information with Click to Pay/ });
@@ -225,5 +239,78 @@ describe('ClickToPaySignup', () => {
 
         await waitFor(() => expect(screen.getByRole('textbox', { name: 'Mobile' })).toHaveValue('31612345678'));
         expect(screen.queryByRole('combobox', { name: /Prefix/ })).not.toBeInTheDocument();
+    });
+
+    describe('analytics', () => {
+        const getSignupEvents = (onSubmitAnalytics: jest.Mock, type: InfoEventType) =>
+            onSubmitAnalytics.mock.calls.filter(([event]) => event.type === type && event.target === UiTarget.clickToPaySignupConsentToggle);
+
+        test('should send a displayed event when rendered', () => {
+            const onSubmitAnalytics = jest.fn();
+            renderSignup({ onSubmitAnalytics });
+
+            expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+            expect(onSubmitAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: InfoEventType.displayed,
+                    target: UiTarget.clickToPaySignupConsentToggle,
+                    brand: 'mc'
+                })
+            );
+        });
+
+        test('should not send another displayed event when re-rendered while visible', async () => {
+            const user = userEvent.setup();
+            const onSubmitAnalytics = jest.fn();
+            renderSignup({ defaultChecked: true, firstName: 'Jane', onSubmitAnalytics });
+
+            await user.type(screen.getByRole('textbox', { name: 'Last name' }), 'Doe');
+
+            expect(getSignupEvents(onSubmitAnalytics, InfoEventType.displayed)).toHaveLength(1);
+        });
+
+        test('should not send another displayed event when the analytics callback changes while visible', () => {
+            const firstOnSubmitAnalytics = jest.fn();
+            const secondOnSubmitAnalytics = jest.fn();
+            const { rerenderWith } = renderSignup({ onSubmitAnalytics: firstOnSubmitAnalytics });
+
+            rerenderWith({ onSubmitAnalytics: secondOnSubmitAnalytics });
+
+            expect(getSignupEvents(firstOnSubmitAnalytics, InfoEventType.displayed)).toHaveLength(1);
+            expect(getSignupEvents(secondOnSubmitAnalytics, InfoEventType.displayed)).toHaveLength(0);
+        });
+
+        test('should send a clicked event with the new consent value when the consent is toggled', async () => {
+            const user = userEvent.setup();
+            const onSubmitAnalytics = jest.fn();
+            renderSignup({ onSubmitAnalytics });
+
+            await user.click(getConsentCheckbox());
+            await user.click(getConsentCheckbox());
+
+            const clickedEvents = getSignupEvents(onSubmitAnalytics, InfoEventType.clicked);
+            expect(clickedEvents).toHaveLength(2);
+            expect(clickedEvents[0][0]).toEqual(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: InfoEventType.clicked,
+                    target: UiTarget.clickToPaySignupConsentToggle,
+                    brand: 'mc',
+                    selectedValue: 'checked'
+                })
+            );
+            expect(clickedEvents[1][0]).toEqual(expect.objectContaining({ selectedValue: 'unchecked' }));
+        });
+
+        test('should not send a clicked event when the Click to Pay info dialog is opened', async () => {
+            const user = userEvent.setup();
+            const onSubmitAnalytics = jest.fn();
+            renderSignup({ onSubmitAnalytics });
+
+            await user.click(screen.getByRole('button', { name: 'Click to Pay' }));
+
+            expect(getSignupEvents(onSubmitAnalytics, InfoEventType.clicked)).toHaveLength(0);
+        });
     });
 });
