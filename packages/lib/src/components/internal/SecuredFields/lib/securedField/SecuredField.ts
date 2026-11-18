@@ -342,10 +342,11 @@ class SecuredField extends AbstractSecuredField {
                 const { configLog, error } = feedbackObj;
 
                 const errorMsg = error ?? 'Iframe config failure';
+                const configLogMsg = configLog ? ` Log=${JSON.stringify(configLog)}` : '';
 
                 this.submitFeedbackErrorAnalytics(
                     feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
-                    `${errorMsg}. Field=${this.sfConfig.fieldType}.${configLog ? ` Log=${JSON.stringify(configLog)}` : ''}`
+                    `${errorMsg}. Field=${this.sfConfig.fieldType}.${configLogMsg}`
                 );
                 break;
             }
