@@ -41,6 +41,17 @@ describe('CardInput handlers', () => {
             expect(windowScrollToMock).not.toHaveBeenCalled();
         });
 
+        test('should do nothing when sfp.current is not available', () => {
+            ua.__IS_IOS = true;
+            const sfp: any = { current: null };
+
+            expect(() => setFocusOnFirstField(true, sfp, 'encryptedExpiryDate')).not.toThrow();
+            expect(() => setFocusOnFirstField(true, sfp, 'holderName')).not.toThrow();
+
+            expect(windowScrollToMock).not.toHaveBeenCalled();
+            expect(selectOneMock).not.toHaveBeenCalled();
+        });
+
         test('on iOS it scrolls to the label for the requested field', () => {
             ua.__IS_IOS = true;
 
@@ -263,6 +274,19 @@ describe('CardInput handlers', () => {
             await Promise.resolve();
 
             expect(sfp.current.setFocusOn).toHaveBeenCalledTimes(1);
+            expect(isAutoJumping.current).toBe(false);
+        });
+
+        test('should reset isAutoJumping without throwing when sfp.current is not available', async () => {
+            const isAutoJumping: any = { current: false };
+            const sfp: any = { current: null };
+
+            const handler = getAutoJumpHandler(isAutoJumping, sfp, ['encryptedCardNumber', 'encryptedExpiryDate']);
+
+            handler();
+
+            await Promise.resolve();
+
             expect(isAutoJumping.current).toBe(false);
         });
     });
