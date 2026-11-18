@@ -11,14 +11,14 @@ import { CustomCardConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../Card/constants';
 import type { CustomCardInputRef } from './CustomCardInput';
+import type { UIElementProps } from '../internal/UIElement/types';
 
 const SELECTABLE_DUAL_BRANDED_SCENARIO = 'Dual Branded (Selectable): Regulation mandates that you must provide a brand selection mechanism';
 const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No selection mechanism required';
 
 type CustomCardProps = CustomCardConfiguration &
-    Required<Pick<CustomCardConfiguration, 'onBinLookup' | 'brandsConfiguration' | 'type' | 'loadingContext'>> & {
-        clientKey: string; // not in CustomCardConfiguration, only optional in UIElementProps
-    };
+    Required<Pick<CustomCardConfiguration, 'onBinLookup' | 'brandsConfiguration' | 'loadingContext'>> &
+    Required<Pick<UIElementProps, 'type'>>;
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static readonly type = TxVariants.customCard;

@@ -62,7 +62,7 @@ export interface CSFConfigObject extends CSFCommonProps {
 export interface CSFSetupObject extends CSFCommonProps {
     type: string;
     componentType?: string;
-    clientKey: string;
+    clientKey?: string;
     rootNode: string | HTMLElement; // TODO - when is this a string?
     callbacks?: object;
     isKCP?: boolean;

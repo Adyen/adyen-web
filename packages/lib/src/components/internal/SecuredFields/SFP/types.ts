@@ -36,7 +36,7 @@ export interface SFPProps {
     autoFocus?: boolean;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    clientKey: string;
+    clientKey?: string;
     componentType: string;
     countryCode?: string;
     forceCompat?: boolean;

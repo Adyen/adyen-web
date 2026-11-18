@@ -42,7 +42,7 @@ interface SecuredFieldsProps {
     brand: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    clientKey: string;
+    clientKey?: string;
     countryCode?: string;
     forceCompat?: boolean;
     i18n?: Language;
