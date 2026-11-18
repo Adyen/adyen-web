@@ -39,6 +39,7 @@ export const URL_MAP = {
     cardWithKcp: '/iframe.html?args=&globals=&id=components-cards--with-kcp&viewMode=story',
     cardWithClickToPay: '/iframe.html?args=&id=components-cards--with-click-to-pay&viewMode=story',
     cardWithFastlane: '/iframe.html?args=&globals=&id=components-cards--with-mocked-fastlane&viewMode=story',
+    cardWithClickToPaySignup: '/iframe.html?args=&globals=&id=components-cards--with-click-to-pay-signup&viewMode=story',
     fullAvsWithoutPrefilledDataUrl: '/iframe.html?args=componentConfiguration.data:!undefined&globals=&id=components-cards--with-avs&viewMode=story',
     fullAvsWithPrefilledDataUrl: '/iframe.html?globals=&args=&id=components-cards--with-avs&viewMode=story',
     addressLookupUrl: '/iframe.html?id=components-cards--with-avs-address-lookup&viewMode=story',
