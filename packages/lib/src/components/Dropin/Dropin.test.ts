@@ -11,6 +11,8 @@ import Fastlane from '../PayPalFastlane';
 import Card from '../Card';
 import Giftcard from '../Giftcard';
 import PaypalElement from '../PayPal';
+import ANCV from '../ANCV';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
@@ -20,6 +22,7 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import getOrderStatus from '../../core/Services/order-status';
+import type CheckoutSession from '../../core/CheckoutSession';
 
 jest.mock('../../core/Services/order-status');
 
@@ -984,6 +987,95 @@ describe('Dropin', () => {
 
             await waitFor(() => expect(screen.getByRole('button', { name: /Pay \$29.99/i })).toBeEnabled());
             expect(getDropinStatus(dropin)).toBe('ready');
+        });
+    });
+
+    describe('ANCV order creation', () => {
+        const createdOrder: Order = { orderData: 'order-data', pspReference: 'order-psp' };
+
+        const mountDropinWithANCV = async ({
+            config,
+            session,
+            ancvConfiguration
+        }: {
+            config?: Partial<CoreConfiguration>;
+            session?: CheckoutSession;
+            ancvConfiguration?: Record<string, unknown>;
+        }) => {
+            const checkout = await createAdyenCheckout(
+                getAdyenCheckoutConfiguration({ paymentMethodsResponse: { paymentMethods: [{ name: 'ANCV', type: 'ancv' }] }, ...config })
+            );
+            if (session) checkout.session = session;
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [ANCV],
+                paymentMethodsConfiguration: { ancv: ancvConfiguration ?? {} }
+            });
+
+            render(dropin.render());
+
+            // While loading, the button content is aria-hidden, so it has no accessible name: keep hold of the element instead of re-querying it
+            const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
+            const user = userEvent.setup();
+            await user.type(screen.getByLabelText(/Your ANCV identification/i), '12345678901');
+            await user.click(payButton);
+
+            return { dropin, payButton };
+        };
+
+        describe('advanced flow', () => {
+            test('should re-enable the pay button and skip the payment when onOrderRequest rejects', async () => {
+                const onOrderRequest = jest.fn((_resolve, reject) => reject(new AdyenCheckoutError('NETWORK_ERROR', 'Order could not be created')));
+                const onSubmit = jest.fn();
+                const onError = jest.fn();
+
+                const { dropin, payButton } = await mountDropinWithANCV({ config: { onSubmit, onError }, ancvConfiguration: { onOrderRequest } });
+
+                await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+                await waitFor(() => expect(payButton).toBeEnabled());
+                expect(dropin.dropinRef?.state.status.type).toBe('ready');
+                expect(onSubmit).not.toHaveBeenCalled();
+            });
+
+            test('should make the payment with the created order when onOrderRequest resolves', async () => {
+                const onOrderRequest = jest.fn(resolve => resolve(createdOrder));
+                const onSubmit = jest.fn();
+
+                const { dropin } = await mountDropinWithANCV({ config: { onSubmit }, ancvConfiguration: { onOrderRequest } });
+
+                await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+                expect(onSubmit.mock.calls[0][0].data.order).toEqual(createdOrder);
+                expect(dropin.dropinRef?.state.status.type).toBe('loading');
+            });
+        });
+
+        describe('sessions flow', () => {
+            test('should re-enable the pay button and skip the payment when session.createOrder rejects', async () => {
+                const session = mock<CheckoutSession>();
+                session.createOrder.mockRejectedValue(new AdyenCheckoutError('NETWORK_ERROR', 'Order could not be created'));
+                const onError = jest.fn();
+
+                const { dropin, payButton } = await mountDropinWithANCV({ config: { onError }, session });
+
+                await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+                await waitFor(() => expect(payButton).toBeEnabled());
+                expect(dropin.dropinRef?.state.status.type).toBe('ready');
+                expect(session.createOrder).toHaveBeenCalledTimes(1);
+                expect(session.submitPayment).not.toHaveBeenCalled();
+            });
+
+            test('should make the payment with the created order when session.createOrder resolves', async () => {
+                const session = mock<CheckoutSession>();
+                session.createOrder.mockResolvedValue({ ...createdOrder, sessionData: 'session-data' });
+                // Keep the payment pending so the assertion runs against the in-flight state
+                session.submitPayment.mockReturnValue(new Promise(() => {}));
+
+                const { dropin } = await mountDropinWithANCV({ session });
+
+                await waitFor(() => expect(session.submitPayment).toHaveBeenCalledTimes(1));
+                expect(session.submitPayment.mock.calls[0][0].order).toEqual(createdOrder);
+                expect(dropin.dropinRef?.state.status.type).toBe('loading');
+            });
         });
     });
 });
