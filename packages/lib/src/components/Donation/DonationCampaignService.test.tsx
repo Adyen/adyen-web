@@ -2,7 +2,11 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import DonationCampaignService, { DEFAULT_DONATION_AUTO_START_DELAY_MS } from './DonationCampaignService';
 import type { ICore } from '../../core/types';
 import type { DonationCampaign, DonationCampaignOptions } from './types';
-import type { CheckoutSessionDonationCampaignsResponse, CheckoutSessionDonationsResponse } from '../../core/CheckoutSession/types';
+import type {
+    CheckoutSessionCancelDonationResponse,
+    CheckoutSessionDonationCampaignsResponse,
+    CheckoutSessionDonationsResponse
+} from '../../core/CheckoutSession/types';
 import CheckoutSession from '../../core/CheckoutSession';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
 
@@ -288,37 +292,61 @@ describe('DonationCampaignService', () => {
     });
 
     describe('onCancel callback', () => {
-        test('should call onDonationCompleted with false when onCancel is triggered', async () => {
-            const core = createMockCore();
-            const onDonationSuccess = jest.fn();
-            core.options = {
-                donation: {
-                    autoMount: true,
-                    onDonationSuccess,
-                    onDonationFailure: jest.fn(),
-                    delay: 0
-                }
-            };
-
-            const mockCampaign = createMockDonationCampaign();
+        const setupServiceWithCampaign = async (core: MockCoreWithSession) => {
             const mockResponse: CheckoutSessionDonationCampaignsResponse = {
                 sessionData: 'test-session-data',
-                donationCampaigns: [mockCampaign]
+                donationCampaigns: [createMockDonationCampaign()]
             };
             (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
-
             await flushPromisesAndTimers();
-            const result = await resultPromise;
+            return resultPromise;
+        };
 
+        test('should call the sessions cancel donation endpoint and then call onDonationCompleted with false', async () => {
+            const core = createMockCore();
+            const onDonationSuccess = jest.fn();
+            core.options = { donation: { autoMount: true, onDonationSuccess, onDonationFailure: jest.fn(), delay: 0 } };
+            let resolveCancel: (value: CheckoutSessionCancelDonationResponse) => void = () => {};
+            (core.session.cancelDonation as jest.Mock).mockReturnValue(
+                new Promise<CheckoutSessionCancelDonationResponse>(resolve => {
+                    resolveCancel = resolve;
+                })
+            );
+
+            const result = await setupServiceWithCampaign(core);
             result?.onCancel({ data: { amount: { currency: 'EUR', value: 100 } } });
+
+            expect(core.session.cancelDonation).toHaveBeenCalledTimes(1);
+            expect(onDonationSuccess).not.toHaveBeenCalled();
+
+            resolveCancel({ sessionData: 'cancelled-session-data' });
+            await flushPromisesAndTimers();
 
             expect(onDonationSuccess).toHaveBeenCalledWith({ didDonate: false });
         });
-    });
 
+        test('should warn and still call onDonationCompleted with false when the cancel donation call fails', async () => {
+            const core = createMockCore();
+            const onDonationSuccess = jest.fn();
+            const onDonationFailure = jest.fn();
+            core.options = { donation: { autoMount: true, onDonationSuccess, onDonationFailure, delay: 0 } };
+            const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            (core.session.cancelDonation as jest.Mock).mockRejectedValue(new Error('Network error'));
+
+            const result = await setupServiceWithCampaign(core);
+            result?.onCancel({ data: { amount: { currency: 'EUR', value: 100 } } });
+            await flushPromisesAndTimers();
+
+            expect(warnSpy).toHaveBeenCalledTimes(1);
+            expect(onDonationSuccess).toHaveBeenCalledWith({ didDonate: false });
+            expect(onDonationFailure).not.toHaveBeenCalled();
+
+            warnSpy.mockRestore();
+        });
+    });
     describe('fixedAmounts donation type', () => {
         test('should return DonationConfiguration (fixedAmounts donation type)  when campaign is available', async () => {
             const core = createMockCore();

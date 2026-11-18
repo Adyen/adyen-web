@@ -40,7 +40,11 @@ export const Default: DonationStory = {
         </Checkout>
     ),
     args: {
-        componentConfiguration
+        componentConfiguration,
+        useSessions: false
+    },
+    parameters: {
+        controls: { exclude: ['useSessions'] }
     }
 };
 
@@ -48,7 +52,11 @@ export const IntegrateWithCard = {
     render: DonationCardIntegrationExample,
     tags: ['no-automated-visual-test'],
     args: {
-        redirectResult: getSearchParameter('redirectResult')
+        redirectResult: getSearchParameter('redirectResult'),
+        useSessions: false
+    },
+    parameters: {
+        controls: { exclude: ['useSessions'] }
     }
 };
 

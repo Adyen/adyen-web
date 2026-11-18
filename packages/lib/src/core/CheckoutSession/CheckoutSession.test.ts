@@ -125,4 +125,25 @@ describe('CheckoutSession', () => {
             expect(session.data).toBe(successResponseMock.sessionData);
         });
     });
+
+    describe('cancelDonation', () => {
+        test('should call the donations cancel endpoint with the current sessionData and store the returned sessionData', async () => {
+            const cancelResponseMock = { sessionData: 'cancelledSessionData' };
+            httpPostMock.mockImplementationOnce(() => Promise.resolve(cancelResponseMock));
+
+            const session = new CheckoutSession(rawSessionMock, clientKeyMock, 'test');
+            await session.cancelDonation();
+
+            expect(httpPostMock).toHaveBeenCalledWith(
+                {
+                    loadingContext: 'test',
+                    path: `v1/sessions/${rawSessionMock.id}/donations/cancel?clientKey=${clientKeyMock}`,
+                    errorLevel: 'fatal',
+                    errorCode: '632'
+                },
+                { sessionData: rawSessionMock.sessionData }
+            );
+            expect(session.data).toBe(cancelResponseMock.sessionData);
+        });
+    });
 });
