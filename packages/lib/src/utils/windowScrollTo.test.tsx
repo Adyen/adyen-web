@@ -18,4 +18,13 @@ describe('windowScrollTo', () => {
 
         mockScrollTo.mockRestore();
     });
+
+    test('should not scroll when called with null', () => {
+        const mockScrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+        windowScrollTo(null);
+
+        expect(mockScrollTo).not.toHaveBeenCalled();
+        mockScrollTo.mockRestore();
+    });
 });
