@@ -70,7 +70,13 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
                  * Relates to errors triggered by a field blurring (some pm forms have this, some don't) - check if there is an error to either set or to clear
                  */
                 case ERROR_ACTION_BLUR_SCENARIO: {
-                    const difference = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
+                    // Use srPanelResp.currentErrorsSortedByLayout here because currentErrorsSortedByLayout can be null, but it only reaches here if
+                    // there's srPanelResp action which means there's an currentErrorsSortedByLayout
+                    const difference = getArrayDifferences<SortedErrorObject, string>(
+                        srPanelResp.currentErrorsSortedByLayout,
+                        previousSortedErrors,
+                        'field'
+                    );
 
                     const latestErrorMsg = difference?.[0];
 
