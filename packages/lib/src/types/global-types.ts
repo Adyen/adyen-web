@@ -307,7 +307,7 @@ export interface PaymentData extends PaymentMethodData {
     socialSecurityNumber?: string;
     installments?: { value: number };
     shopperEmail?: string;
-    shopperName?: { firstName: string; lastName: string };
+    shopperName?: { firstName?: string; lastName?: string };
     telephoneNumber?: string;
     dateOfBirth?: string;
     bankAccount?: BankDetailsSchema;

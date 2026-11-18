@@ -245,6 +245,29 @@ export const WithClickToPay: CardStory = {
     }
 };
 
+/**
+ * Uses the advanced flow so that no session shopper details prefill the sign-up fields.
+ * The E2E tests pass their own configuration through the 'componentConfiguration' URL parameter.
+ */
+export const WithClickToPaySignup: CardStory = {
+    render: createCardComponent,
+    tags: ['no-automated-visual-test'],
+    args: {
+        useSessions: false,
+        componentConfiguration: getComponentConfigFromUrl() ?? {
+            configuration: {
+                mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+            },
+            clickToPayConfiguration: {
+                enableSignup: true,
+                merchantDisplayName: 'Adyen Merchant Name'
+            },
+            enableStoreDetails: true
+        }
+    }
+};
+
 export const CardWith_3DS2_Redirect: CardStory = {
     render: args => <CardWith3DS2Redirect {...args} />,
 

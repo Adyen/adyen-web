@@ -27,6 +27,14 @@ export type ClickToPayProps = {
      */
     disableOtpAutoFocus?: boolean;
     /**
+     * Shopper first name used to prefill the Click to Pay sign-up
+     */
+    firstName?: string;
+    /**
+     * Shopper last name used to prefill the Click to Pay sign-up
+     */
+    lastName?: string;
+    /**
      *  Callback triggered when the Click to Pay component is ready to be used
      */
     onReady?(): void;

@@ -31,3 +31,14 @@ export interface ClickToPaySignupFormData extends PhoneInputSchema {
     lastName?: string;
     shopperEmail?: string;
 }
+
+export interface ClickToPaySignupState {
+    consentGiven: boolean;
+    details: ClickToPaySignupDetails;
+}
+
+export interface ClickToPaySignupPaymentData {
+    shopperName?: { firstName?: string; lastName?: string };
+    shopperEmail?: string;
+    telephoneNumber?: string;
+}

@@ -24,7 +24,14 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
     // Destructure props, refs and state hooks
     const { type, cvcPolicy } = props;
     const { sfp } = refs;
-    const { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode } = states;
+    const {
+        dualBrandSelectElements,
+        setDualBrandSelectElements,
+        setSelectedBrandValue,
+        setBinLookupBrand,
+        issuingCountryCode,
+        setIssuingCountryCode
+    } = states;
 
     return {
         /**
@@ -42,6 +49,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
             if (!binLookupResponse || !Object.keys(binLookupResponse).length) {
                 setDualBrandSelectElements([]);
                 setSelectedBrandValue('');
+                setBinLookupBrand?.('');
 
                 // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon - so set to null
                 // However for a single-branded card we need to pass the "base" type so the brand logo is reset - so set to type
@@ -77,6 +85,8 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                     // Set properties on state to trigger the dual branding icons in the UI
                     setDualBrandSelectElements(switcherObj.dualBrandSelectElements);
                     setSelectedBrandValue(switcherObj.selectedBrandValue); // initially this value from switcherObj will be ''
+                    // For dual branded cards the brand is the one the shopper selects, held in selectedBrandValue
+                    setBinLookupBrand?.('');
 
                     // Pass an object through to SFP
                     sfp.current.processBinLookupResponse({
@@ -98,6 +108,9 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                     // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
                     // EXCEPT - if we are dealing with a brand that we exclude from the UI
                     if (!hasExcludedBrand) setSelectedBrandValue(supportedBrands[0].brand);
+
+                    // Unlike selectedBrandValue, this is also set when an excluded brand was removed (e.g. a Mastercard co-branded with a US debit network)
+                    setBinLookupBrand?.(supportedBrands[0].brand);
 
                     // Pass object through to SFP
                     sfp.current.processBinLookupResponse({

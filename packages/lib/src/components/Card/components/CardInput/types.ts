@@ -28,6 +28,7 @@ import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Ad
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
+import type { CardClickToPayConfiguration } from '../../types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
@@ -84,6 +85,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey?: string;
+    clickToPayConfiguration?: CardClickToPayConfiguration;
     configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
@@ -102,6 +104,10 @@ export interface CardInputProps {
     i18n?: Language;
     implementationType?: 'components' | 'custom';
     installmentOptions?: InstallmentOptions;
+    /**
+     * Whether the merchant configuration allows the Click to Pay sign-up. Brand and shopper recognition are checked by CardInput.
+     */
+    isClickToPaySignupAvailable?: boolean;
     keypadFix?: boolean;
     lastFour?: string;
     loadingContext?: string;
