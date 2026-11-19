@@ -1,0 +1,812 @@
+import { h } from 'preact';
+import { mock } from 'jest-mock-extended';
+import { BasePayPalElement } from './BasePayPalElement';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../../config/testMocks/setup-core-mock';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import CancelError from '../../../core/Errors/CancelError';
+import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { PayPalService } from '../services/PayPalService';
+import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
+import requestPayPalOrderDetails from '../services/request-paypal-order-details';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
+import type { PaymentAction } from '../../../types/global-types';
+import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPresentationModeOptions, PayPalV6OnApproveData } from '../paypal-js-types';
+import type { BasePayPalConfiguration, SupportedPayPalFundingSources } from '../types';
+
+jest.mock('../services/PayPalService');
+jest.mock('../services/PayPalSdkLoader');
+jest.mock('../services/request-paypal-order-details');
+
+const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService>;
+const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdkLoader>;
+const requestPayPalOrderDetailsMock = requestPayPalOrderDetails as jest.Mock;
+
+/**
+ * BasePayPalElement is never instantiated directly - 'componentToRender' throws by design. This subclass
+ * provides the minimum a concrete variant (PayPal, Venmo, ...) supplies, so the shared logic can be tested.
+ */
+class TestPayPalElement extends BasePayPalElement {
+    protected override componentToRender(): h.JSX.Element | null {
+        return null;
+    }
+}
+
+const core = setupCoreMock();
+const isEligibleMock = jest.fn();
+
+const createElement = (props?: BasePayPalConfiguration) => new TestPayPalElement(core, props);
+
+describe('BasePayPalElement', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
+        PayPalServiceMock.prototype.refresh.mockResolvedValue(undefined);
+        PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
+        PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
+            isEligible: isEligibleMock
+        } as unknown as PayPalEligiblePaymentMethods);
+        isEligibleMock.mockReturnValue(true);
+    });
+
+    describe('constructor', () => {
+        test('should always create the SDK loader and the PayPal service', () => {
+            createElement({
+                nonce: 'test-nonce',
+                configuration: { merchantId: 'merchant-1' },
+                countryCode: 'US',
+                amount: { value: 1000, currency: 'USD' },
+                vault: true
+            });
+
+            expect(PayPalSdkLoaderMock).toHaveBeenCalledTimes(1);
+            expect(PayPalSdkLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ nonce: 'test-nonce' }));
+
+            expect(PayPalServiceMock).toHaveBeenCalledTimes(1);
+            expect(PayPalServiceMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    merchantId: 'merchant-1',
+                    countryCode: 'US',
+                    amount: { value: 1000, currency: 'USD' },
+                    vault: true,
+                    sdkLoader: expect.any(PayPalSdkLoader)
+                })
+            );
+
+            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+        });
+
+        test('should default vault to false and the country code to an empty string', () => {
+            createElement();
+
+            expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ vault: false, countryCode: '' }));
+        });
+
+        test('should only request the paypal-payments component by default', () => {
+            createElement();
+
+            expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
+        });
+
+        test('should let a subclass extend the requested SDK components', () => {
+            class MultiComponentElement extends TestPayPalElement {
+                protected override get paypalComponents(): PayPalComponents {
+                    return ['paypal-payments', 'venmo-payments'];
+                }
+            }
+
+            const element = new MultiComponentElement(core);
+
+            expect(element).toBeInstanceOf(BasePayPalElement);
+            expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'venmo-payments'] }));
+        });
+
+        test('should report the error via onError when initialization fails', async () => {
+            const initError = new Error('Failed to load token');
+            PayPalServiceMock.prototype.initialize.mockRejectedValue(initError);
+            const onErrorMock = jest.fn();
+
+            createElement({ onError: onErrorMock });
+
+            await new Promise(process.nextTick);
+
+            expect(onErrorMock).toHaveBeenCalledTimes(1);
+            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+            expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                message: 'Something went wrong while initializing paypal',
+                cause: initError
+            });
+        });
+
+        test('should forward an AdyenCheckoutError as-is when initialization fails', async () => {
+            const initError = new AdyenCheckoutError('NETWORK_ERROR', 'PayPal token request failed');
+            PayPalServiceMock.prototype.initialize.mockRejectedValue(initError);
+            const onErrorMock = jest.fn();
+
+            createElement({ onError: onErrorMock });
+
+            await new Promise(process.nextTick);
+
+            expect(onErrorMock).toHaveBeenCalledWith(initError, expect.anything());
+        });
+
+        test.each([
+            ['onShippingAddressChange', { onShippingAddressChange: jest.fn() }],
+            ['onShippingOptionsChange', { onShippingOptionsChange: jest.fn() }],
+            ['both shipping callbacks', { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }]
+        ])('should throw an implementation error when %s is provided and isExpress is not set', (_name, shippingCallbacks) => {
+            expect(() => createElement({ ...shippingCallbacks })).toThrow(
+                'paypal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+            );
+            expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+        });
+
+        test('should throw an AdyenCheckoutError of type IMPLEMENTATION_ERROR when the shipping callbacks are used without isExpress', () => {
+            let caughtError: unknown;
+
+            try {
+                createElement({ onShippingAddressChange: jest.fn() });
+            } catch (error) {
+                caughtError = error;
+            }
+
+            expect(caughtError).toBeInstanceOf(AdyenCheckoutError);
+            expect((caughtError as AdyenCheckoutError).name).toBe('IMPLEMENTATION_ERROR');
+        });
+
+        test('should not throw when the shipping callbacks are used and isExpress is true', () => {
+            expect(() => createElement({ isExpress: true, onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() })).not.toThrow();
+
+            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+        });
+
+        test.each([['redirect'], ['direct-app-switch']])(
+            'should throw an implementation error when isExpress is true and the presentation mode is "%s"',
+            presentationMode => {
+                expect(() =>
+                    createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
+                ).toThrow(`paypal - Unsupported presentation mode: ${presentationMode} for express checkout`);
+
+                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+            }
+        );
+
+        test.each([['popup'], ['modal'], ['payment-handler'], ['auto']])(
+            'should not throw when isExpress is true and the presentation mode is "%s"',
+            presentationMode => {
+                expect(() =>
+                    createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
+                ).not.toThrow();
+
+                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+            }
+        );
+
+        test('should not throw when an unsupported express presentation mode is used but isExpress is not set', () => {
+            expect(() => createElement({ presentationModeOptions: { presentationMode: 'redirect' } })).not.toThrow();
+
+            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not throw when isExpress is true and no presentation mode is provided', () => {
+            expect(() => createElement({ isExpress: true })).not.toThrow();
+        });
+    });
+
+    describe('isAvailable', () => {
+        test('should wait for the SDK and resolve when the funding source is eligible', async () => {
+            const element = createElement();
+
+            await expect(element.isAvailable()).resolves.toBeUndefined();
+
+            expect(PayPalServiceMock.prototype.isSdkLoaded).toHaveBeenCalledTimes(1);
+            expect(isEligibleMock).toHaveBeenCalledWith('paypal');
+        });
+
+        test('should check the eligibility of the funding source declared by the subclass', async () => {
+            class VenmoLikeElement extends TestPayPalElement {
+                protected override fundingSource: SupportedPayPalFundingSources = 'venmo';
+            }
+
+            await new VenmoLikeElement(core).isAvailable();
+
+            expect(isEligibleMock).toHaveBeenCalledWith('venmo');
+        });
+
+        test('should reject when the funding source is not eligible', async () => {
+            isEligibleMock.mockReturnValue(false);
+            const element = createElement();
+
+            await expect(element.isAvailable()).rejects.toBeInstanceOf(AdyenCheckoutError);
+            await expect(element.isAvailable()).rejects.toThrow('paypal is not available');
+        });
+
+        test('should reject when the SDK fails to load', async () => {
+            PayPalServiceMock.prototype.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+            const element = createElement();
+
+            await expect(element.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
+            expect(isEligibleMock).not.toHaveBeenCalled();
+        });
+
+        test('should reject when the PayPal service was never created', async () => {
+            const element = createElement();
+            // @ts-ignore overriding a protected property to simulate a missing service
+            element.paypalService = undefined;
+
+            await expect(element.isAvailable()).rejects.toThrow('paypal is not available');
+            expect(PayPalServiceMock.prototype.isSdkLoaded).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('data', () => {
+        test('should return a data object with the sdk subtype', () => {
+            const element = createElement();
+
+            expect(element.data).toEqual({
+                clientStateDataIndicator: true,
+                paymentMethod: {
+                    type: 'paypal',
+                    subtype: 'sdk',
+                    checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+                    sdkData: expect.any(String)
+                },
+                browserInfo: expect.objectContaining({ userAgent: expect.any(String) }),
+                riskData: { clientData: TEST_RISK_DATA }
+            });
+        });
+
+        test('should return the express subtype when the isExpress flag is set', () => {
+            const element = createElement({ isExpress: true });
+
+            expect(element.data.paymentMethod).toEqual(expect.objectContaining({ type: 'paypal', subtype: 'express' }));
+        });
+
+        test('should always collect the browser info', () => {
+            const element = createElement();
+
+            expect(element.data.browserInfo).toEqual(
+                expect.objectContaining({
+                    acceptHeader: expect.any(String),
+                    colorDepth: expect.any(Number),
+                    javaEnabled: expect.any(Boolean),
+                    language: expect.any(String),
+                    screenHeight: expect.any(Number),
+                    screenWidth: expect.any(Number),
+                    timeZoneOffset: expect.any(Number),
+                    userAgent: expect.any(String)
+                })
+            );
+        });
+
+        test('should add storePaymentMethod when vault is set', () => {
+            const element = createElement({ vault: true, amount: { value: 1000, currency: 'USD' } });
+
+            expect(element.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should add storePaymentMethod when the amount is zero (zero-auth)', () => {
+            const element = createElement({ amount: { value: 0, currency: 'USD' } });
+
+            expect(element.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should not add storePaymentMethod when vault is not set and the amount is not zero', () => {
+            const element = createElement({ amount: { value: 1000, currency: 'USD' } });
+
+            expect(element.data).not.toHaveProperty('storePaymentMethod');
+        });
+
+        test('should not add storePaymentMethod when vault is not set and there is no amount', () => {
+            const element = createElement();
+
+            expect(element.data).not.toHaveProperty('storePaymentMethod');
+        });
+    });
+
+    test('should always be valid', () => {
+        expect(createElement().isValid).toBe(true);
+    });
+
+    test('should prevent calling submit manually', () => {
+        const onErrorMock = jest.fn();
+        const element = createElement({ onError: onErrorMock });
+
+        element.submit();
+
+        expect(onErrorMock).toHaveBeenCalledWith(
+            expect.objectContaining({ message: 'Calling submit() is not supported for this payment method' }),
+            expect.anything()
+        );
+    });
+
+    describe('beforeRender', () => {
+        test('should send a rendered analytics event with the merchant configuration', () => {
+            const analytics = mock<IAnalytics>({ checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID });
+            const element = new TestPayPalElement(setupCoreMock({ analyticsMock: analytics }), { isExpress: true, expressPage: 'cart' });
+
+            // @ts-ignore accessing a protected method
+            element.beforeRender({ isExpress: true, expressPage: 'cart' });
+
+            expect(analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.rendered,
+                    isExpress: true,
+                    expressPage: 'cart'
+                })
+            );
+        });
+    });
+
+    describe('updatePaymentData', () => {
+        test('should store the new payment data', () => {
+            const element = createElement();
+
+            element.updatePaymentData('new-payment-data');
+
+            expect(element.paymentData).toBe('new-payment-data');
+        });
+
+        test('should warn when the payment data is empty', () => {
+            const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const element = createElement();
+
+            element.updatePaymentData('');
+
+            expect(consoleWarnSpy).toHaveBeenCalledWith('paypal - Updating payment data with an invalid value');
+            consoleWarnSpy.mockRestore();
+        });
+    });
+
+    describe('update', () => {
+        const mountElement = (props?: BasePayPalConfiguration) => {
+            const element = createElement(props);
+            element.mount(document.createElement('div'));
+            return element;
+        };
+
+        test('should refresh the PayPal service with the updated configuration', () => {
+            const element = mountElement({
+                configuration: { merchantId: 'merchant-1' },
+                countryCode: 'US',
+                amount: { value: 1000, currency: 'USD' }
+            });
+
+            element.update({ countryCode: 'GB', amount: { value: 5000, currency: 'GBP' }, vault: true });
+
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledTimes(1);
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    merchantId: 'merchant-1',
+                    countryCode: 'GB',
+                    amount: { value: 5000, currency: 'GBP' },
+                    vault: true,
+                    components: ['paypal-payments']
+                })
+            );
+        });
+
+        test('should not create a new PayPal service nor a new SDK loader', () => {
+            const element = mountElement();
+
+            element.update({ countryCode: 'GB' });
+
+            expect(PayPalServiceMock).toHaveBeenCalledTimes(1);
+            expect(PayPalSdkLoaderMock).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not refresh the service when no prop it is derived from changed', () => {
+            const element = mountElement({ countryCode: 'US', amount: { value: 1000, currency: 'USD' } });
+
+            element.update({ onError: jest.fn(), showPayButton: false });
+
+            expect(PayPalServiceMock.prototype.refresh).not.toHaveBeenCalled();
+        });
+
+        test('should not refresh the service when the amount is updated with the same value and currency', () => {
+            const element = mountElement({ amount: { value: 1000, currency: 'USD' } });
+
+            element.update({ amount: { value: 1000, currency: 'USD' } });
+
+            expect(PayPalServiceMock.prototype.refresh).not.toHaveBeenCalled();
+        });
+
+        test('should refresh the service when only the vault flag changes', () => {
+            const element = mountElement({ vault: false });
+
+            element.update({ vault: true });
+
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(expect.objectContaining({ vault: true }));
+        });
+
+        test('should refresh the service before re-mounting, so that the element waits for the new SDK instance', () => {
+            const element = mountElement();
+            const callOrder: string[] = [];
+
+            PayPalServiceMock.prototype.refresh.mockImplementation(() => {
+                callOrder.push('refresh');
+                return Promise.resolve();
+            });
+            jest.spyOn(element, 'mount').mockImplementation(() => {
+                callOrder.push('mount');
+                return element;
+            });
+
+            element.update({ countryCode: 'GB' });
+
+            expect(callOrder).toEqual(['refresh', 'mount']);
+        });
+
+        test('should hand over the createPayPalMessages of the refreshed SDK instance', async () => {
+            const createPayPalMessagesMock = jest.fn();
+            PayPalServiceMock.prototype.getInstance.mockReturnValue({
+                createPayPalMessages: createPayPalMessagesMock
+            } as unknown as ReturnType<PayPalService['getInstance']>);
+            const onCreatePayPalMessagesMock = jest.fn();
+
+            const element = mountElement({ onCreatePayPalMessages: onCreatePayPalMessagesMock });
+            await new Promise(process.nextTick);
+            onCreatePayPalMessagesMock.mockClear();
+
+            element.update({ countryCode: 'GB' });
+            await new Promise(process.nextTick);
+
+            expect(onCreatePayPalMessagesMock).toHaveBeenCalledTimes(1);
+            expect(onCreatePayPalMessagesMock).toHaveBeenCalledWith(createPayPalMessagesMock);
+        });
+
+        test('should report the error via onError when the refresh fails', async () => {
+            const refreshError = new Error('Failed to load token');
+            const onErrorMock = jest.fn();
+            const element = mountElement({ onError: onErrorMock });
+
+            PayPalServiceMock.prototype.refresh.mockRejectedValue(refreshError);
+
+            element.update({ countryCode: 'GB' });
+            await new Promise(process.nextTick);
+
+            expect(onErrorMock).toHaveBeenCalledTimes(1);
+            expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                message: 'Something went wrong while initializing paypal',
+                cause: refreshError
+            });
+        });
+    });
+
+    describe('updateWithAction', () => {
+        const createAction = (action: Partial<PaymentAction> = {}): PaymentAction => ({
+            type: 'sdk',
+            paymentMethodType: 'paypal',
+            paymentData: 'payment-data',
+            sdkData: { token: 'sdk-token' },
+            ...action
+        });
+
+        test('should throw when the action is not for PayPal', () => {
+            const element = createElement();
+
+            expect(() => element.updateWithAction(createAction({ paymentMethodType: 'scheme' }))).toThrow('Invalid Action');
+        });
+
+        test('should store the payment data and resolve the pending submit with the sdk token', async () => {
+            const element = createElement();
+            // @ts-ignore accessing a protected method
+            const submitPromise = element.handleSubmit();
+
+            element.updateWithAction(createAction());
+
+            expect(element.paymentData).toBe('payment-data');
+            await expect(submitPromise).resolves.toBe('sdk-token');
+        });
+
+        test('should notify that the action was handled', () => {
+            const onActionHandledMock = jest.fn();
+            const element = createElement({ onActionHandled: onActionHandledMock });
+            // @ts-ignore accessing a protected method
+            void element.handleSubmit();
+
+            const action = createAction();
+            element.updateWithAction(action);
+
+            expect(onActionHandledMock).toHaveBeenCalledWith({
+                componentType: 'paypal',
+                actionDescription: 'sdk-loaded',
+                originalAction: action
+            });
+        });
+
+        test('should reject the pending submit when the action carries no token', async () => {
+            const element = createElement();
+            // @ts-ignore accessing a protected method
+            const submitPromise = element.handleSubmit();
+
+            element.updateWithAction(createAction({ sdkData: undefined }));
+
+            await expect(submitPromise).rejects.toThrow('No token was provided');
+        });
+
+        test('should report an error when there is no pending payment to resolve', () => {
+            const onErrorMock = jest.fn();
+            const element = createElement({ onError: onErrorMock });
+
+            element.updateWithAction(createAction());
+
+            expect(onErrorMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    message: 'The instance of the PayPal component being used is not the same which started the payment'
+                }),
+                expect.anything()
+            );
+        });
+
+        test('should report an error when there is no pending payment to reject', () => {
+            const onErrorMock = jest.fn();
+            const element = createElement({ onError: onErrorMock });
+
+            element.updateWithAction(createAction({ sdkData: undefined }));
+
+            expect(onErrorMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    message: 'The instance of the PayPal component being used is not the same which started the payment'
+                }),
+                expect.anything()
+            );
+        });
+
+        test('handleAction should delegate to updateWithAction', () => {
+            const element = createElement();
+            const updateWithActionSpy = jest.spyOn(element, 'updateWithAction');
+            const action = createAction();
+
+            element.handleAction(action);
+
+            expect(updateWithActionSpy).toHaveBeenCalledWith(action);
+        });
+    });
+
+    describe('handleOnApprove', () => {
+        const approve = async (element: BasePayPalElement, data: unknown) => {
+            // @ts-ignore accessing a protected method
+            await element.handleOnApprove(data as PayPalV6OnApproveData);
+        };
+
+        test('should remap orderId/payerId to the casing expected by /payments/details', async () => {
+            const element = createElement();
+            element.paymentData = 'payment-data';
+            // @ts-ignore spying on a protected method
+            const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+            await approve(element, { orderId: 'order-1', payerId: 'payer-1', fundingSource: 'paypal' });
+
+            expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
+                data: {
+                    details: { orderID: 'order-1', payerID: 'payer-1', paymentSource: 'paypal' },
+                    paymentData: 'payment-data'
+                }
+            });
+        });
+
+        test('should remap vaultSetupToken to vaultToken in the save payment (zero-auth) flow', async () => {
+            const element = createElement();
+            // @ts-ignore spying on a protected method
+            const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+            await approve(element, { vaultSetupToken: 'vault-token-1', payerId: 'payer-1' });
+
+            expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
+                data: {
+                    details: { vaultToken: 'vault-token-1', payerID: 'payer-1' },
+                    paymentData: undefined
+                }
+            });
+        });
+
+        test('should not request the order details when onAuthorized is not provided', async () => {
+            const element = createElement();
+            // @ts-ignore spying on a protected method
+            jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+            await approve(element, { orderId: 'order-1' });
+
+            expect(requestPayPalOrderDetailsMock).not.toHaveBeenCalled();
+        });
+
+        test('should not request the order details in the save payment flow, even when onAuthorized is provided', async () => {
+            const onAuthorizedMock = jest.fn();
+            const element = createElement({ onAuthorized: onAuthorizedMock });
+            // @ts-ignore spying on a protected method
+            const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+            await approve(element, { vaultSetupToken: 'vault-token-1' });
+
+            expect(requestPayPalOrderDetailsMock).not.toHaveBeenCalled();
+            expect(onAuthorizedMock).not.toHaveBeenCalled();
+            expect(handleAdditionalDetailsSpy).toHaveBeenCalledTimes(1);
+        });
+
+        describe('when onAuthorized is provided', () => {
+            const orderDetails = {
+                payPalOrder: { id: 'order-1' },
+                billingAddress: { street: 'Simon Carmiggeltstraat', city: 'Amsterdam', country: 'NL' },
+                deliveryAddress: { street: 'Simon Carmiggeltstraat', city: 'Amsterdam', country: 'NL' },
+                shopperName: { firstName: 'John', lastName: 'Doe' }
+            };
+
+            test('should fetch the order details and hand them over to the merchant', async () => {
+                requestPayPalOrderDetailsMock.mockResolvedValue(orderDetails);
+                const onAuthorizedMock = jest.fn((_data, actions) => actions.resolve());
+                const element = createElement({
+                    onAuthorized: onAuthorizedMock,
+                    clientKey: 'test_client_key',
+                    loadingContext: 'https://loading-context.test/',
+                    configuration: { merchantId: 'merchant-1' }
+                });
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+                await approve(element, { orderId: 'order-1' });
+
+                expect(requestPayPalOrderDetailsMock).toHaveBeenCalledWith('https://loading-context.test/', {
+                    clientKey: 'test_client_key',
+                    merchantId: 'merchant-1',
+                    orderId: 'order-1'
+                });
+                expect(onAuthorizedMock).toHaveBeenCalledWith(
+                    {
+                        authorizedEvent: orderDetails.payPalOrder,
+                        billingAddress: orderDetails.billingAddress,
+                        deliveryAddress: orderDetails.deliveryAddress,
+                        shopperName: orderDetails.shopperName
+                    },
+                    { resolve: expect.any(Function), reject: expect.any(Function) }
+                );
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledTimes(1);
+            });
+
+            test('should omit the address and shopper details that were not returned', async () => {
+                requestPayPalOrderDetailsMock.mockResolvedValue({ payPalOrder: { id: 'order-1' } });
+                const onAuthorizedMock = jest.fn((_data, actions) => actions.resolve());
+                const element = createElement({ onAuthorized: onAuthorizedMock });
+                // @ts-ignore spying on a protected method
+                jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+                await approve(element, { orderId: 'order-1' });
+
+                expect(onAuthorizedMock).toHaveBeenCalledWith({ authorizedEvent: { id: 'order-1' } }, expect.anything());
+            });
+
+            test('should report the error and skip the details call when fetching the order fails', async () => {
+                const requestError = new Error('Order not found');
+                requestPayPalOrderDetailsMock.mockRejectedValue(requestError);
+                const onErrorMock = jest.fn();
+                const element = createElement({ onAuthorized: jest.fn(), onError: onErrorMock });
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+                await approve(element, { orderId: 'order-1' });
+
+                expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
+                expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                    message: 'Something went wrong with finalizing the paypal order',
+                    cause: requestError
+                });
+            });
+
+            test('should report the error when the merchant rejects the authorization', async () => {
+                requestPayPalOrderDetailsMock.mockResolvedValue(orderDetails);
+                const onErrorMock = jest.fn();
+                const element = createElement({
+                    onAuthorized: (_data, actions) => actions.reject(),
+                    onError: onErrorMock
+                });
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
+
+                await approve(element, { orderId: 'order-1' });
+
+                expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Something went wrong with finalizing the paypal order' });
+            });
+        });
+    });
+
+    describe('handleSubmit', () => {
+        test('should reject with the payment failure reason and notify onPaymentFailed', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const element = createElement({
+                onSubmit: (_data, _component, actions) => actions.resolve({ resultCode: 'Refused' }),
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            // @ts-ignore accessing a protected method
+            const submitPromise = element.handleSubmit();
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentFailedMock).toHaveBeenCalledWith({ resultCode: 'Refused' }, element);
+            await expect(submitPromise).rejects.toThrow('Something went wrong during PayPal payment: {"resultCode":"Refused"}');
+        });
+
+        test('should include the error message when the payments call rejects with an Error', async () => {
+            const element = createElement({
+                onSubmit: jest.fn().mockImplementation((_data, _component, actions) => actions.reject(new Error('Network timeout')))
+            });
+
+            // @ts-ignore accessing a protected method
+            const submitPromise = element.handleSubmit();
+
+            await expect(submitPromise).rejects.toThrow('Something went wrong during PayPal payment: Network timeout');
+        });
+
+        test('should reset the status and leave the promise pending when the shopper cancels', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const element = createElement({
+                onSubmit: jest.fn().mockImplementation((_data, _component, actions) => actions.reject(new CancelError('cancelled'))),
+                onPaymentFailed: onPaymentFailedMock
+            });
+            const setElementStatusSpy = jest.spyOn(element, 'setElementStatus');
+
+            // @ts-ignore accessing a protected method
+            const submitPromise = element.handleSubmit();
+
+            await new Promise(process.nextTick);
+
+            expect(setElementStatusSpy).toHaveBeenCalledWith('ready');
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
+
+            const raceResult = await Promise.race([
+                submitPromise.then(
+                    () => 'settled',
+                    () => 'settled'
+                ),
+                Promise.resolve('pending')
+            ]);
+            expect(raceResult).toBe('pending');
+        });
+    });
+
+    describe('shipping change handlers', () => {
+        test('should forward the shipping address change to the merchant along with the component', async () => {
+            const onShippingAddressChangeMock = jest.fn().mockResolvedValue(undefined);
+            const element = createElement({ isExpress: true, onShippingAddressChange: onShippingAddressChangeMock });
+            const data = { orderId: 'order-1', shippingAddress: { city: 'Amsterdam', countryCode: 'NL' } };
+
+            // @ts-ignore accessing a protected method
+            await element.handleOnShippingAddressChange(data);
+
+            expect(onShippingAddressChangeMock).toHaveBeenCalledWith(data, element);
+        });
+
+        test('should resolve without calling anything when no shipping address callback is set', async () => {
+            const element = createElement();
+
+            // @ts-ignore accessing a protected method
+            await expect(element.handleOnShippingAddressChange({})).resolves.toBeUndefined();
+        });
+
+        test('should forward the shipping options change to the merchant along with the component', async () => {
+            const onShippingOptionsChangeMock = jest.fn().mockResolvedValue(undefined);
+            const element = createElement({ isExpress: true, onShippingOptionsChange: onShippingOptionsChangeMock });
+            const data = { orderId: 'order-1', selectedShippingOption: { id: 'express' } };
+
+            // @ts-ignore accessing a protected method
+            await element.handleOnShippingOptionsChange(data);
+
+            expect(onShippingOptionsChangeMock).toHaveBeenCalledWith(data, element);
+        });
+
+        test('should resolve without calling anything when no shipping options callback is set', async () => {
+            const element = createElement();
+
+            // @ts-ignore accessing a protected method
+            await expect(element.handleOnShippingOptionsChange({})).resolves.toBeUndefined();
+        });
+    });
+
+    test('should throw when the subclass does not implement componentToRender', () => {
+        class IncompleteElement extends BasePayPalElement {}
+
+        // @ts-ignore accessing a protected method
+        expect(() => new IncompleteElement(core).componentToRender()).toThrow('Method not implemented.');
+    });
+});
