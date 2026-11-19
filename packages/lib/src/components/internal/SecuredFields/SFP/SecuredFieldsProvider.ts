@@ -26,7 +26,6 @@ import { resolveCVCErrorKey } from '../../../Card/components/CardInput/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { TxVariants } from '../../../tx-variants';
-import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 /**
  * SecuredFieldsProvider:
@@ -215,16 +214,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 this.setState({ status: 'csfLoadFailure' });
                 // Report the error
                 this.props.onError?.(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
-
-                // Generate analytics error event
-                const errorObj = new AnalyticsErrorEvent({
-                    component: this.props.componentType,
-                    code: ErrorEventCode.SECURED_FIELDS_LOAD_FAILURE,
-                    errorType: ErrorEventType.internal,
-                    message: 'secured field iframes have failed to load'
-                });
-
-                this.props.onSubmitAnalytics?.(errorObj);
             }
         }, this.csfLoadFailTimeoutMS);
     }
