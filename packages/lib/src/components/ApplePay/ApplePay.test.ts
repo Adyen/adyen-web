@@ -15,6 +15,7 @@ import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../.
 import Language from '../../language/Language';
 import { ICore } from '../../types';
 import type { ILanguageService } from '../../language/LanguageService';
+import type { ApplePayConfiguration } from './types';
 
 jest.mock('../../core/Services/http');
 jest.mock('./services/ApplePayService');
@@ -27,6 +28,7 @@ let core: ICore;
 
 beforeEach(() => {
     core = setupCoreMock();
+    core.options.countryCode = 'NL';
     const mockApplePaySdkLoaderLoadFunction = jest.fn().mockImplementation(() => {
         mockApplePaySession = mock<ApplePaySession>({
             // @ts-ignore The following methods are not recognized as static members
@@ -72,6 +74,9 @@ const configurationMock = {
     merchantName: 'TestMerchant',
     merchantId: 'test-merchant'
 };
+
+// The constructor loads the SDK asynchronously, and the Apple Pay version a session needs is only set once it resolves
+const waitForSdkLoad = () => new Promise(process.nextTick);
 
 describe('ApplePay', () => {
     describe('constructor()', () => {
@@ -173,6 +178,26 @@ describe('ApplePay', () => {
     });
 
     describe('validateMerchant()', () => {
+        test.each(['merchantName', 'merchantId'] as const)(
+            'should reject merchant validation without calling the API when %s is missing',
+            async missingProperty => {
+                const applepay = new ApplePay(core, {
+                    configuration: { ...configurationMock, [missingProperty]: undefined },
+                    totalPriceLabel: 'Total'
+                });
+                const resolve = jest.fn();
+                const reject = jest.fn();
+
+                await applepay['validateMerchant'](resolve, reject);
+
+                expect(reject).toHaveBeenCalledWith(
+                    'Could not get Apple Pay session: missing configuration.merchantName or configuration.merchantId'
+                );
+                expect(resolve).not.toHaveBeenCalled();
+                expect(mockedHttpPost).not.toHaveBeenCalled();
+            }
+        );
+
         test('should pass decoded token back to Apple Pay', async () => {
             mockedHttpPost.mockResolvedValue({
                 data: 'eyJ0b2tlbiI6ImFwcGxlLXBheS1zZXNzaW9uIn0=' // translates to: {"token":"apple-pay-session"}
@@ -183,6 +208,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -200,13 +226,14 @@ describe('ApplePay', () => {
             expect(resolveMock).toHaveBeenCalledWith({ token: 'apple-pay-session' });
         });
 
-        test('should use the current URL as default', () => {
+        test('should use the current URL as default', async () => {
             // Hostname is provided by the jsdom `url` environment option (https://adyen.dev/).
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // @ts-ignore ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
@@ -221,13 +248,14 @@ describe('ApplePay', () => {
             });
         });
 
-        test('should use custom domainName if set in the component configuration', () => {
+        test('should use custom domainName if set in the component configuration', async () => {
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 domainName: 'https://pay.example.com',
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // @ts-ignore ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
@@ -250,6 +278,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -285,6 +314,80 @@ describe('ApplePay', () => {
     });
 
     describe('submit()', () => {
+        test.each<{ missingProperty: string; props: ApplePayConfiguration }>([
+            { missingProperty: 'countryCode', props: {} },
+            { missingProperty: 'amount', props: { amount: undefined } },
+            { missingProperty: 'totalPriceLabel', props: { configuration: { merchantId: 'test-merchant' } } },
+            { missingProperty: 'merchantName', props: { configuration: { merchantId: 'test-merchant' }, totalPriceLabel: 'Total' } },
+            { missingProperty: 'merchantId', props: { configuration: { merchantName: 'TestMerchant' } } }
+        ])('should call onError with an implementation error when $missingProperty is missing', async ({ missingProperty, props }) => {
+            if (missingProperty === 'countryCode') {
+                core.options.countryCode = undefined;
+            }
+            const onError = jest.fn();
+            const applepay = new ApplePay(core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 },
+                ...props,
+                onError
+            });
+            await waitForSdkLoad();
+
+            expect(() => applepay.submit()).not.toThrow();
+            await waitForSdkLoad();
+
+            expect(onError).toHaveBeenCalledTimes(1);
+            expect(onError).toHaveBeenCalledWith(
+                expect.objectContaining({ name: 'IMPLEMENTATION_ERROR', message: expect.stringContaining(missingProperty) }),
+                applepay
+            );
+            expect(ApplePayService).not.toHaveBeenCalled();
+            expect(ApplePayService.prototype.begin).not.toHaveBeenCalled();
+            expect(mockedHttpPost).not.toHaveBeenCalled();
+        });
+
+        test('should start a session with custom merchant validation without merchant configuration', async () => {
+            const onValidateMerchant = jest.fn().mockResolvedValue(undefined);
+            const onError = jest.fn();
+            const applepay = new ApplePay(core, {
+                totalPriceLabel: 'Total',
+                onValidateMerchant,
+                onError
+            });
+            await waitForSdkLoad();
+
+            applepay.submit();
+            await waitForSdkLoad();
+
+            expect(ApplePayService).toHaveBeenCalledWith(
+                expect.objectContaining({ currencyCode: 'USD', total: expect.objectContaining({ amount: '0' }) }),
+                expect.objectContaining({ onValidateMerchant })
+            );
+            expect(ApplePayService.prototype.begin).toHaveBeenCalledTimes(1);
+            expect(onError).not.toHaveBeenCalled();
+            expect(mockedHttpPost).not.toHaveBeenCalled();
+        });
+
+        test('should report an error and not start a session when no Apple Pay version is available', async () => {
+            const onErrorMock = jest.fn();
+            const applepay = new ApplePay(core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 },
+                onError: onErrorMock
+            });
+            await waitForSdkLoad();
+            applepay['applePayVersionNumber'] = undefined;
+
+            applepay.submit();
+            await new Promise(process.nextTick);
+
+            expect(ApplePayService).not.toHaveBeenCalled();
+            expect(onErrorMock).toHaveBeenCalledWith(
+                expect.objectContaining({ name: 'ERROR', message: 'Apple Pay is not available on this device' }),
+                applepay
+            );
+        });
+
         test('should forward apple pay error (if available) to ApplePay if payment fails', async () => {
             const onPaymentFailedMock = jest.fn();
             const error = mock<ApplePayJS.ApplePayError>();
@@ -310,6 +413,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -352,6 +456,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -396,6 +501,7 @@ describe('ApplePay', () => {
             });
             const setElementStatusSpy = jest.spyOn(applepay, 'setElementStatus');
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -450,6 +556,7 @@ describe('ApplePay', () => {
                 resultCode: 'Authorized'
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -501,6 +608,7 @@ describe('ApplePay', () => {
                 resultCode: 'Authorized'
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -546,6 +654,7 @@ describe('ApplePay', () => {
                 resultCode: 'Authorized'
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -620,6 +729,7 @@ describe('ApplePay', () => {
                 onPaymentFailed: onPaymentFailedMock
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -744,6 +854,7 @@ describe('ApplePay', () => {
                 supportsCouponCode: true
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -760,6 +871,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -780,6 +892,7 @@ describe('ApplePay', () => {
                 onCouponCodeChanged: onCouponCodeChangeMock
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -795,6 +908,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -818,6 +932,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -845,6 +960,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);

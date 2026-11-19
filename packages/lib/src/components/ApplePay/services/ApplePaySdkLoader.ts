@@ -5,14 +5,14 @@ import { IAnalytics } from '../../../core/Analytics/Analytics';
 export const APPLE_PAY_SDK_URL = 'https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js';
 
 class ApplePaySdkLoader {
-    private sdkLoadingPromise: Promise<void>;
+    private sdkLoadingPromise: Promise<void> | undefined;
     private readonly analytics: IAnalytics;
 
     constructor({ analytics }: { analytics: IAnalytics }) {
         this.analytics = analytics;
     }
 
-    public async load(): Promise<ApplePaySession> {
+    public async load(): Promise<ApplePaySession | undefined> {
         try {
             const scriptElement = new Script({
                 src: APPLE_PAY_SDK_URL,

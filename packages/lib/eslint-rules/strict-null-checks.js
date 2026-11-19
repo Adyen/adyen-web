@@ -58,7 +58,6 @@ const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName :
 // list may only shrink. A listed file with no errors left is reported as an obsolete entry.
 // ══════════════════════════════════════════════════════════
 const STRICT_NULL_CHECKS_BACKLOG = [
-
     // ── Ticket 4: Shared form fields (92 errors) ──
 
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
@@ -68,13 +67,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/Card.tsx',
     'src/components/Card/components/CardInput/CardInput.tsx',
     'src/components/Card/components/CardInput/utils.ts',
-
-    // ── Ticket 8: Apple Pay ──
-    'src/components/ApplePay/ApplePay.tsx',
-    'src/components/ApplePay/services/ApplePaySdkLoader.ts',
-    'src/components/ApplePay/services/ApplePayService.ts',
-    'src/components/ApplePay/utils/map-adyen-brands-to-applepay-brands.ts',
-    'src/components/ApplePay/utils/payment-request.ts',
 
     // ── No ticket yet (316 errors) ──
     // src/components/Ach (19 errors)

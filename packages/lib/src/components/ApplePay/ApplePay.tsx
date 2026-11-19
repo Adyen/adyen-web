@@ -35,7 +35,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     protected static readonly defaultProps = defaultProps;
 
     private sdkLoader: ApplePaySdkLoader;
-    private applePayVersionNumber: number = undefined;
+    private applePayVersionNumber?: number;
 
     constructor(checkout: ICore, props?: ApplePayConfiguration) {
         super(checkout, props);
@@ -72,7 +72,6 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * Formats the component props
      */
     protected override formatProps(props: ApplePayConfiguration): ApplePayConfiguration {
-        // @ts-ignore TODO: Fix brands prop
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
@@ -120,7 +119,12 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.selected, target: UiTarget.instantPaymentButton });
             this.submitAnalytics(event);
         }
-        void this.startSession();
+
+        this.startSession().catch((error: unknown) => {
+            this.handleError(
+                error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError('ERROR', 'Apple Pay - Could not start session', { cause: error })
+            );
+        });
     };
 
     public get isValid(): boolean {
@@ -138,11 +142,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * @param merchantIdentifier
      */
     public async applePayCapabilities(merchantIdentifier?: string): Promise<ApplePayJS.PaymentCredentialStatusResponse> {
-        const identifier = merchantIdentifier || this.props.configuration.merchantId;
+        const identifier = merchantIdentifier || this.props.configuration?.merchantId;
+        if (!identifier) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Apple Pay: Missing merchantId for applePayCapabilities()');
+        }
 
         try {
             await this.sdkLoader.isSdkLoaded();
-            return await ApplePaySession?.applePayCapabilities(identifier);
+            return await ApplePaySession.applePayCapabilities(identifier);
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Apple Pay: Error when requesting applePayCapabilities()', { cause: error });
         }
@@ -159,7 +166,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         try {
             await this.sdkLoader.isSdkLoaded();
 
-            if (ApplePaySession?.canMakePayments()) {
+            if (typeof ApplePaySession !== 'undefined' && ApplePaySession.canMakePayments()) {
                 return Promise.resolve();
             }
 
@@ -175,7 +182,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * @private
      */
     private defineApplePayVersionNumber() {
-        if (window.location.protocol !== 'https:') return;
+        if (window.location.protocol !== 'https:' || typeof ApplePaySession === 'undefined') return;
         this.applePayVersionNumber = this.props.version || resolveSupportedVersion(LATEST_APPLE_PAY_VERSION);
     }
 
@@ -194,17 +201,26 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
-    private startSession() {
+    private async startSession(): Promise<void> {
         const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChanged } = this.props;
+        const version = this.applePayVersionNumber;
+
+        if (!version) {
+            throw new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device');
+        }
 
         const paymentRequest = preparePaymentRequest({
-            companyName: this.props.configuration.merchantName,
+            companyName: this.props.configuration?.merchantName,
             countryCode: this.core.options.countryCode,
             ...this.props
         });
 
+        if (!onValidateMerchant && (!this.props.configuration?.merchantName || !this.props.configuration?.merchantId)) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Apple Pay - Missing configuration.merchantName or configuration.merchantId');
+        }
+
         const session = new ApplePayService(paymentRequest, {
-            version: this.applePayVersionNumber,
+            version,
             onError: (error: unknown) => {
                 this.handleError(
                     new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', {
@@ -221,8 +237,9 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onCouponCodeChanged,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
-                const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
-                const deliveryAddress = formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact, true);
+                const billingAddress = event.payment.billingContact && formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
+                const deliveryAddress =
+                    event.payment.shippingContact && formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact, true);
 
                 this.setState({
                     applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
@@ -246,7 +263,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     .then(paymentResponse => {
                         this.handleResponse(paymentResponse);
                     })
-                    .catch((paymentResponse?: RawPaymentResponse | CancelError) => {
+                    .catch((paymentResponse: RawPaymentResponse | CancelError) => {
                         if (paymentResponse instanceof CancelError) {
                             reject({ status: ApplePaySession.STATUS_FAILURE });
                             this.setElementStatus('ready');
@@ -272,13 +289,13 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }
         });
 
-        return new Promise<void>((resolve, reject) => this.props.onClick(resolve, reject))
+        return new Promise<void>((resolve, reject) => (this.props.onClick ?? defaultProps.onClick)(resolve, reject))
             .then(() => {
                 session.begin();
             })
-            .catch(() => ({
+            .catch(() => {
                 // Swallow exception triggered by onClick reject
-            }));
+            });
     }
 
     /**
@@ -290,7 +307,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     private async handleAuthorization(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (!this.props.onAuthorized) {
-                resolve();
+                return resolve();
             }
 
             const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
@@ -337,16 +354,20 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             });
     }
 
-    private async validateMerchant(resolve: (merchantSession: unknown) => void, reject: (error: string) => void) {
+    private async validateMerchant(resolve: (merchantSession: unknown) => void, reject: (error?: string) => void) {
         const { hostname } = window.location;
         const { clientKey, configuration, loadingContext, initiative, domainName } = this.props;
-        const { merchantName, merchantId } = configuration;
+        const { merchantName, merchantId } = configuration ?? {};
+        if (!merchantName || !merchantId) {
+            reject('Could not get Apple Pay session: missing configuration.merchantName or configuration.merchantId');
+            return;
+        }
         const path = `v1/applePay/sessions?clientKey=${clientKey}`;
         const options = { loadingContext, path };
         const request: ApplePaySessionRequest = {
             displayName: merchantName,
             domainName: domainName || hostname,
-            initiative,
+            initiative: initiative ?? defaultProps.initiative,
             merchantIdentifier: merchantId
         };
 
@@ -354,7 +375,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             const response = await httpPost<ApplePaySessionResponse>(options, request);
             const decodedData: DecodeObject = base64.decode(response.data);
 
-            if (!decodedData.success) {
+            if (!decodedData.success || decodedData.data === undefined) {
                 reject('Could not decode Apple Pay session');
             } else {
                 const session: unknown = JSON.parse(decodedData.data);
@@ -365,16 +386,16 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) {
             return null;
         }
 
         return (
             <ApplePayButton
-                buttonStyle={this.props.buttonColor}
-                buttonType={this.props.buttonType}
-                buttonLocale={this.props.buttonLocale}
+                buttonStyle={this.props.buttonColor ?? defaultProps.buttonColor}
+                buttonType={this.props.buttonType ?? defaultProps.buttonType}
+                buttonLocale={this.props.buttonLocale ?? this.i18n.locale}
                 onClick={this.submit}
             />
         );
