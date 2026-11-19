@@ -62,9 +62,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.handleOnApproveV6 = this.handleOnApproveV6.bind(this);
         this.initializePayPalV6 = this.initializePayPalV6.bind(this);
 
-        if (this.props.usePayPalV6) {
+        if (this.props.payPalV6) {
             const { isExpress } = this.props;
-            const { onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props.usePayPalV6;
+            const { onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props.payPalV6;
 
             if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
                 throw new AdyenCheckoutError(
@@ -92,7 +92,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         const sdkLoader = new PayPalSdkLoader({
             analytics: this.analytics,
             environment: this.props.environment,
-            nonce: this.props.usePayPalV6?.nonce
+            nonce: this.props.payPalV6?.nonce
         });
 
         this.paypalService = new PayPalService({ sdkLoader, ...this.paypalServiceConfig });
@@ -140,7 +140,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * that the service is always created and refreshed with the same set of props.
      */
     private get paypalServiceConfig(): PayPalServiceRefreshConfig {
-        const paypalV6Props = this.props.usePayPalV6;
+        const paypalV6Props = this.props.payPalV6;
 
         const components: PayPalComponents = ['paypal-payments'];
 
@@ -169,7 +169,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     private onPayPalServiceReady(sdkReadyPromise: Promise<void>): void {
         sdkReadyPromise
             .then(() => {
-                const { onCreatePayPalMessages } = this.props.usePayPalV6 ?? {};
+                const { onCreatePayPalMessages } = this.props.payPalV6 ?? {};
 
                 if (onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
                     onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
@@ -185,7 +185,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     public override async isAvailable(): Promise<void> {
-        if (this.props.usePayPalV6) {
+        if (this.props.payPalV6) {
             if (!this.paypalService) {
                 throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
             }
@@ -199,7 +199,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     protected override get sdkDataPaymentMethodConfiguration() {
-        return this.props.usePayPalV6 ? { supportsPayPalV6: true } : undefined;
+        return this.props.payPalV6 ? { supportsPayPalV6: true } : undefined;
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
@@ -255,17 +255,17 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * Formats the component data output
      */
     protected formatData() {
-        const { isExpress, userAction, usePayPalV6 } = this.props;
+        const { isExpress, userAction, payPalV6 } = this.props;
         const isZeroAuth = this.props.amount?.value === 0;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
-                ...(!usePayPalV6 && { userAction })
+                ...(!payPalV6 && { userAction })
             },
-            ...(usePayPalV6 && { browserInfo: this.browserInfo }),
-            ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
+            ...(payPalV6 && { browserInfo: this.browserInfo }),
+            ...(payPalV6 && (payPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }
 
@@ -357,7 +357,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - Approve data from the PayPal SDK
      */
     private handleOnApproveV6(data: PayPalV6OnApproveData): Promise<void> {
-        const onAuthorized = this.props.usePayPalV6?.onAuthorized;
+        const onAuthorized = this.props.payPalV6?.onAuthorized;
 
         let state: AdditionalDetailsData | undefined;
 
@@ -501,38 +501,38 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     /**
-     * If the merchant provides the 'usePayPalV6' prop with an 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
+     * If the merchant provides the 'payPalV6' prop with an 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
      * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
      * paymentData
      *
      * @param data - The shipping address change data
      */
     private handleOnShippingAddressChangeV6(data: PayPalV6OnShippingAddressChangeData): Promise<void> {
-        const { usePayPalV6 } = this.props;
+        const { payPalV6 } = this.props;
 
-        if (!usePayPalV6?.onShippingAddressChange) return Promise.resolve();
+        if (!payPalV6?.onShippingAddressChange) return Promise.resolve();
 
-        return usePayPalV6.onShippingAddressChange(data, this);
+        return payPalV6.onShippingAddressChange(data, this);
     }
 
     /**
-     * If the merchant provides the 'usePayPalV6' prop with an 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
+     * If the merchant provides the 'payPalV6' prop with an 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
      * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
      * paymentData
      *
      * @param data - The shipping options change data
      */
     private handleOnShippingOptionsChangeV6(data: PayPalV6OnShippingOptionsChangeData): Promise<void> {
-        const { usePayPalV6 } = this.props;
+        const { payPalV6 } = this.props;
 
-        if (!usePayPalV6?.onShippingOptionsChange) return Promise.resolve();
+        if (!payPalV6?.onShippingOptionsChange) return Promise.resolve();
 
-        return usePayPalV6.onShippingOptionsChange(data, this);
+        return payPalV6.onShippingOptionsChange(data, this);
     }
 
     protected override componentToRender(): h.JSX.Element | null {
-        if (this.props.usePayPalV6) {
-            const { usePayPalV6: paypalv6Props } = this.props;
+        if (this.props.payPalV6) {
+            const { payPalV6: paypalv6Props } = this.props;
 
             if (!this.paypalService) return null;
 

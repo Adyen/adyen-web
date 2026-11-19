@@ -93,7 +93,7 @@ const Component = () => {
                     store.setPspReference(pspReference);
                 },
 
-                usePayPalV6: {
+                payPalV6: {
                     blockPayPalVenmoButton: true,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: true,

@@ -50,9 +50,9 @@ describe('PayPal v6', () => {
     });
 
     describe('constructor', () => {
-        test('should create the SDK loader and PayPal service and initialize it when usePayPalV6 is set', () => {
+        test('should create the SDK loader and PayPal service and initialize it when payPalV6 is set', () => {
             new Paypal(core, {
-                usePayPalV6: { vault: true, nonce: 'test-nonce' },
+                payPalV6: { vault: true, nonce: 'test-nonce' },
                 configuration: { merchantId: 'merchant-1' },
                 countryCode: 'US',
                 amount: { value: 1000, currency: 'USD' }
@@ -76,40 +76,40 @@ describe('PayPal v6', () => {
         });
 
         test('should flag in the sdkData that PayPal v6 is supported', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
 
             const decodedSdkData = decodeSdkData(paypal.data.paymentMethod.sdkData);
 
             expect(decodedSdkData.paymentMethodConfiguration).toEqual({ supportsPayPalV6: true });
         });
 
-        test('should default vault to false when not provided in usePayPalV6', () => {
-            new Paypal(core, { usePayPalV6: {} });
+        test('should default vault to false when not provided in payPalV6', () => {
+            new Paypal(core, { payPalV6: {} });
 
             expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ vault: false }));
         });
 
         test('should pass the paypal and venmo components to the PayPal service by default', () => {
-            new Paypal(core, { usePayPalV6: {} });
+            new Paypal(core, { payPalV6: {} });
 
             expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'venmo-payments'] }));
         });
 
         test('should not pass the venmo component to the PayPal service when the venmo button is blocked', () => {
-            new Paypal(core, { usePayPalV6: { blockPayPalVenmoButton: true } });
+            new Paypal(core, { payPalV6: { blockPayPalVenmoButton: true } });
 
             expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
         });
 
         test('should pass the messages component to the PayPal service when onCreatePayPalMessages is provided', () => {
-            new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: jest.fn() } });
+            new Paypal(core, { payPalV6: { onCreatePayPalMessages: jest.fn() } });
 
             expect(PayPalServiceMock).toHaveBeenCalledWith(
                 expect.objectContaining({ components: ['paypal-payments', 'venmo-payments', 'paypal-messages'] })
             );
         });
 
-        test('should not create the SDK loader or PayPal service when usePayPalV6 is not set', () => {
+        test('should not create the SDK loader or PayPal service when payPalV6 is not set', () => {
             new Paypal(core);
 
             expect(PayPalSdkLoaderMock).not.toHaveBeenCalled();
@@ -122,7 +122,7 @@ describe('PayPal v6', () => {
             PayPalServiceMock.prototype.initialize.mockRejectedValue(initError);
             const onErrorMock = jest.fn();
 
-            new Paypal(core, { usePayPalV6: {}, onError: onErrorMock });
+            new Paypal(core, { payPalV6: {}, onError: onErrorMock });
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -139,7 +139,7 @@ describe('PayPal v6', () => {
             ['onShippingOptionsChange', { onShippingOptionsChange: jest.fn() }],
             ['both shipping callbacks', { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }]
         ])('should throw an implementation error when %s is provided and isExpress is not set', (_name, shippingCallbacks) => {
-            expect(() => new Paypal(core, { usePayPalV6: { ...shippingCallbacks } })).toThrow(
+            expect(() => new Paypal(core, { payPalV6: { ...shippingCallbacks } })).toThrow(
                 'PayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
             );
             expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe('PayPal v6', () => {
             let caughtError: unknown;
 
             try {
-                new Paypal(core, { usePayPalV6: { onShippingAddressChange: jest.fn() } });
+                new Paypal(core, { payPalV6: { onShippingAddressChange: jest.fn() } });
             } catch (error) {
                 caughtError = error;
             }
@@ -163,7 +163,7 @@ describe('PayPal v6', () => {
                 () =>
                     new Paypal(core, {
                         isExpress: true,
-                        usePayPalV6: { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }
+                        payPalV6: { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }
                     })
             ).not.toThrow();
 
@@ -171,7 +171,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not throw when no shipping callbacks are provided and isExpress is not set', () => {
-            expect(() => new Paypal(core, { usePayPalV6: {} })).not.toThrow();
+            expect(() => new Paypal(core, { payPalV6: {} })).not.toThrow();
         });
 
         test('should not throw when the v5 shipping callbacks are used without isExpress', () => {
@@ -185,7 +185,7 @@ describe('PayPal v6', () => {
                     () =>
                         new Paypal(core, {
                             isExpress: true,
-                            usePayPalV6: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
+                            payPalV6: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
                         })
                 ).toThrow(`PayPal - Unsupported presentation mode: ${presentationMode} for express checkout`);
 
@@ -197,7 +197,7 @@ describe('PayPal v6', () => {
             let caughtError: unknown;
 
             try {
-                new Paypal(core, { isExpress: true, usePayPalV6: { presentationModeOptions: { presentationMode: 'redirect' } } });
+                new Paypal(core, { isExpress: true, payPalV6: { presentationModeOptions: { presentationMode: 'redirect' } } });
             } catch (error) {
                 caughtError = error;
             }
@@ -213,7 +213,7 @@ describe('PayPal v6', () => {
                     () =>
                         new Paypal(core, {
                             isExpress: true,
-                            usePayPalV6: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
+                            payPalV6: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
                         })
                 ).not.toThrow();
 
@@ -222,13 +222,13 @@ describe('PayPal v6', () => {
         );
 
         test('should not throw when an unsupported express presentation mode is used but isExpress is not set', () => {
-            expect(() => new Paypal(core, { usePayPalV6: { presentationModeOptions: { presentationMode: 'redirect' } } })).not.toThrow();
+            expect(() => new Paypal(core, { payPalV6: { presentationModeOptions: { presentationMode: 'redirect' } } })).not.toThrow();
 
             expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
         });
 
         test('should not throw when isExpress is true and no presentation mode is provided', () => {
-            expect(() => new Paypal(core, { isExpress: true, usePayPalV6: {} })).not.toThrow();
+            expect(() => new Paypal(core, { isExpress: true, payPalV6: {} })).not.toThrow();
         });
 
         test('should forward an AdyenCheckoutError as-is when initialization fails', async () => {
@@ -236,7 +236,7 @@ describe('PayPal v6', () => {
             PayPalServiceMock.prototype.initialize.mockRejectedValue(initError);
             const onErrorMock = jest.fn();
 
-            new Paypal(core, { usePayPalV6: {}, onError: onErrorMock });
+            new Paypal(core, { payPalV6: {}, onError: onErrorMock });
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -256,7 +256,7 @@ describe('PayPal v6', () => {
             mockSdkInstance({ createPayPalMessages: createPayPalMessagesMock });
             const onCreatePayPalMessagesMock = jest.fn();
 
-            new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
+            new Paypal(core, { payPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
 
             expect(onCreatePayPalMessagesMock).not.toHaveBeenCalled();
 
@@ -270,7 +270,7 @@ describe('PayPal v6', () => {
             mockSdkInstance({});
             const onCreatePayPalMessagesMock = jest.fn();
 
-            new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
+            new Paypal(core, { payPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -281,7 +281,7 @@ describe('PayPal v6', () => {
             mockSdkInstance(undefined);
             const onCreatePayPalMessagesMock = jest.fn();
 
-            new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
+            new Paypal(core, { payPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -291,7 +291,7 @@ describe('PayPal v6', () => {
         test('should not read the SDK instance when the callback is not provided', async () => {
             mockSdkInstance({ createPayPalMessages: createPayPalMessagesMock });
 
-            new Paypal(core, { usePayPalV6: {} });
+            new Paypal(core, { payPalV6: {} });
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -305,7 +305,7 @@ describe('PayPal v6', () => {
             const onCreatePayPalMessagesMock = jest.fn();
             const onErrorMock = jest.fn();
 
-            new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock }, onError: onErrorMock });
+            new Paypal(core, { payPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock }, onError: onErrorMock });
 
             await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -319,7 +319,7 @@ describe('PayPal v6', () => {
             const onErrorMock = jest.fn();
 
             new Paypal(core, {
-                usePayPalV6: {
+                payPalV6: {
                     onCreatePayPalMessages: () => {
                         throw callbackError;
                     }
@@ -347,7 +347,7 @@ describe('PayPal v6', () => {
 
         test('should refresh the PayPal service with the updated configuration', () => {
             const paypal = mountPayPal({
-                usePayPalV6: {},
+                payPalV6: {},
                 configuration: { merchantId: 'merchant-1' },
                 countryCode: 'US',
                 amount: { value: 1000, currency: 'USD' }
@@ -366,10 +366,10 @@ describe('PayPal v6', () => {
             );
         });
 
-        test('should refresh the service with the updated usePayPalV6 configuration', () => {
-            const paypal = mountPayPal({ usePayPalV6: {} });
+        test('should refresh the service with the updated payPalV6 configuration', () => {
+            const paypal = mountPayPal({ payPalV6: {} });
 
-            paypal.update({ usePayPalV6: { vault: true, locale: 'en_GB', blockPayPalVenmoButton: true } });
+            paypal.update({ payPalV6: { vault: true, locale: 'en_GB', blockPayPalVenmoButton: true } });
 
             expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(
                 expect.objectContaining({ vault: true, locale: 'en_GB', components: ['paypal-payments'] })
@@ -377,7 +377,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not create a new PayPal service nor a new SDK loader', () => {
-            const paypal = mountPayPal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ payPalV6: {} });
 
             paypal.update({ countryCode: 'GB' });
 
@@ -386,7 +386,7 @@ describe('PayPal v6', () => {
         });
 
         test('should re-render the component with the same PayPal service', () => {
-            const paypal = mountPayPal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ payPalV6: {} });
             const paypalService = mockPayPalComponentV6.mock.calls[0][0].paypalService;
             mockPayPalComponentV6.mockClear();
 
@@ -397,7 +397,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not refresh the service when no prop it is derived from changed', () => {
-            const paypal = mountPayPal({ usePayPalV6: {}, countryCode: 'US', amount: { value: 1000, currency: 'USD' } });
+            const paypal = mountPayPal({ payPalV6: {}, countryCode: 'US', amount: { value: 1000, currency: 'USD' } });
 
             paypal.update({ onError: jest.fn(), showPayButton: false });
 
@@ -405,7 +405,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not refresh the service when the amount is updated with the same value and currency', () => {
-            const paypal = mountPayPal({ usePayPalV6: {}, amount: { value: 1000, currency: 'USD' } });
+            const paypal = mountPayPal({ payPalV6: {}, amount: { value: 1000, currency: 'USD' } });
 
             paypal.update({ amount: { value: 1000, currency: 'USD' } });
 
@@ -413,14 +413,14 @@ describe('PayPal v6', () => {
         });
 
         test('should refresh the service when the requested SDK components change', () => {
-            const paypal = mountPayPal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ payPalV6: {} });
 
-            paypal.update({ usePayPalV6: { blockPayPalVenmoButton: true } });
+            paypal.update({ payPalV6: { blockPayPalVenmoButton: true } });
 
             expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
         });
 
-        test('should not refresh anything when usePayPalV6 is not set', () => {
+        test('should not refresh anything when payPalV6 is not set', () => {
             const paypal = mountPayPal({ showPayButton: true });
 
             paypal.update({ countryCode: 'GB' });
@@ -431,7 +431,7 @@ describe('PayPal v6', () => {
         test('should report the error via onError when the refresh fails', async () => {
             const refreshError = new Error('Failed to load token');
             const onErrorMock = jest.fn();
-            const paypal = mountPayPal({ usePayPalV6: {}, onError: onErrorMock });
+            const paypal = mountPayPal({ payPalV6: {}, onError: onErrorMock });
 
             PayPalServiceMock.prototype.refresh.mockRejectedValue(refreshError);
 
@@ -447,7 +447,7 @@ describe('PayPal v6', () => {
     });
 
     describe('isAvailable', () => {
-        test('should resolve without using the PayPal service when usePayPalV6 is not set', async () => {
+        test('should resolve without using the PayPal service when payPalV6 is not set', async () => {
             const paypal = new Paypal(core);
 
             await expect(paypal.isAvailable()).resolves.toBeUndefined();
@@ -456,7 +456,7 @@ describe('PayPal v6', () => {
 
         test('should wait for the SDK and resolve when PayPal is eligible', async () => {
             isEligibleMock.mockReturnValue(true);
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
 
             await expect(paypal.isAvailable()).resolves.toBeUndefined();
 
@@ -466,7 +466,7 @@ describe('PayPal v6', () => {
 
         test('should reject when PayPal is not eligible', async () => {
             isEligibleMock.mockReturnValue(false);
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
 
             await expect(paypal.isAvailable()).rejects.toThrow('PayPal is not available');
             await expect(paypal.isAvailable()).rejects.toBeInstanceOf(AdyenCheckoutError);
@@ -474,7 +474,7 @@ describe('PayPal v6', () => {
 
         test('should reject when the SDK fails to load', async () => {
             PayPalServiceMock.prototype.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
 
             await expect(paypal.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
             expect(isEligibleMock).not.toHaveBeenCalled();
@@ -483,7 +483,7 @@ describe('PayPal v6', () => {
 
     describe('handleOnApproveV6', () => {
         test('should call handleAdditionalDetails with the approve data and the stored paymentData', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             paypal.paymentData = 'pd-v6';
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
@@ -496,7 +496,7 @@ describe('PayPal v6', () => {
         });
 
         test('should pass undefined paymentData when none is stored', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -508,7 +508,7 @@ describe('PayPal v6', () => {
         });
 
         test('should remap orderId/payerId/fundingSource to orderID/payerID/paymentSource and drop the remaining data', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             paypal.paymentData = 'pd-v6';
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
@@ -528,7 +528,7 @@ describe('PayPal v6', () => {
         });
 
         test('should set paymentSource to undefined when the approve data has no fundingSource (one-time payment flow)', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -540,7 +540,7 @@ describe('PayPal v6', () => {
         });
 
         test('should remap vaultSetupToken/payerId to vaultToken/payerID when there is no orderId (save payment flow)', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             paypal.paymentData = 'pd-v6';
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
@@ -555,7 +555,7 @@ describe('PayPal v6', () => {
         });
 
         test('should remap fundingSource to paymentSource in the save payment flow', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             paypal.paymentData = 'pd-v6';
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
@@ -575,7 +575,7 @@ describe('PayPal v6', () => {
         test('should report the error and skip handleAdditionalDetails when the approve data has no orderId nor vaultSetupToken', async () => {
             const onErrorMock = jest.fn();
             const onAuthorizedMock = jest.fn();
-            const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
+            const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -593,7 +593,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not request the order details when onAuthorized is not provided', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             // @ts-ignore spying on a protected method
             jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -605,7 +605,7 @@ describe('PayPal v6', () => {
 
         test('should not request the order details when there is no orderId, even if onAuthorized is provided', async () => {
             const onAuthorizedMock = jest.fn();
-            const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+            const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock } });
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -632,7 +632,7 @@ describe('PayPal v6', () => {
 
             test('should request the order details using the loadingContext, clientKey, merchantId and orderId', async () => {
                 const paypal = new Paypal(core, {
-                    usePayPalV6: { onAuthorized: jest.fn().mockImplementation((_data, { resolve }) => resolve()) },
+                    payPalV6: { onAuthorized: jest.fn().mockImplementation((_data, { resolve }) => resolve()) },
                     loadingContext: 'https://loading-context/',
                     clientKey: 'test_client_key',
                     configuration: { merchantId: 'merchant-1' }
@@ -652,7 +652,7 @@ describe('PayPal v6', () => {
 
             test('should set the state and call onAuthorized with the parsed order details', async () => {
                 const onAuthorizedMock = jest.fn().mockImplementation((_data, { resolve }) => resolve());
-                const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock } });
                 // @ts-ignore spying on a protected method
                 jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -676,7 +676,7 @@ describe('PayPal v6', () => {
             test('should omit the addresses and the shopper name when they are not returned', async () => {
                 requestPayPalOrderDetailsMock.mockResolvedValue({ requestId: 'request-id', payPalOrder: { id: 'order-v6' } });
                 const onAuthorizedMock = jest.fn().mockImplementation((_data, { resolve }) => resolve());
-                const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock } });
                 // @ts-ignore spying on a protected method
                 jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -688,7 +688,7 @@ describe('PayPal v6', () => {
 
             test('should call handleAdditionalDetails once onAuthorized resolves', async () => {
                 const onAuthorizedMock = jest.fn().mockImplementation((_data, { resolve }) => resolve());
-                const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock } });
                 paypal.paymentData = 'pd-v6';
                 // @ts-ignore spying on a protected method
                 const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
@@ -704,7 +704,7 @@ describe('PayPal v6', () => {
             test('should report the error and skip handleAdditionalDetails when onAuthorized rejects', async () => {
                 const onErrorMock = jest.fn();
                 const onAuthorizedMock = jest.fn().mockImplementation((_data, { reject }) => reject());
-                const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
+                const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
                 // @ts-ignore spying on a protected method
                 const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -722,7 +722,7 @@ describe('PayPal v6', () => {
                 requestPayPalOrderDetailsMock.mockRejectedValue(requestError);
                 const onErrorMock = jest.fn();
                 const onAuthorizedMock = jest.fn();
-                const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
+                const paypal = new Paypal(core, { payPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
                 // @ts-ignore spying on a protected method
                 const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
@@ -744,7 +744,7 @@ describe('PayPal v6', () => {
     describe('V6 shipping change handlers', () => {
         test('handleOnShippingAddressChangeV6 should call the merchant callback with the component instance', async () => {
             const onShippingAddressChangeMock = jest.fn().mockResolvedValue(undefined);
-            const paypal = new Paypal(core, { isExpress: true, usePayPalV6: { onShippingAddressChange: onShippingAddressChangeMock } });
+            const paypal = new Paypal(core, { isExpress: true, payPalV6: { onShippingAddressChange: onShippingAddressChangeMock } });
 
             const data = { shippingAddress: { city: 'Amsterdam' } } as any;
             // @ts-ignore accessing private method
@@ -754,14 +754,14 @@ describe('PayPal v6', () => {
         });
 
         test('handleOnShippingAddressChangeV6 should resolve when no callback is provided', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             // @ts-ignore accessing private method
             await expect(paypal.handleOnShippingAddressChangeV6({} as any)).resolves.toBeUndefined();
         });
 
         test('handleOnShippingOptionsChangeV6 should call the merchant callback with the component instance', async () => {
             const onShippingOptionsChangeMock = jest.fn().mockResolvedValue(undefined);
-            const paypal = new Paypal(core, { isExpress: true, usePayPalV6: { onShippingOptionsChange: onShippingOptionsChangeMock } });
+            const paypal = new Paypal(core, { isExpress: true, payPalV6: { onShippingOptionsChange: onShippingOptionsChangeMock } });
 
             const data = { selectedShippingOption: { id: 'option-1' } } as any;
             // @ts-ignore accessing private method
@@ -771,7 +771,7 @@ describe('PayPal v6', () => {
         });
 
         test('handleOnShippingOptionsChangeV6 should resolve when no callback is provided', async () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             // @ts-ignore accessing private method
             await expect(paypal.handleOnShippingOptionsChangeV6({} as any)).resolves.toBeUndefined();
         });
@@ -779,32 +779,32 @@ describe('PayPal v6', () => {
 
     describe('formatData', () => {
         test('should not add userAction to the payment method data', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {}, userAction: 'continue' });
+            const paypal = new Paypal(core, { payPalV6: {}, userAction: 'continue' });
 
             expect(paypal.data.paymentMethod).not.toHaveProperty('userAction');
             expect(paypal.data.paymentMethod).toMatchObject({ type: 'paypal', subtype: 'sdk' });
         });
 
         test('should set the subtype to express when isExpress is set', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {}, isExpress: true });
+            const paypal = new Paypal(core, { payPalV6: {}, isExpress: true });
 
             expect(paypal.data.paymentMethod).toMatchObject({ type: 'paypal', subtype: 'express' });
         });
 
-        test('should add storePaymentMethod when vault is set in usePayPalV6', () => {
-            const paypal = new Paypal(core, { usePayPalV6: { vault: true } });
+        test('should add storePaymentMethod when vault is set in payPalV6', () => {
+            const paypal = new Paypal(core, { payPalV6: { vault: true } });
 
             expect(paypal.data.storePaymentMethod).toBe(true);
         });
 
         test('should add storePaymentMethod when the amount is zero (zero-auth)', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {}, amount: { value: 0, currency: 'USD' } });
+            const paypal = new Paypal(core, { payPalV6: {}, amount: { value: 0, currency: 'USD' } });
 
             expect(paypal.data.storePaymentMethod).toBe(true);
         });
 
         test('should not add storePaymentMethod when vault is not set and the amount is not zero', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {}, amount: { value: 1000, currency: 'USD' } });
+            const paypal = new Paypal(core, { payPalV6: {}, amount: { value: 1000, currency: 'USD' } });
 
             expect(paypal.data).not.toHaveProperty('storePaymentMethod');
         });
@@ -816,7 +816,7 @@ describe('PayPal v6', () => {
         });
 
         test('should add the browser info when PayPal v6 is used', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
 
             expect(paypal.data.browserInfo).toEqual(
                 expect.objectContaining({
@@ -841,7 +841,7 @@ describe('PayPal v6', () => {
 
     describe('componentToRender', () => {
         test('should render the PayPalComponentV6 even when showPayButton is false', () => {
-            const paypal = new Paypal(core, { showPayButton: false, usePayPalV6: {} });
+            const paypal = new Paypal(core, { showPayButton: false, payPalV6: {} });
 
             render(paypal.render());
 
@@ -849,7 +849,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not render anything when the PayPal service is not available', () => {
-            const paypal = new Paypal(core, { usePayPalV6: {} });
+            const paypal = new Paypal(core, { payPalV6: {} });
             // @ts-ignore overriding private field
             paypal.paypalService = undefined;
 
@@ -858,13 +858,13 @@ describe('PayPal v6', () => {
             expect(mockPayPalComponentV6).not.toHaveBeenCalled();
         });
 
-        test('should render the PayPalComponentV6 forwarding the usePayPalV6 configuration', () => {
+        test('should render the PayPalComponentV6 forwarding the payPalV6 configuration', () => {
             const style = { paypal: { type: 'pay' as const, class: 'paypal-gold' as const } };
             const presentationModeOptions = { presentationMode: 'modal' as const };
             const paypal = new Paypal(core, {
                 showPayButton: true,
                 isExpress: true,
-                usePayPalV6: {
+                payPalV6: {
                     commit: true,
                     vault: true,
                     style,
@@ -902,7 +902,7 @@ describe('PayPal v6', () => {
         });
 
         test('should forward blockPayPalButtonVariants to the PayPalComponentV6', () => {
-            const paypal = new Paypal(core, { usePayPalV6: { blockPayPalButtonVariants: true } });
+            const paypal = new Paypal(core, { payPalV6: { blockPayPalButtonVariants: true } });
 
             render(paypal.render());
 
@@ -910,7 +910,7 @@ describe('PayPal v6', () => {
         });
 
         test('should forward the environment to the PayPalComponentV6', () => {
-            const paypal = new Paypal(core, { environment: 'live', usePayPalV6: {} });
+            const paypal = new Paypal(core, { environment: 'live', payPalV6: {} });
 
             render(paypal.render());
 
@@ -919,7 +919,7 @@ describe('PayPal v6', () => {
 
         test('should map the onCancel prop to a CANCEL AdyenCheckoutError', () => {
             const onErrorMock = jest.fn();
-            const paypal = new Paypal(core, { showPayButton: true, usePayPalV6: {}, onError: onErrorMock });
+            const paypal = new Paypal(core, { showPayButton: true, payPalV6: {}, onError: onErrorMock });
             render(paypal.render());
 
             const { onCancel } = mockPayPalComponentV6.mock.calls[0][0];
@@ -931,7 +931,7 @@ describe('PayPal v6', () => {
 
         test('should map the onError prop to an ERROR AdyenCheckoutError preserving the cause', () => {
             const onErrorMock = jest.fn();
-            const paypal = new Paypal(core, { showPayButton: true, usePayPalV6: {}, onError: onErrorMock });
+            const paypal = new Paypal(core, { showPayButton: true, payPalV6: {}, onError: onErrorMock });
             render(paypal.render());
 
             const cause = new Error('sdk failure');
