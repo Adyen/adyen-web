@@ -119,13 +119,12 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.selected, target: UiTarget.instantPaymentButton });
             this.submitAnalytics(event);
         }
-        try {
-            void this.startSession();
-        } catch (error: unknown) {
+
+        this.startSession().catch((error: unknown) => {
             this.handleError(
                 error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError('ERROR', 'Apple Pay - Could not start session', { cause: error })
             );
-        }
+        });
     };
 
     public get isValid(): boolean {
@@ -202,7 +201,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
-    private startSession() {
+    private async startSession(): Promise<void> {
         const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChanged } = this.props;
         const version = this.applePayVersionNumber;
 
@@ -294,9 +293,9 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             .then(() => {
                 session.begin();
             })
-            .catch(() => ({
+            .catch(() => {
                 // Swallow exception triggered by onClick reject
-            }));
+            });
     }
 
     /**

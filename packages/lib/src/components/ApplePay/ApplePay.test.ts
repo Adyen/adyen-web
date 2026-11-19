@@ -379,6 +379,7 @@ describe('ApplePay', () => {
             applepay['applePayVersionNumber'] = undefined;
 
             applepay.submit();
+            await new Promise(process.nextTick);
 
             expect(ApplePayService).not.toHaveBeenCalled();
             expect(onErrorMock).toHaveBeenCalledWith(
