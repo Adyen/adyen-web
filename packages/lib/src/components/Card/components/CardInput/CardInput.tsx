@@ -32,6 +32,7 @@ import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/lib/types';
+import type { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
@@ -48,7 +49,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const isValidating = useRef(false);
     const getImage = useImage();
 
-    const billingAddressRef = useRef(null);
+    const billingAddressRef = useRef<ComponentMethodsRef | null>(null);
     const setAddressRef = ref => {
         billingAddressRef.current = ref;
     };
@@ -86,7 +87,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const [isSfpValid, setIsSfpValid] = useState(false);
     const [expiryDatePolicy, setExpiryDatePolicy] = useState(DATE_POLICY_REQUIRED);
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
-    const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
+    const [issuingCountryCode, setIssuingCountryCode] = useState<string | null>(null);
 
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState<DualBrandSelectElement[]>([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState(props.storedPaymentMethodId ? props.brand : ''); // If this is a storedCard comp initialise state with the storedCard's brand
@@ -101,14 +102,14 @@ const CardInput = (props: Readonly<CardInputProps>) => {
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
     const [billingAddress, setBillingAddress] = useState<AddressData | null>(showBillingAddress ? initialBillingAddress : null);
-    const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
-    const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
+    const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState<boolean | undefined>(false);
+    const [socialSecurityNumber, setSocialSecurityNumber] = useState<string | undefined>('');
     const [installments, setInstallments] = useState<InstallmentsState>({ value: null });
 
     // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
     // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
     // or else the name of an internal, Adyen-web, element (like 'holderName')
-    const [iOSFocusedField, setIOSFocusedField] = useState(null);
+    const [iOSFocusedField, setIOSFocusedField] = useState<string | null | undefined>(null);
 
     /**
      * This stores the brand as detected by the internal regEx.
@@ -152,7 +153,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
 
     const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
 
-    const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
+    const cardCountryCode: string | undefined = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
     const showKCP = !!props.configuration.koreanAuthenticationRequired && isKorea;
 
@@ -328,16 +329,16 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         clearSRPanel?.(); // TODO - recheck if this is still true
 
         // Validate SecuredFields
-        sfp.current.showValidation();
+        sfp.current?.showValidation();
 
         // Validate holderName & SSN & KCP (taxNumber) but *not* billingAddress
         triggerValidation(['holderName', 'socialSecurityNumber', 'taxNumber']);
 
         // Validate Address
-        if (billingAddressRef?.current) billingAddressRef.current.showValidation();
+        if (billingAddressRef?.current) billingAddressRef.current.showValidation?.();
     };
 
-    cardInputRef.current.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
+    cardInputRef.current.processBinLookupResponse = (binLookupResponse: BinLookupResponse | null, isReset: boolean) => {
         extensions.processBinLookup(binLookupResponse, isReset);
     };
 
@@ -348,13 +349,16 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      */
     useEffect(() => {
         // componentDidMount - expose more methods expected by Card.tsx
-        cardInputRef.current.setFocusOn = sfp.current.setFocusOn;
-        cardInputRef.current.updateStyles = sfp.current.updateStyles;
-        cardInputRef.current.handleUnsupportedCard = sfp.current.handleUnsupportedCard;
+        const sfpInstance = sfp.current;
+        if (!sfpInstance) return;
+
+        cardInputRef.current.setFocusOn = sfpInstance.setFocusOn;
+        cardInputRef.current.updateStyles = sfpInstance.updateStyles;
+        cardInputRef.current.handleUnsupportedCard = sfpInstance.handleUnsupportedCard;
 
         // componentWillUnmount
         return () => {
-            sfp.current.destroy();
+            sfpInstance.destroy();
         };
     }, []);
 
@@ -454,7 +458,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
 
         const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
-        const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
+        const sfStateErrorsObj = sfp.current?.mapErrorsToValidationRuleResult();
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
 
         props.onChange({

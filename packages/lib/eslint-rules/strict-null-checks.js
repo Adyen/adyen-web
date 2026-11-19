@@ -63,11 +63,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
     'src/components/internal/IbanInput/validate.ts',
 
-    // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──
-    'src/components/Card/Card.tsx',
-    'src/components/Card/components/CardInput/CardInput.tsx',
-    'src/components/Card/components/CardInput/utils.ts',
-
     // ── No ticket yet (316 errors) ──
     // src/components/Ach (19 errors)
     'src/components/Ach/Ach.tsx',

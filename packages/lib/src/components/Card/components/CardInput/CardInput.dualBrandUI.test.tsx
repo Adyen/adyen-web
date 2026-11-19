@@ -1,4 +1,4 @@
-import { createRef, h } from 'preact';
+import { createRef, Fragment, h } from 'preact';
 import { render, screen, act, fireEvent } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
@@ -16,6 +16,7 @@ const cardInputRequiredProps = {
     brandsIcons: [],
     brandsConfiguration: {},
     onSubmitAnalytics: jest.fn(),
+    payButton: () => <Fragment />,
     setComponentRef: jest.fn(ref => {
         cardInputRef = ref;
     })
