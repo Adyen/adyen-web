@@ -68,18 +68,18 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
     useEffect(() => {
         try {
             // Create a partial function for setting SR messages with fixed configuration
-            const setMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
+            const setMessages: SetSRMessagesReturnFn | undefined = setSRMessagesFromObjects?.({});
             // Set messages with current errors and layout
 
             // Unlike Card SR Panel, isValidating is a boolean
-            const srPanelResp: SetSRMessagesReturnObject = setMessages?.({
+            const srPanelResp: SetSRMessagesReturnObject | undefined = setMessages?.({
                 errors,
                 isValidating,
                 layout
             });
 
             // Store the sorted list of errors for comparison
-            const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
+            const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout ?? null;
             setSortedErrorList(currentErrorsSortedByLayout);
 
             // Handle different error scenarios based on the action type
@@ -113,10 +113,10 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
                         // Only announce blur-based errors to screen reader
                         const isBlurBasedError = true;
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                        setSRMessagesFromStrings(latestSRError);
+                        setSRMessagesFromStrings?.(latestSRError);
                     } else {
                         // Clear SR panel if there are no more errors
-                        clearSRPanel();
+                        clearSRPanel?.();
                     }
                     break;
                 }

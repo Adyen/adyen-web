@@ -140,6 +140,23 @@ describe('AmazonPay', () => {
             amazonPay.submit();
             expect(makePaymentsCallSpy).toHaveBeenCalled();
         });
+
+        test('should not call onPaymentFailed if beforeSubmit is rejected', async () => {
+            const beforeSubmitMock = jest.fn().mockImplementation((_data, _component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+            const amazonPay = getElement({ beforeSubmit: beforeSubmitMock, onPaymentFailed: onPaymentFailedMock });
+            const setElementStatusSpy = jest.spyOn(amazonPay, 'setElementStatus');
+
+            amazonPay.submit();
+            await new Promise(process.nextTick);
+
+            expect(beforeSubmitMock).toHaveBeenCalledTimes(1);
+            expect(core.session?.submitPayment).not.toHaveBeenCalled();
+            expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
+        });
     });
 
     describe('getShopperDetails', () => {

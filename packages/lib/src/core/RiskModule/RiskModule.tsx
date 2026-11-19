@@ -29,7 +29,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         }
     };
 
-    private nodeRiskContainer = null;
+    private nodeRiskContainer: HTMLDivElement | null = null;
 
     constructor(checkout: ICore, props?) {
         super(checkout, props);
@@ -42,10 +42,13 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         this.setState({ data: riskElements });
 
         if (this.props.risk.enabled === true) {
-            if (document.querySelector(this.props.risk.node)) {
-                this.nodeRiskContainer = document.createElement('div');
-                document.querySelector(this.props.risk.node).appendChild(this.nodeRiskContainer);
-                this.mount(this.nodeRiskContainer);
+            const { node } = this.props.risk;
+            const riskNode = node && document.querySelector(node);
+            if (riskNode) {
+                const nodeRiskContainer = document.createElement('div');
+                this.nodeRiskContainer = nodeRiskContainer;
+                riskNode.appendChild(nodeRiskContainer);
+                this.mount(nodeRiskContainer);
             } else {
                 this.onError({ message: 'RiskModule node was not found' });
             }
@@ -65,12 +68,12 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
     public onRiskComplete = result => {
         const data = { ...this.state.data, [result.type]: result.value, persistentCookie: result.persistentCookie, components: result.components };
         this.setState({ data, isValid: true });
-        this.props.risk.onComplete(this.riskData);
+        this.props.risk.onComplete?.(this.riskData);
         this.cleanUp();
     };
 
     public onError = error => {
-        this.props.risk.onError(error);
+        this.props.risk.onError?.(error);
         this.cleanUp();
     };
 

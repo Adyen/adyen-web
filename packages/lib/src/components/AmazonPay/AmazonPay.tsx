@@ -6,7 +6,6 @@ import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest, A
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import { TxVariants } from '../tx-variants';
-import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 import './AmazonPay.scss';
@@ -102,7 +101,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         if (amazonComponentSubmitFunction) {
             return amazonComponentSubmitFunction();
         }
-        this.makePaymentsCall()?.then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
+        this.executePaymentsCall();
     }
 
     protected override componentToRender(): h.JSX.Element {

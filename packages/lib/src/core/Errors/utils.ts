@@ -101,7 +101,7 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     const SR_INDICATOR_PREFIX = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? '' : '-sr'; // Useful for testing whether SR is reading out aria-live errors (sr) or aria-describedby ones
 
     // Create array of error objects, sorted by layout
-    const sortedErrors: SortedErrorObject[] = Object.entries(errors).reduce((acc, [key, value]) => {
+    const sortedErrors: SortedErrorObject[] = Object.entries(errors).reduce<SortedErrorObject[]>((acc, [key, value]) => {
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
 

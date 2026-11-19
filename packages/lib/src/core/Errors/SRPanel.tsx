@@ -5,6 +5,8 @@ import { SRMessages, SRMessagesRef } from './SRMessages';
 import type { ICore } from '../types';
 import './SRPanel.scss';
 
+const DEFAULT_NODE = 'body';
+
 /**
  * A panel meant to hold messages that will be read out by ScreenReaders on an aria-live="polite" basis
  * Expects a string or string array of message to add to the panel to be read out
@@ -15,7 +17,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     public static readonly defaultProps: Partial<SRPanelProps> = {
         enabled: true,
-        node: 'body',
+        node: DEFAULT_NODE,
         showPanel: false,
         id: 'ariaLiveSRPanel',
         ariaAttributes: {
@@ -25,7 +27,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         }
     };
 
-    private readonly srPanelContainer = null;
+    private readonly srPanelContainer: HTMLDivElement | null = null;
 
     private readonly id;
     private readonly showPanel;
@@ -45,7 +47,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
 
-            const panelParent = document.querySelector(this.props.node);
+            // An explicit `node: undefined` in srConfig overrides defaultProps, so fall back to the default here too
+            const panelParent = document.querySelector(this.props.node ?? DEFAULT_NODE);
 
             if (panelParent) {
                 const preExistingSRPanel = document.getElementById(this.id);
@@ -53,13 +56,14 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                     panelParent.removeChild(preExistingSRPanel);
                 }
 
-                this.srPanelContainer = document.createElement('div');
-                this.srPanelContainer.className = 'sr-panel-holder';
-                this.srPanelContainer.id = this.id;
+                const srPanelContainer = document.createElement('div');
+                this.srPanelContainer = srPanelContainer;
+                srPanelContainer.className = 'sr-panel-holder';
+                srPanelContainer.id = this.id;
 
-                panelParent.appendChild(this.srPanelContainer);
+                panelParent.appendChild(srPanelContainer);
 
-                this.mount(this.srPanelContainer);
+                this.mount(srPanelContainer);
             } else {
                 throw new Error('Component could not mount. Root node was not found.');
             }
@@ -98,13 +102,13 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     public setMessages = (messages: string[] | string | null): void => {
         if (!this.props.enabled) return;
 
-        let panelMessages = null;
+        let panelMessages: string[] | null = null;
         if (messages) {
             // Ensure panelMessages is an array
             panelMessages = Array.isArray(messages) ? messages : [messages];
         }
 
-        this.componentRef.setMessages(panelMessages);
+        this.componentRef.setMessages?.(panelMessages);
     };
 
     render() {

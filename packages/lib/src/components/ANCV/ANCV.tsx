@@ -6,7 +6,6 @@ import { Await } from '../../components/internal/Await';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
-import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class ANCVElement extends UIElement<ANCVConfiguration> {
@@ -40,7 +39,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
      * Otherwise createOrder and then Resolve.
      */
     public createOrder = (): Promise<void> => {
-        this.setStatus('loading');
+        this.setElementStatus('loading');
 
         // allow for multiple ANCV payments, follow giftcard logic and just use order if it exists
         if (this.props.order) {
@@ -68,12 +67,12 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
             return false;
         }
 
-        this.createOrder()
-            .then(this.makePaymentsCall)
-            .then(sanitizeResponse)
-            .then(verifyPaymentDidNotFail)
-            .then(this.handleResponse)
-            .catch(this.handleFailedResult);
+        void this.createOrder().then(() => {
+            // createOrder() reports a failed order through onError and resolves anyway, so there is nothing to pay with
+            if (!this.state.order && !this.props.order) return;
+
+            this.executePaymentsCall();
+        });
     }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick

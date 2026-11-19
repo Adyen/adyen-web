@@ -62,7 +62,7 @@ function IssuerList({
     const [inputType, setInputType] = useState<IssuerListInputTypes>(IssuerListInputTypes.Dropdown);
 
     const { setSRMessagesFromObjects, shouldMoveFocusSR } = useSRPanelContext();
-    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
+    const setSRMessages: SetSRMessagesReturnFn | undefined = setSRMessagesFromObjects?.({});
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -121,7 +121,7 @@ function IssuerList({
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
 
-        const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: true });
+        const srPanelResp: SetSRMessagesReturnObject | undefined = setSRMessages?.({ errors, isValidating: true });
         if (srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
             // Focus field in error, if required
             if (shouldMoveFocusSR) setFocusOnField(containerRef.current, 'issuer-list');
