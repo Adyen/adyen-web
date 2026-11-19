@@ -835,7 +835,7 @@ describe('SecuredField destroy', () => {
         expect(card.iframeContentWindow).toBeNull();
     });
 
-    test('should remove all children from the holder element by default (fullDestroy = true)', () => {
+    test('should remove all children from the holder element by default (removeFromDOM = true)', () => {
         expect(holderEl.childNodes.length).toBeGreaterThan(0);
 
         card.destroy();
@@ -843,7 +843,7 @@ describe('SecuredField destroy', () => {
         expect(holderEl.childNodes.length).toBe(0);
     });
 
-    test('should not remove children from the holder element when fullDestroy is false', () => {
+    test('should not remove children from the holder element when removeFromDOM is false', () => {
         expect(holderEl.childNodes.length).toBeGreaterThan(0);
 
         card.destroy(false);
