@@ -199,7 +199,7 @@ export interface LayoutObj {
     props: CardInputProps;
     showKCP: boolean;
     showBrazilianSSN: boolean;
-    countrySpecificSchemas: AddressSchema;
+    countrySpecificSchemas?: AddressSchema;
     billingAddressRequiredFields?: string[];
 }
 
