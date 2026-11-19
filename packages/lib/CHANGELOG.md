@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.48.2
+
+### Patch Changes
+
+- Fixed: some fix ([#4340](https://github.com/Adyen/adyen-web/pull/4340))
+
 ## 6.48.1
 
 ### Patch Changes
