@@ -255,8 +255,12 @@ class SecuredField extends AbstractSecuredField {
             logger.log('### SecuredField::postMessageListener:: feedbackObj.numKey=', feedbackObj.numKey);
         }
 
-        // Check for the numKey linked to this particular securedFields OR for one indicating a stalled config
-        if (this.numKey !== feedbackObj.numKey && feedbackObj.numKey !== STALLED_CONFIG_NUMKEY) {
+        // Check for the numKey linked to this particular securedFields
+        // OR for one indicating a stalled config (only allowed for configFailure action)
+        const feedbackNumKey = feedbackObj?.numKey ?? null;
+        const feedbackAction = feedbackObj?.action ?? '';
+        const isStalledConfig = feedbackNumKey === STALLED_CONFIG_NUMKEY && feedbackAction === 'configFailure';
+        if (this.numKey !== feedbackNumKey && !isStalledConfig) {
             if (this.sfConfig.showWarnings) {
                 logger.warn(
                     'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
