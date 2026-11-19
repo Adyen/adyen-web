@@ -11,7 +11,7 @@ import './InfoModal.scss';
 
 interface InfoModalProps {
     isOpen: boolean;
-    focusAfterClose: HTMLElement;
+    focusAfterClose: HTMLElement | null;
     onClose(): void;
 }
 

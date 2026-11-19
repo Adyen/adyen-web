@@ -139,7 +139,7 @@ export type FastlaneSignupConfiguration = FastlaneConsentRenderState & {
 
 export interface FastlaneData {
     consentShown: boolean;
-    fastlaneSessionId: string;
+    fastlaneSessionId?: string;
     consentGiven: boolean;
     consentVersion?: string;
     telephoneNumber?: string;

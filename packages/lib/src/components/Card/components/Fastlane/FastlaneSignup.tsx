@@ -45,7 +45,7 @@ const FastlaneSignup = ({
 }: Readonly<FastlaneSignupProps>) => {
     const shouldDisplaySignup = useMemo(() => showConsent && SUPPORTED_BRANDS.includes(currentDetectedBrand), [showConsent, currentDetectedBrand]);
     const [hasConsentFormBeenShown, setHasConsentFormBeenShown] = useState<boolean>(shouldDisplaySignup);
-    const [isChecked, setIsChecked] = useState<boolean>(defaultToggleState);
+    const [isChecked, setIsChecked] = useState<boolean>(defaultToggleState ?? false);
     const getImage = useImage();
     const [telephoneNumber, setTelephoneNumber] = useState<string>('');
     const { i18n } = useCoreContext();
@@ -131,7 +131,9 @@ const FastlaneSignup = ({
         onSubmitAnalytics(event);
     }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics, type]);
 
-    if (!shouldDisplaySignup || !isFastlaneConfigurationValid) {
+    // The links are added to the check here for TypesScript reasons.
+    // They are guaranteed to be defined when isFastlaneConfigurationValid is true
+    if (!shouldDisplaySignup || !isFastlaneConfigurationValid || !termsAndConditionsLink || !privacyPolicyLink) {
         return null;
     }
 
