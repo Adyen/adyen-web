@@ -17,6 +17,7 @@ export interface PaymentMethodsContainerProps {
     isDisablingPaymentMethod?: boolean;
     isLoading: boolean;
     showRadioButton?: boolean;
+    standalone?: boolean;
 }
 
 function PaymentMethodsContainer({
@@ -29,7 +30,8 @@ function PaymentMethodsContainer({
     showRemovePaymentMethodButton = false,
     onDisableStoredPaymentMethod = () => {},
     onSelect = () => {},
-    showRadioButton
+    showRadioButton,
+    standalone = paymentMethods.length === 1
 }: Readonly<PaymentMethodsContainerProps>) {
     const { i18n } = useCoreContext();
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
@@ -38,8 +40,6 @@ function PaymentMethodsContainer({
         { 'adyen-checkout__payment-methods-list--loading': isLoading },
         ...classNameModifiers.map(m => `adyen-checkout__payment-methods-list--${m}`)
     ]);
-
-    const standalone = paymentMethods.length === 1;
 
     return (
         <div className="adyen-checkout-payment-methods-container">
