@@ -67,6 +67,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     constructor(checkout: ICore, props?: P) {
         super(checkout, props);
 
+        console.log('fix added');
+
         this.core.register(this.constructor as NewableComponent);
 
         this.submit = this.submit.bind(this);
