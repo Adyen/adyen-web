@@ -385,14 +385,14 @@ class SecuredField extends AbstractSecuredField {
         this.submitAnalytics?.(event);
     }
 
-    destroy(fullDestroy: boolean = true): void {
+    destroy(removeFromDOM: boolean = true): void {
         // Remove listening/messaging capabilities
         off(window, 'message', this.postMessageListener, false);
         off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
 
         // Remove the UI element from the DOM
-        if (fullDestroy) {
+        if (removeFromDOM) {
             removeAllChildren(this.holderEl);
         }
     }
