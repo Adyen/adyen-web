@@ -41,7 +41,6 @@ class PayPalPaylaterElement extends BasePayPalElement<PayPalPayLaterConfiguratio
                 {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
                 {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
                 commit={this.props.commit}
-                presentationModeOptions={this.props.presentationModeOptions}
                 hidePayPalMessaging={this.props.hidePayPalMessaging}
                 messagingContentOptions={this.props.messagingContentOptions}
                 countryCode={this.props.countryCode}

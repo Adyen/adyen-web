@@ -25,7 +25,6 @@ class PayPalCreditElement extends BasePayPalElement<PayPalCreditConfiguration> {
                 {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
                 commit={this.props.commit}
                 vault={this.props.vault}
-                presentationModeOptions={this.props.presentationModeOptions}
                 onSubmit={this.handleSubmit}
                 onApprove={this.handleOnApprove}
                 onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}

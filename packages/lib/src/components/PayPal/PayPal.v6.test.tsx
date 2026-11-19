@@ -6,7 +6,7 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import base64 from '../../utils/base64';
-import type { PayPalEligiblePaymentMethods, PayPalSdkInstance, PayPalPresentationModeOptions } from './paypal-js-types';
+import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from './paypal-js-types';
 import type { PayPalComponentV6Props } from './components/types';
 
 jest.mock('./services/PayPalService');
@@ -178,56 +178,7 @@ describe('PayPal v6', () => {
             expect(() => new Paypal(core, { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() })).not.toThrow();
         });
 
-        test.each([['redirect'], ['direct-app-switch']])(
-            'should throw an implementation error when isExpress is true and the presentation mode is "%s"',
-            presentationMode => {
-                expect(
-                    () =>
-                        new Paypal(core, {
-                            isExpress: true,
-                            payPalV6Configuration: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
-                        })
-                ).toThrow(`PayPal - Unsupported presentation mode: ${presentationMode} for express checkout`);
-
-                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
-            }
-        );
-
-        test('should throw an AdyenCheckoutError of type IMPLEMENTATION_ERROR when an unsupported express presentation mode is used', () => {
-            let caughtError: unknown;
-
-            try {
-                new Paypal(core, { isExpress: true, payPalV6Configuration: { presentationModeOptions: { presentationMode: 'redirect' } } });
-            } catch (error) {
-                caughtError = error;
-            }
-
-            expect(caughtError).toBeInstanceOf(AdyenCheckoutError);
-            expect((caughtError as AdyenCheckoutError).name).toBe('IMPLEMENTATION_ERROR');
-        });
-
-        test.each([['popup'], ['modal'], ['payment-handler'], ['auto']])(
-            'should not throw when isExpress is true and the presentation mode is "%s"',
-            presentationMode => {
-                expect(
-                    () =>
-                        new Paypal(core, {
-                            isExpress: true,
-                            payPalV6Configuration: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
-                        })
-                ).not.toThrow();
-
-                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
-            }
-        );
-
-        test('should not throw when an unsupported express presentation mode is used but isExpress is not set', () => {
-            expect(() => new Paypal(core, { payPalV6Configuration: { presentationModeOptions: { presentationMode: 'redirect' } } })).not.toThrow();
-
-            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
-        });
-
-        test('should not throw when isExpress is true and no presentation mode is provided', () => {
+        test('should not throw when isExpress is true and no shipping callbacks are provided', () => {
             expect(() => new Paypal(core, { isExpress: true, payPalV6Configuration: {} })).not.toThrow();
         });
 
@@ -860,7 +811,6 @@ describe('PayPal v6', () => {
 
         test('should render the PayPalComponentV6 forwarding the payPalV6Configuration configuration', () => {
             const style = { paypal: { type: 'pay' as const, class: 'paypal-gold' as const } };
-            const presentationModeOptions = { presentationMode: 'modal' as const };
             const paypal = new Paypal(core, {
                 showPayButton: true,
                 isExpress: true,
@@ -868,7 +818,6 @@ describe('PayPal v6', () => {
                     commit: true,
                     vault: true,
                     style,
-                    presentationModeOptions,
                     blockPayPalButtonVariants: false,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: false,
@@ -885,7 +834,6 @@ describe('PayPal v6', () => {
                     commit: true,
                     vault: true,
                     style,
-                    presentationModeOptions,
                     blockPayPalButtonVariants: false,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: false,

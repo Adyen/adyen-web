@@ -23,9 +23,6 @@ export const Default: Story = {
     args: {
         componentConfiguration: {
             payPalV6Configuration: {
-                presentationModeOptions: {
-                    presentationMode: 'auto'
-                },
                 style: {
                     paypal: {
                         type: 'buynow',

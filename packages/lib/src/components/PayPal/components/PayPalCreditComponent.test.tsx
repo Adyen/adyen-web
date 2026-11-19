@@ -76,7 +76,7 @@ describe('PayPalCreditComponent', () => {
     });
 
     test('should forward the payment options and the shipping callbacks to the credit button', async () => {
-        const props = createProps({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
+        const props = createProps({ commit: false, vault: true });
         render(<PayPalCreditComponent {...props} />);
 
         await screen.findByTestId('paypal-credit-button');
@@ -86,7 +86,6 @@ describe('PayPalCreditComponent', () => {
                 paypalService: props.paypalService,
                 commit: false,
                 vault: true,
-                presentationModeOptions: { presentationMode: 'popup' },
                 onSubmit: props.onSubmit,
                 onError: props.onError,
                 onCancel: props.onCancel,

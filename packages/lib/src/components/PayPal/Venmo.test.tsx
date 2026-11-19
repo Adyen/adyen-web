@@ -69,7 +69,7 @@ describe('Venmo', () => {
     });
 
     test('should render the Venmo component with the payment options', () => {
-        const element = createElement({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
+        const element = createElement({ commit: false, vault: true });
 
         render(element.render());
 
@@ -77,7 +77,6 @@ describe('Venmo', () => {
             expect.objectContaining({
                 commit: false,
                 vault: true,
-                presentationModeOptions: { presentationMode: 'popup' },
                 paypalService: expect.any(PayPalService),
                 setComponentRef: expect.any(Function),
                 onSubmit: expect.any(Function),
@@ -86,17 +85,6 @@ describe('Venmo', () => {
                 onError: expect.any(Function)
             })
         );
-    });
-
-    test('should only accept the presentation modes supported by Venmo', () => {
-        // Fails type-check if a mode is added to or removed from the Venmo presentation modes
-        const supportedModes: Record<NonNullable<VenmoConfiguration['presentationModeOptions']>['presentationMode'], true> = {
-            auto: true,
-            popup: true,
-            modal: true
-        };
-
-        expect(Object.keys(supportedModes)).toEqual(['auto', 'popup', 'modal']);
     });
 
     test('should pass the environment down to the Venmo component', () => {

@@ -34,7 +34,6 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PayPalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import { isPayPalServiceConfigEqual } from './utils/is-paypal-service-config-equal';
-import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
 import collectBrowserInfo from '../../utils/browserInfo';
 import './Paypal.scss';
 
@@ -64,23 +63,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         if (this.props.payPalV6Configuration) {
             const { isExpress } = this.props;
-            const { onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props.payPalV6Configuration;
+            const { onShippingAddressChange, onShippingOptionsChange } = this.props.payPalV6Configuration;
 
             if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
                 throw new AdyenCheckoutError(
                     'IMPLEMENTATION_ERROR',
                     'PayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
-                );
-            }
-
-            if (
-                isExpress &&
-                presentationModeOptions?.presentationMode &&
-                !SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
-            ) {
-                throw new AdyenCheckoutError(
-                    'IMPLEMENTATION_ERROR',
-                    `PayPal - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
                 );
             }
 
@@ -549,7 +537,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     blockPayPalCreditButton={paypalv6Props.blockPayPalCreditButton}
                     blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
-                    presentationModeOptions={paypalv6Props.presentationModeOptions}
                     environment={this.props.environment}
                     onSubmit={this.handleSubmit}
                     onApprove={this.handleOnApproveV6}
