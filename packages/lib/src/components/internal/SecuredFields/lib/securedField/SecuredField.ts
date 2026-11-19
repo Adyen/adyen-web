@@ -12,7 +12,8 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE
+    ENCRYPTED_SECURITY_CODE,
+    STALLED_CONFIG_NUMKEY
 } from '../constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { CVCPolicyType, DatePolicyType, RtnType_callbackFn, RtnType_noParamVoidFn, RtnType_postMessageListener, SFFeedbackObj } from '../types';
@@ -205,7 +206,6 @@ class SecuredField extends AbstractSecuredField {
         // CHECK FOR EXPECTED PROPS & MATCHING numKey
         if (!this.isFeedbackObjValid(feedbackObj)) return;
 
-        // VALIDATION CHECKS PASSED - DECIDE ON COURSE OF ACTION
         /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log(
@@ -216,6 +216,7 @@ class SecuredField extends AbstractSecuredField {
             );
         }
 
+        // VALIDATION CHECKS PASSED - DECIDE ON COURSE OF ACTION
         this.handleFeedbackAction(feedbackObj);
     }
 
@@ -254,7 +255,12 @@ class SecuredField extends AbstractSecuredField {
             logger.log('### SecuredField::postMessageListener:: feedbackObj.numKey=', feedbackObj.numKey);
         }
 
-        if (this.numKey !== feedbackObj.numKey) {
+        // Check for the numKey linked to this particular securedFields
+        // OR for one indicating a stalled config (only allowed for configFailure action)
+        const feedbackNumKey = feedbackObj?.numKey ?? null;
+        const feedbackAction = feedbackObj?.action ?? '';
+        const isStalledConfig = feedbackNumKey === STALLED_CONFIG_NUMKEY && feedbackAction === 'configFailure';
+        if (this.numKey !== feedbackNumKey && !isStalledConfig) {
             if (this.sfConfig.showWarnings) {
                 logger.warn(
                     'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
@@ -310,19 +316,42 @@ class SecuredField extends AbstractSecuredField {
                 // (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
                 this.submitFeedbackErrorAnalytics(
                     feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
-                    `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
+                    `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`
                 );
                 break;
 
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
             case 'insecureMerchantDomain': {
-                const fallbackCode =
-                    feedbackObj.action === 'invalidHosting'
-                        ? ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING
-                        : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
+                const isInvalidHosting = feedbackObj.action === 'invalidHosting';
+                const fallbackCode = isInvalidHosting
+                    ? ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING
+                    : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
+                const fallbackErrorMsg = isInvalidHosting ? 'Invalid hosting' : 'Insecure merchant domain';
 
-                this.submitFeedbackErrorAnalytics(feedbackObj.code ?? fallbackCode, `${feedbackObj.error}. Field=${this.sfConfig.fieldType}`);
+                this.submitFeedbackErrorAnalytics(
+                    feedbackObj.code ?? fallbackCode,
+                    `${feedbackObj.error ?? fallbackErrorMsg}. Field=${this.sfConfig.fieldType}`
+                );
+                break;
+            }
+
+            // Listen for the SF iframe indicating it failed to configure (JS didn't load, or loaded but failed to complete)
+            case 'configFailure': {
+                // Remove the event listeners (otherwise, without having a securedField-specific numKey to act as a filter, it will fire again for the other securedFields)
+                // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
+                this.destroy(false);
+
+                // Get the last logged step and the error
+                const { configLog, error } = feedbackObj;
+
+                const errorMsg = error ?? 'Iframe config failure';
+                const configLogMsg = configLog ? ` Log=${JSON.stringify(configLog)}` : '';
+
+                this.submitFeedbackErrorAnalytics(
+                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                    `${errorMsg}. Field=${this.sfConfig.fieldType}.${configLogMsg}`
+                );
                 break;
             }
 
@@ -356,15 +385,22 @@ class SecuredField extends AbstractSecuredField {
         this.submitAnalytics?.(event);
     }
 
-    destroy(): void {
+    destroy(removeFromDOM: boolean = true): void {
+        // Remove listening/messaging capabilities
         off(window, 'message', this.postMessageListener, false);
         off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
-        removeAllChildren(this.holderEl);
+
+        // Remove the UI element from the DOM
+        if (removeFromDOM) {
+            removeAllChildren(this.holderEl);
+        }
     }
 
     /**
      * Returns whether the securedField is hidden OR whether it is optional and not in error
+     *
+     * Used in CSF.ts
      */
     isOptionalOrHidden(): boolean {
         if (

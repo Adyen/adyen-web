@@ -224,6 +224,7 @@ export interface SFFeedbackObj {
     encryptionSuccess?: boolean;
     hasGenuineTouchEvents?: boolean;
     mode?: string;
+    configLog?: Record<string, string>;
 }
 
 export interface EncryptionObj {

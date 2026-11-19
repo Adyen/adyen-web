@@ -4,12 +4,22 @@ import SecuredField from './SecuredField';
 import en from '../../../../../../../server/translations/en-US.json';
 
 import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_PWD_FIELD, GIFT_CARD } from '../constants';
+import {
+    CVC_POLICY_REQUIRED,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_HIDDEN,
+    DATE_POLICY_REQUIRED,
+    DATE_POLICY_OPTIONAL,
+    DATE_POLICY_HIDDEN,
+    ENCRYPTED_PWD_FIELD,
+    GIFT_CARD
+} from '../constants';
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
 import * as logger from '../utilities/logger';
 import { CardPlaceholders } from '../../../../Card/types';
 import { ErrorEventCode, ErrorEventType } from '../../../../../core/Analytics/events/AnalyticsErrorEvent';
 import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
+import { SecuredFieldSetupObject } from '../types';
 
 const { i18n } = setupCoreMock().modules;
 
@@ -41,8 +51,8 @@ const ERROR_MSG_CARD_TOO_OLD = SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD;
 const nodeHolder = document.createElement('div');
 
 const iframeUIConfig = {
-    placeholders: null,
-    sfStyles: null,
+    placeholders: undefined,
+    sfStyles: undefined,
     ariaConfig: {}
 };
 
@@ -54,8 +64,8 @@ const cardPlaceholders: CardPlaceholders = {
     password: '***'
 };
 
-const setupObj = {
-    extraFieldData: null,
+const setupObj: SecuredFieldSetupObject = {
+    extraFieldData: '',
     txVariant: 'card',
     cardGroupTypes: ['amex', 'mc', 'visa'],
     iframeUIConfig,
@@ -67,18 +77,18 @@ const setupObj = {
     fieldType: ENCRYPTED_CARD_NUMBER,
     cvcPolicy: CVC_POLICY_REQUIRED,
     expiryDatePolicy: DATE_POLICY_REQUIRED,
-    iframeSrc: null,
-    loadingContext: null,
+    iframeSrc: '',
+    loadingContext: 'test',
     holderEl: nodeHolder,
-    legacyInputMode: null,
-    minimumExpiryDate: null,
-    uid: null,
-    implementationType: null,
+    legacyInputMode: false,
+    minimumExpiryDate: '',
+    uid: '',
+    implementationType: 'components',
     maskSecurityCode: false,
     disableIOSArrowKeys: false,
     placeholders: cardPlaceholders,
     exposeExpiryDate: false,
-    submitAnalytics: null,
+    submitAnalytics: undefined,
     componentType: 'scheme'
 };
 
@@ -542,6 +552,46 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             });
         });
 
+        test('Check analytics event is submitted after "configFailure" action', () => {
+            const submitAnalyticsSpy = jest.fn(() => {});
+
+            const localCard = new SecuredField(
+                // @ts-ignore test only
+                {
+                    ...setupObj,
+                    fieldType: ENCRYPTED_SECURITY_CODE,
+                    submitAnalytics: submitAnalyticsSpy
+                },
+                i18n
+            );
+
+            const feedbackObj = {
+                action: 'configFailure',
+                fieldType: ENCRYPTED_SECURITY_CODE,
+                numKey: localCard.numKey,
+                code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                error: 'Config failure',
+                configLog: 'some-config-log'
+            };
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(feedbackObj)
+            };
+
+            // @ts-ignore event type
+            localCard.postMessageListenerFn(messageEvent);
+
+            expect(submitAnalyticsSpy).toHaveBeenCalledWith({
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: 'scheme',
+                errorType: ErrorEventType.internal,
+                code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                message: 'Config failure. Field=encryptedSecurityCode. Log="some-config-log"'
+            });
+        });
+
         test('Check callback is called after "focus" action', () => {
             card.onFocus(myCallback);
 
@@ -672,5 +722,132 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             // Should not be valid after an encryption action
             expect(card.isValid).toEqual(false);
         });
+    });
+});
+
+describe('SecuredField isOptionalOrHidden', () => {
+    describe('for a CVC field', () => {
+        test('should return true when the cvcPolicy is hidden', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE, cvcPolicy: CVC_POLICY_REQUIRED }, i18n);
+            card.cvcPolicy = CVC_POLICY_HIDDEN;
+
+            expect(card.isOptionalOrHidden()).toBe(true);
+        });
+
+        test('should return true when the cvcPolicy is optional and the field has no error', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE, cvcPolicy: CVC_POLICY_REQUIRED }, i18n);
+            card.cvcPolicy = CVC_POLICY_OPTIONAL;
+            card.hasError = false;
+
+            expect(card.isOptionalOrHidden()).toBe(true);
+        });
+
+        test('should return false when the cvcPolicy is optional and the field has an error', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE, cvcPolicy: CVC_POLICY_REQUIRED }, i18n);
+            card.cvcPolicy = CVC_POLICY_OPTIONAL;
+            card.hasError = true;
+
+            expect(card.isOptionalOrHidden()).toBe(false);
+        });
+
+        test('should return false when the cvcPolicy is required', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE, cvcPolicy: CVC_POLICY_REQUIRED }, i18n);
+
+            expect(card.isOptionalOrHidden()).toBe(false);
+        });
+    });
+
+    describe('for an expiry date field', () => {
+        test('should return true when the expiryDatePolicy is hidden', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE, expiryDatePolicy: DATE_POLICY_REQUIRED }, i18n);
+            card.expiryDatePolicy = DATE_POLICY_HIDDEN;
+
+            expect(card.isOptionalOrHidden()).toBe(true);
+        });
+
+        test('should return true when the expiryDatePolicy is optional and the field has no error', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE, expiryDatePolicy: DATE_POLICY_REQUIRED }, i18n);
+            card.expiryDatePolicy = DATE_POLICY_OPTIONAL;
+            card.hasError = false;
+
+            expect(card.isOptionalOrHidden()).toBe(true);
+        });
+
+        test('should return false when the expiryDatePolicy is optional and the field has an error', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE, expiryDatePolicy: DATE_POLICY_REQUIRED }, i18n);
+            card.expiryDatePolicy = DATE_POLICY_OPTIONAL;
+            card.hasError = true;
+
+            expect(card.isOptionalOrHidden()).toBe(false);
+        });
+
+        test('should return false when the expiryDatePolicy is required', () => {
+            const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE, expiryDatePolicy: DATE_POLICY_REQUIRED }, i18n);
+
+            expect(card.isOptionalOrHidden()).toBe(false);
+        });
+    });
+
+    test('should return false for any other field type, regardless of policy', () => {
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_CARD_NUMBER }, i18n);
+
+        expect(card.isOptionalOrHidden()).toBe(false);
+    });
+});
+
+describe('SecuredField destroy', () => {
+    let holderEl: HTMLDivElement;
+    let card: SecuredField;
+
+    beforeEach(() => {
+        holderEl = document.createElement('div');
+        card = new SecuredField({ ...setupObj, holderEl }, i18n);
+
+        // Populate the listener refs that destroy() removes, without going through the full
+        // iframeOnLoadListenerFn flow (which requires an onIframeLoaded callback & a real iframe load event)
+        card.postMessageListener = jest.fn();
+        card.iframeOnLoadListener = jest.fn();
+    });
+
+    test('should remove the window "message" listener', () => {
+        const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+
+        card.destroy();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith('message', card.postMessageListener, false);
+
+        removeEventListenerSpy.mockRestore();
+    });
+
+    test('should remove the iframe "load" listener', () => {
+        // @ts-ignore iframeRef is protected, but accessible for this test
+        const iframe: HTMLIFrameElement = card.iframeRef;
+        const removeEventListenerSpy = jest.spyOn(iframe, 'removeEventListener');
+
+        card.destroy();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith('load', card.iframeOnLoadListener, false);
+    });
+
+    test('should reset iframeContentWindow to null', () => {
+        card.destroy();
+
+        expect(card.iframeContentWindow).toBeNull();
+    });
+
+    test('should remove all children from the holder element by default (removeFromDOM = true)', () => {
+        expect(holderEl.childNodes.length).toBeGreaterThan(0);
+
+        card.destroy();
+
+        expect(holderEl.childNodes.length).toBe(0);
+    });
+
+    test('should not remove children from the holder element when removeFromDOM is false', () => {
+        expect(holderEl.childNodes.length).toBeGreaterThan(0);
+
+        card.destroy(false);
+
+        expect(holderEl.childNodes.length).toBeGreaterThan(0);
     });
 });
