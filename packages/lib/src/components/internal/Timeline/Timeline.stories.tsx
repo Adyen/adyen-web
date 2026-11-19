@@ -4,7 +4,6 @@ import { Timeline } from './Timeline';
 
 const meta: Meta = {
     title: 'Internal Elements/Timeline',
-    tags: ['no-automated-visual-test'],
     component: Timeline
 };
 

@@ -6,67 +6,100 @@
 
 
 
-// simple re-mapping
+// Bento colour aliases the SDK maps to a different Bento value, mostly to meet WCAG 2.1 AA contrast
 aliases.$color: map.merge(
     aliases.$color,
     (
-        // this color has been remapped for a11y reasons
-        color-label-highlight: #00112C,
-        color-label-critical: map.get(aliases.$color, color-label-on-background-critical-weak),
+        // Links use the regular text colour and are told apart by their underline
+        color-label-highlight: map.get(aliases.$color, color-label-primary),
+        // Darker grey, so the outline keeps a 3:1 non-text contrast against the selected payment method background in Drop-in
+        color-outline-tertiary: map.get(aliases.$color, color-decorative-grey),
+        // Bento's tertiary label is below the 4.5:1 text contrast, so it uses the secondary label colour
         color-label-tertiary: map.get(aliases.$color, color-label-secondary),
-        // label tertiary doesn't have enough contrast
-        color-outline-tertiary: #848D96,
-         // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
+        // Bento's hover outline lacks contrast, so hover uses the active outline, as Bento's own components do
         color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
     )
 );
 
-@function adyen-sdk-generate-css-variables($maps...) {
-    $adyen-output-map: ();
+// DEPRECATED: CSS variables merchants could override before Bento v2, keyed by component and then by the token that replaces them.
+// Only applied through `component-token()`, so other components using the replacement token ignore the deprecated variables.
+// A replacement token maps to a single deprecated variable per component, and multi-token values have no entry.
+$deprecated-css-variables: (
+    alert: (
+        color-background-critical-weak: alert-critical-background-color,
+        color-background-warning-weak: alert-warning-background-color,
+        color-background-highlight-weak: alert-highlight-background-color,
+        color-background-success-weak: alert-success-background-color,
+    ),
+    button: (
+        color-background-inverse-primary: color-background-always-dark,
+        color-background-inverse-primary-active: color-background-always-dark-active,
+        color-label-primary: button-tertiary-color,
+        color-label-primary-active: button-tertiary-active-color,
+        spacer-050: button-icon-only-padding,
+    ),
+    toggle: (
+        spacer-070: toggle-label-padding,
+        color-background-primary: toggle-track-background-color,
+        border-radius-xl: toggle-track-border-radius,
+        spacer-080: toggle-track-height,
+        color-background-primary-hover: toggle-track-hover-background-color,
+        color-outline-tertiary-hover: toggle-track-hover-border-color,
+        color-background-primary-active: toggle-track-active-background-color,
+        color-outline-tertiary-active: toggle-track-active-border-color,
+        color-background-secondary: toggle-track-disabled-background-color,
+        color-outline-disabled: toggle-track-disabled-border-color,
+        color-background-inverse-primary: toggle-track-toggled-background-color,
+        spacer-010: toggle-track-toggled-padding,
+        color-background-inverse-primary-hover: toggle-track-toggled-hover-background-color,
+        color-background-inverse-primary-active: toggle-track-toggled-active-background-color,
+        color-background-tertiary-active: toggle-track-toggled-disabled-background-color,
+        color-label-primary: toggle-handle-toggled-color,
+        spacer-060: toggle-handle-height,
+        color-label-disabled: toggle-handle-disabled-background-color,
+        color-background-disabled: toggle-handle-toggled-disabled-background-color,
+        color-label-secondary: toggle-description-color,
+        spacer-020: toggle-description-padding,
+    ),
+);
+$adyen-tokens-map: ();
 
-    @each $map in $maps {
-        @each $name, $value in $map {
-            $adyen-output-map: map.merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
-        }
-    }
-
-    @return $adyen-output-map;
+@each $map
+    in (
+        aliases.$color,
+        aliases.$text,
+        aliases.$focus-ring,
+        definitions.$border,
+        definitions.$spacer,
+        definitions.$shadow,
+        definitions.$animation,
+        components.$tooltip,
+        overrides.$text-overrides
+    )
+{
+    $adyen-tokens-map: map.merge($adyen-tokens-map, $map);
 }
 
 @function token($token, $generate-css-var: true) {
-    $adyen-tokens-map: ();
-
-    @if $generate-css-var {
-        $adyen-tokens-map: adyen-sdk-generate-css-variables(
-            aliases.$color,
-            aliases.$text,
-            aliases.$focus-ring,
-            definitions.$border,
-            definitions.$spacer,
-            definitions.$shadow,
-            definitions.$animation,
-            components.$toggle,
-            components.$button,
-            components.$tooltip,
-            components.$alert,
-            overrides.$text-overrides
-        );
-    } @else {
-        $adyen-tokens-map: map.merge(
-            aliases.$color,
-            aliases.$text,
-            aliases.$focus-ring,
-            definitions.$border,
-            definitions.$spacer,
-            definitions.$shadow,
-            definitions.$animation,
-            components.$toggle,
-            components.$button,
-            components.$tooltip,
-            components.$alert,
-            overrides.$text-overrides
-        );
+    @if not map.has-key($adyen-tokens-map, '#{$token}') {
+        @error 'Unknown design token: #{$token}';
     }
 
-    @return map.get($adyen-tokens-map, '#{$token}');
+    $value: map.get($adyen-tokens-map, '#{$token}');
+
+    @if $generate-css-var {
+        @return var(--adyen-sdk-#{$token}, #{$value});
+    }
+
+    @return $value;
+}
+
+@function component-token($token, $component) {
+    $deprecated-name: map.get($deprecated-css-variables, $component, $token);
+
+    @if not $deprecated-name {
+        @error 'No deprecated CSS variable for `#{$token}` in `#{$component}`, use `token()` instead';
+    }
+
+    @return var(--adyen-sdk-#{$token}, var(--adyen-sdk-#{$deprecated-name}, #{token($token, false)}));
 }

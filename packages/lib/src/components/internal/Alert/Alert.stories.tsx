@@ -5,6 +5,7 @@ import Language from '../../../language';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { Resources } from '../../../core/Context/Resources';
 import { ILanguageService } from '../../../language/LanguageService';
+import './Alert.stories.scss';
 
 const languageServiceStub: ILanguageService = {
     fetchTranslationsFromCdn: () => Promise.resolve({})
@@ -12,7 +13,6 @@ const languageServiceStub: ILanguageService = {
 
 const meta: Meta = {
     title: 'Internal Elements/Alert',
-    tags: ['no-automated-visual-test'],
     component: Alert,
     argTypes: {
         type: {
@@ -51,4 +51,44 @@ export const Default: StoryObj = {
         icon: 'cross'
     }
 };
+
+const CustomizedAlerts = ({ modifier }: { readonly modifier: 'css-variables' | 'deprecated-css-variables' }) => (
+    <CoreProvider
+        loadingContext={'test'}
+        i18n={new Language({ locale: 'en-US', service: languageServiceStub })}
+        resources={new Resources('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/')}
+    >
+        <div className={`alert-story-customization alert-story-customization--${modifier}`}>
+            <Alert type="error" icon="cross">
+                Error alert message
+            </Alert>
+            <Alert type="warning" icon="info">
+                Warning alert message
+            </Alert>
+            <Alert type="info" icon="info">
+                Info alert message
+            </Alert>
+            <Alert type="success" icon="success">
+                Success alert message
+            </Alert>
+        </div>
+    </CoreProvider>
+);
+
+export const CustomizedWithCssVariables: StoryObj = {
+    render: () => <CustomizedAlerts modifier="css-variables" />,
+    parameters: {
+        controls: { disable: true },
+        docs: { description: { story: 'Customized with the Bento v2 CSS variables the alert uses.' } }
+    }
+};
+
+export const CustomizedWithDeprecatedCssVariables: StoryObj = {
+    render: () => <CustomizedAlerts modifier="deprecated-css-variables" />,
+    parameters: {
+        controls: { disable: true },
+        docs: { description: { story: 'Customized with the deprecated pre-Bento v2 CSS variables, which still apply to the alert as fallbacks.' } }
+    }
+};
+
 export default meta;
