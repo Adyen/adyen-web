@@ -23,7 +23,7 @@ const captureEndDigits = (endDigitsRef: { current: string | undefined }) => (e: 
 
 function createReviewPageRender<T>(mountFn: MountFn<T>) {
     return function ReviewPageStory({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<T>) {
-        const { countryCode, amount, shopperLocale } = checkoutConfig;
+        const { countryCode, amount, shopperLocale, shopperReference } = checkoutConfig;
         const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string; orderStatus?: OrderStatus } | null>(null);
         const endDigitsRef = useRef<string | undefined>(undefined);
         const wrapperRef = useRef<HTMLDivElement>(null);
@@ -36,7 +36,7 @@ function createReviewPageRender<T>(mountFn: MountFn<T>) {
                     countryCode,
                     reference: 'ABC123',
                     returnUrl: RETURN_URL,
-                    shopperReference: SHOPPER_REFERENCE,
+                    shopperReference: shopperReference || SHOPPER_REFERENCE,
                     shopperEmail: 'shopper.ctp1@adyen.com'
                 });
 

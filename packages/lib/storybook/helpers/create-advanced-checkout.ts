@@ -4,7 +4,7 @@ import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsC
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import type Checkout from '../../src/core/core';
-import { STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
+import { SHOPPER_REFERENCE, STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
 
 import type { PaymentMethodsResponse } from '../../src/types';
 import type { AdyenCheckoutProps, ShopperDetails } from '../types';
@@ -21,6 +21,7 @@ async function createAdvancedFlowCheckout(
         countryCode,
         shopperLocale,
         amount,
+        shopperReference: shopperReferenceOverride,
         allowedPaymentTypes = [],
         paymentMethodsOverride,
         paymentsOptions,
@@ -40,10 +41,13 @@ async function createAdvancedFlowCheckout(
         value: Number(amount)
     };
 
+    const shopperReference = shopperReferenceOverride || SHOPPER_REFERENCE;
+
     const _paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
         amount: paymentAmount,
         shopperLocale,
-        countryCode
+        countryCode,
+        shopperReference
     });
 
     const paymentMethodsResponse = !paymentMethodsOverride
@@ -72,6 +76,7 @@ async function createAdvancedFlowCheckout(
                     amount: paymentAmount,
                     countryCode,
                     shopperLocale,
+                    shopperReference,
                     ...(paymentsOptions && paymentsOptions)
                 };
 
@@ -145,7 +150,7 @@ async function createAdvancedFlowCheckout(
         onOrderCancel: async order => {
             await cancelOrder(order.order);
             await checkout.update({
-                paymentMethodsResponse: await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode }),
+                paymentMethodsResponse: await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode, shopperReference }),
                 order: null,
                 amount: paymentAmount
             });

@@ -55,6 +55,7 @@ export type AdyenCheckoutProps = {
     countryCode: string;
     shopperLocale: string;
     amount: number;
+    shopperReference?: string;
     sessionData?: SessionsRequestData;
     allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;

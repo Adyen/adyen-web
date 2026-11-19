@@ -17,7 +17,7 @@ export const WithDropin: SessionPatchingStory = {
         return <DropinDemo amount={amount} countryCode={countryCode} shopperLocale={shopperLocale} />;
     },
     parameters: {
-        controls: { exclude: ['useSessions', 'shopperLocale', 'amount', 'showPayButton'] }
+        controls: { exclude: ['useSessions', 'shopperLocale', 'amount', 'showPayButton', 'shopperReference'] }
     }
 };
 
@@ -27,7 +27,7 @@ export const WithComponents: SessionPatchingStory = {
         return <ComponentsDemo amount={amount} countryCode={countryCode} shopperLocale={shopperLocale} />;
     },
     parameters: {
-        controls: { exclude: ['useSessions', 'shopperLocale', 'amount', 'showPayButton'] }
+        controls: { exclude: ['useSessions', 'shopperLocale', 'amount', 'showPayButton', 'shopperReference'] }
     }
 };
 

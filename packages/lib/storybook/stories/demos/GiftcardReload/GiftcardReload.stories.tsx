@@ -22,7 +22,7 @@ export const WithDropin: GiftcardReloadStory = {
         return <GiftcardReloadDemo amount={amount} countryCode={countryCode} shopperLocale={shopperLocale} />;
     },
     parameters: {
-        controls: { exclude: ['useSessions', 'showPayButton'] }
+        controls: { exclude: ['useSessions', 'showPayButton', 'shopperReference'] }
     }
 };
 
