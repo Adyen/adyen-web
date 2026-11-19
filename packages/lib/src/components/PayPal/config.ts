@@ -1,5 +1,3 @@
-import { PayPalPresentationModeOptions } from './paypal-js-types';
-
 const INTEGRATION_DATE = '2020-02-01';
 const PAYPAL_JS_URL_V5 = 'https://www.paypal.com/sdk/js';
 const ADYEN_CLIENTID_V5_TEST = 'AXy9hIzWB6h_LjZUHjHmsbsiicSIbL4GKOrcgomEedVjduUinIU4C2llxkW5p0OG0zTNgviYFceaXEnj';
@@ -68,15 +66,6 @@ const DEFAULT_PAYMENT_SESSION_OPTIONS = {
     presentationMode: 'auto'
 } as const;
 
-const SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeOptions['presentationMode']> = [
-    'auto',
-    'popup',
-    'modal',
-    'payment-handler'
-] as const;
-
-const SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeOptions['presentationMode']> = ['auto', 'popup', 'modal'] as const;
-
 export {
     INTEGRATION_DATE,
     PAYPAL_JS_URL_V5,
@@ -87,7 +76,5 @@ export {
     SUPPORTED_COLORS_FOR_CREDIT,
     PAYPAL_SDK_URL_PRODUCTION,
     PAYPAL_SDK_URL_SANDBOX,
-    DEFAULT_PAYMENT_SESSION_OPTIONS,
-    SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS,
-    SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS
+    DEFAULT_PAYMENT_SESSION_OPTIONS
 };

@@ -26,8 +26,7 @@ import type {
     PageTypes,
     FetchContentOptions,
     PayPalMessagesSession,
-    PayPalMessageElement as PayPalMessageElementV6,
-    PayPalPresentationModeOptions as PayPalPresentationModeOptionsV6
+    PayPalMessageElement as PayPalMessageElementV6
 } from '@paypal/paypal-js/sdk-v6';
 
 export type { PayPalOneTimePaymentSessionOptions, PayPalMessagesOptions, PayPalMessagesSession } from '@paypal/paypal-js/sdk-v6';
@@ -82,8 +81,9 @@ export type PayPalMessageElement = PayPalMessageElementV6 & {
     setContent(content: PayPalMessageContent): void;
 };
 /**
- * Presentation modes offered by the PayPal SDK, without the 'redirect' mode, which is not supported yet.
+ * Options passed when starting a payment session. The presentation mode is always 'auto', letting the PayPal SDK decide how to present the payment flow.
  */
-export type PayPalPresentationModeOptions = PayPalPresentationModeOptionsV6 & {
+export type PayPalSessionStartOptions = {
+    presentationMode: 'auto';
     sandboxSupport?: { enabled: boolean };
 };

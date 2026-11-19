@@ -143,14 +143,14 @@ describe('Paypal', () => {
             expect(paypal.props.vault).toBe(true);
         });
 
-        test('should not set usePayPalV6 when it is not provided', () => {
+        test('should not set payPalV6Configuration when it is not provided', () => {
             const paypal = new Paypal(core);
-            expect(paypal.props.usePayPalV6).toBeUndefined();
+            expect(paypal.props.payPalV6Configuration).toBeUndefined();
         });
     });
 
     describe('sdkData', () => {
-        test('should not add paymentMethodConfiguration when usePayPalV6 is not set', () => {
+        test('should not add paymentMethodConfiguration when payPalV6Configuration is not set', () => {
             const paypal = new Paypal(core);
 
             const decodedSdkData = decodeSdkData(paypal.data.paymentMethod.sdkData);

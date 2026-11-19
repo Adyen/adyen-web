@@ -21,7 +21,6 @@ const PayPalComponentV6 = ({
     blockPayPalCreditButton,
     blockPayPalPayLaterButton,
     blockPayPalVenmoButton,
-    presentationModeOptions,
     onSubmit,
     onApprove,
     onShippingAddressChange,
@@ -40,7 +39,6 @@ const PayPalComponentV6 = ({
     const commonProps = useMemo(
         () => ({
             paypalService,
-            presentationModeOptions,
             commit,
             onSubmit,
             onApprove: handleOnApprove,

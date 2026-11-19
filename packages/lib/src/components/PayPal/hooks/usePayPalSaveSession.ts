@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { PayPalPresentationModeOptions, PayPalSavePaymentSession } from '../paypal-js-types';
+import { PayPalSavePaymentSession, PayPalSessionStartOptions } from '../paypal-js-types';
 import { useStartPayPalSession } from './useStartPayPalSession';
 
 export const usePayPalSaveSession = ({
-    presentationModeOptions,
+    sandboxSupport,
     createSession,
     onSubmit,
     onError
 }: {
-    presentationModeOptions?: PayPalPresentationModeOptions;
+    sandboxSupport?: PayPalSessionStartOptions['sandboxSupport'];
     createSession: () => PayPalSavePaymentSession | undefined;
     onSubmit: () => Promise<string>;
     onError: (error: Error) => void;
 }) => {
     const [paymentSession, setPaymentSession] = useState<PayPalSavePaymentSession | undefined>();
 
-    const startSession = useStartPayPalSession({ presentationModeOptions, onError });
+    const startSession = useStartPayPalSession({ sandboxSupport, onError });
 
     useEffect(() => {
         setPaymentSession(createSession());

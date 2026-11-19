@@ -23,7 +23,6 @@ import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
 import { PayPalService } from '../services/PayPalService';
 import requestPayPalOrderDetails from '../services/request-paypal-order-details';
 import { isPayPalServiceConfigEqual } from '../utils/is-paypal-service-config-equal';
-import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from '../config';
 import collectBrowserInfo from '../../../utils/browserInfo';
 import '../Paypal.scss';
 
@@ -54,29 +53,17 @@ export class BasePayPalElement<TProps extends BasePayPalConfiguration = BasePayP
     }
 
     /**
-     * The express flow relies on the shipping callbacks and on a presentation mode that keeps the shopper on the
-     * merchant page. Therefore any combination that PayPal does not support in express is rejected upfront.
+     * The shipping callbacks are only supported in the express flow, therefore using them outside of it is rejected upfront.
      *
      * @throws AdyenCheckoutError - IMPLEMENTATION_ERROR when the express configuration is not supported
      */
     private validateExpressConfiguration(): void {
-        const { isExpress, onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props;
+        const { isExpress, onShippingAddressChange, onShippingOptionsChange } = this.props;
 
         if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
                 `${this.displayName} - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks`
-            );
-        }
-
-        if (
-            isExpress &&
-            presentationModeOptions?.presentationMode &&
-            !SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
-        ) {
-            throw new AdyenCheckoutError(
-                'IMPLEMENTATION_ERROR',
-                `${this.displayName} - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
             );
         }
     }

@@ -74,7 +74,7 @@ describe('VenmoComponent', () => {
     });
 
     test('should forward the payment options to the venmo button', async () => {
-        const props = createProps({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
+        const props = createProps({ commit: false, vault: true });
         render(<VenmoComponent {...props} style={{ type: 'pay', class: 'venmo-blue' }} />);
 
         await screen.findByTestId('venmo-button');
@@ -84,7 +84,6 @@ describe('VenmoComponent', () => {
                 paypalService: props.paypalService,
                 commit: false,
                 vault: true,
-                presentationModeOptions: { presentationMode: 'popup' },
                 style: { type: 'pay', class: 'venmo-blue' },
                 onSubmit: props.onSubmit,
                 onError: props.onError,

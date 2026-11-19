@@ -7,16 +7,14 @@ import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
 import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { DEFAULT_PAYMENT_SESSION_OPTIONS, SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS } from '../config';
 import { isLiveEnvironment } from '../../../utils/is-live-environment';
-import type { PayPalPresentationModeOptions, PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
+import type { PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
 
 export const VenmoButton = ({
     paypalService,
     commit,
     style,
     vault,
-    presentationModeOptions,
     onApprove,
     onCancel,
     onError,
@@ -42,42 +40,29 @@ export const VenmoButton = ({
 
     const isLive = isLiveEnvironment(environment);
 
-    // Venmo does not support the 'redirect', 'direct-app-switch' and 'payment-handler' modes. The Venmo component already omits them from its types,
-    // so this fallback to 'auto' is only needed because the PayPal component passes its own presentation mode options to this button.
-    const isSupportedPresentationMode =
-        presentationModeOptions && SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode);
-
-    const presentationModeOptionsWithSandboxSupport = useMemo<PayPalPresentationModeOptions>(
-        () => ({
-            ...(isSupportedPresentationMode ? presentationModeOptions : DEFAULT_PAYMENT_SESSION_OPTIONS),
-            sandboxSupport: {
-                enabled: !isLive
-            }
-        }),
-        [presentationModeOptions, isSupportedPresentationMode, isLive]
-    );
+    const sandboxSupport = useMemo(() => ({ enabled: !isLive }), [isLive]);
 
     const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
-                presentationModeOptions: presentationModeOptionsWithSandboxSupport,
+                sandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
                 onSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, sandboxSupport]
         )
     );
 
     const { onClick: savePaymentClick } = usePayPalSaveSession(
         useMemo(
             () => ({
-                presentationModeOptions: presentationModeOptionsWithSandboxSupport,
+                sandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
                 onSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, sandboxSupport]
         )
     );
 

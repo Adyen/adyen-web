@@ -1,11 +1,8 @@
 import { renderHook } from '@testing-library/preact-hooks';
 import { useStartPayPalSession } from './useStartPayPalSession';
-import type { PayPalError, PayPalPresentationModeOptions } from '../paypal-js-types';
+import type { PayPalError } from '../paypal-js-types';
 
 describe('useStartPayPalSession', () => {
-    const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
-    const autoOptions: PayPalPresentationModeOptions = { presentationMode: 'auto' };
-
     const createRecoverableError = () => {
         const error = new Error('Payment flow failed') as PayPalError;
         error.name = 'PaymentFlowError';
@@ -14,27 +11,7 @@ describe('useStartPayPalSession', () => {
         return error;
     };
 
-    beforeEach(() => {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
-
-    test('should start the session with the configured presentation mode options', async () => {
-        const startSession = jest.fn().mockResolvedValue(undefined);
-        const onError = jest.fn();
-
-        const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
-
-        await result.current?.(startSession);
-
-        expect(startSession).toHaveBeenCalledWith(modalOptions);
-        expect(onError).not.toHaveBeenCalled();
-    });
-
-    test('should start the session with the auto presentation mode when no presentation mode is configured', async () => {
+    test('should start the session with the auto presentation mode', async () => {
         const startSession = jest.fn().mockResolvedValue(undefined);
         const onError = jest.fn();
 
@@ -42,45 +19,27 @@ describe('useStartPayPalSession', () => {
 
         await result.current?.(startSession);
 
-        expect(startSession).toHaveBeenCalledWith(autoOptions);
-    });
-
-    test('should retry with the auto presentation mode when the session fails with a recoverable error', async () => {
-        const error = createRecoverableError();
-        const startSession = jest.fn().mockRejectedValueOnce(error).mockResolvedValue(undefined);
-        const onError = jest.fn();
-
-        const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
-
-        await result.current?.(startSession);
-
-        expect(startSession).toHaveBeenCalledTimes(2);
-        expect(startSession).toHaveBeenLastCalledWith(autoOptions);
+        expect(startSession).toHaveBeenCalledWith({ presentationMode: 'auto' });
         expect(onError).not.toHaveBeenCalled();
-        expect(console.warn).toHaveBeenCalledWith(
-            `PayPal - Error occurred starting session with '${modalOptions.presentationMode}' presentation mode, retrying with auto presentation mode`,
-            error
-        );
     });
 
-    test('should report the error raised by the retry', async () => {
-        const retryError = new Error('Retry failed');
-        const startSession = jest.fn().mockRejectedValueOnce(createRecoverableError()).mockRejectedValueOnce(retryError);
-        const onError = jest.fn();
+    test('should start the session with the sandbox support when provided', async () => {
+        const startSession = jest.fn().mockResolvedValue(undefined);
+        const sandboxSupport = { enabled: true };
 
-        const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
+        const { result } = renderHook(() => useStartPayPalSession({ sandboxSupport, onError: jest.fn() }));
 
         await result.current?.(startSession);
 
-        expect(onError).toHaveBeenCalledWith(retryError);
+        expect(startSession).toHaveBeenCalledWith({ presentationMode: 'auto', sandboxSupport });
     });
 
-    test('should report the error without retrying when the presentation mode is already auto', async () => {
+    test('should report a recoverable error without retrying', async () => {
         const error = createRecoverableError();
         const startSession = jest.fn().mockRejectedValue(error);
         const onError = jest.fn();
 
-        const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: autoOptions, onError }));
+        const { result } = renderHook(() => useStartPayPalSession({ onError }));
 
         await result.current?.(startSession);
 
@@ -93,7 +52,7 @@ describe('useStartPayPalSession', () => {
         const startSession = jest.fn().mockRejectedValue(error);
         const onError = jest.fn();
 
-        const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
+        const { result } = renderHook(() => useStartPayPalSession({ onError }));
 
         await result.current?.(startSession);
 
@@ -105,7 +64,7 @@ describe('useStartPayPalSession', () => {
         const startSession = jest.fn().mockRejectedValue('session unavailable');
         const onError = jest.fn();
 
-        const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
+        const { result } = renderHook(() => useStartPayPalSession({ onError }));
 
         await result.current?.(startSession);
 
