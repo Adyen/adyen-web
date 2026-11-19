@@ -41,7 +41,7 @@ export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | '
 }
 
 export type PayPalComponentV6Props = Pick<
-    NonNullable<PayPalConfiguration['payPalV6']>,
+    NonNullable<PayPalConfiguration['payPalV6Configuration']>,
     | 'commit'
     | 'vault'
     | 'style'

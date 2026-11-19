@@ -298,7 +298,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * Use PayPal V6 SDK instead of V5
      * @default undefined
      */
-    payPalV6?: Omit<PayPalV6Props<PaypalElement>, 'countryCode'> & {
+    payPalV6Configuration?: Omit<PayPalV6Props<PaypalElement>, 'countryCode'> & {
         /**
          * Set to true to force the UI to only render the PayPal button (no variants like Credit, Pay Later, Venmo)
          * @default false

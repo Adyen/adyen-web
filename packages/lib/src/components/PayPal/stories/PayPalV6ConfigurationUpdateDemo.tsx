@@ -47,8 +47,8 @@ const getConfiguration = (
     ...componentConfiguration,
     countryCode: preset.countryCode,
     amount: { currency: preset.currency, value: isZeroAuth ? 0 : preset.value },
-    payPalV6: {
-        ...componentConfiguration?.payPalV6,
+    payPalV6Configuration: {
+        ...componentConfiguration?.payPalV6Configuration,
         vault,
         locale: preset.locale
     }

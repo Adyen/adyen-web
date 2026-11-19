@@ -76,7 +76,7 @@ export const SplitPaypalButtons: DropinStory = {
         componentConfiguration: {
             paymentMethodsConfiguration: {
                 paypal: {
-                    payPalV6: {
+                    payPalV6Configuration: {
                         blockPayPalCreditButton: true,
                         blockPayPalPayLaterButton: true,
                         blockPayPalVenmoButton: true
