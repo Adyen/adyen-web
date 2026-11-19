@@ -4,11 +4,13 @@ import { render, screen } from '@testing-library/preact';
 import { CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/constants';
 import StoredCardFields from './StoredCardFields';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
+import type { StoredCardFieldsProps } from './types';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
 
-const storedCardProps = {
+const core = setupCoreMock();
+
+const storedCardPropsWithoutExpiry: StoredCardFieldsProps = {
     brand: 'visa',
-    expiryMonth: '03',
-    expiryYear: '2030',
     lastFour: '1111',
     hasCVC: true,
     onFocusField: () => {},
@@ -18,9 +20,15 @@ const storedCardProps = {
     focusedElement: ''
 };
 
+const storedCardProps: StoredCardFieldsProps = {
+    ...storedCardPropsWithoutExpiry,
+    expiryMonth: '03',
+    expiryYear: '2030'
+};
+
 const renderWithCoreProvider = ui => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             {ui}
         </CoreProvider>
     );
@@ -41,9 +49,7 @@ describe('StoredCard', () => {
     });
 
     test('Renders a StoredCard field, without expiryDate (relevant data is null); and with cvc field', () => {
-        const newStoredCardProps = { ...storedCardProps };
-        newStoredCardProps.expiryMonth = null;
-        newStoredCardProps.expiryYear = null;
+        const newStoredCardProps: StoredCardFieldsProps = { ...storedCardProps, expiryMonth: null, expiryYear: null };
 
         renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
@@ -55,9 +61,7 @@ describe('StoredCard', () => {
     });
 
     test('Renders a StoredCard field, without expiryDate (relevant data is empty string); and with cvc field', () => {
-        const newStoredCardProps = { ...storedCardProps };
-        newStoredCardProps.expiryMonth = '';
-        newStoredCardProps.expiryYear = '';
+        const newStoredCardProps: StoredCardFieldsProps = { ...storedCardProps, expiryMonth: '', expiryYear: '' };
 
         renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
@@ -69,11 +73,7 @@ describe('StoredCard', () => {
     });
 
     test('Renders a StoredCard field, without expiryDate (relevant data is missing); and with cvc field', () => {
-        const newStoredCardProps = { ...storedCardProps };
-        delete newStoredCardProps.expiryMonth;
-        delete newStoredCardProps.expiryYear;
-
-        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...storedCardPropsWithoutExpiry} />);
 
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 

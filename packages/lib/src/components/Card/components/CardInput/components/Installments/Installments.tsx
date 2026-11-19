@@ -29,7 +29,7 @@ export interface InstallmentOptions {
 }
 export interface InstallmentsProps {
     brand?: string;
-    onChange?: (installmentObject: InstallmentsState) => void;
+    onChange: (installmentObject: InstallmentsState) => void;
     installmentOptions: InstallmentOptions;
     type?: string;
 }
@@ -50,8 +50,9 @@ function createRadioGroupItems(hasRadioButtonUI: boolean, hasInstallmentValues: 
 function Installments(props: Readonly<InstallmentsProps>) {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
-    const { brand, onChange, type } = props;
-    const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
+    const { brand = '', onChange, type } = props;
+    const installmentOptions = (brand && props.installmentOptions[brand]) || props.installmentOptions.card;
+
     const hasInstallmentOptions = !!installmentOptions;
     const installmentPlansKey = installmentOptions?.plans?.join(',');
     const installmentValues = installmentOptions?.values ?? [];
@@ -60,7 +61,10 @@ function Installments(props: Readonly<InstallmentsProps>) {
     const [installmentAmount, setInstallmentAmount] = useState<number | null>(installmentOptions?.preselectedValue ?? installmentValues[0] ?? null);
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
-    const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving') || installmentOptions?.plans?.includes('bonus');
+    const planHasRevolving = installmentOptions?.plans?.includes('revolving');
+    const planHasBonus = installmentOptions?.plans?.includes('bonus');
+
+    const hasRadioButtonUI = !!(planHasRevolving || planHasBonus);
     const radioGroupItems = useMemo(
         () => createRadioGroupItems(hasRadioButtonUI, hasInstallmentValues, installmentOptions?.plans),
         [hasRadioButtonUI, hasInstallmentValues, installmentPlansKey]
@@ -75,26 +79,6 @@ function Installments(props: Readonly<InstallmentsProps>) {
     const onRadioSelect = e => {
         const selectedBtn = e.currentTarget.getAttribute('value');
         setRadioBtnValue(selectedBtn);
-    };
-
-    const installmentItemsMapper = (value: number): InstallmentsItem => {
-        let translationKey;
-        let translationObj;
-
-        if (type === 'amount') {
-            const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
-
-            translationKey = 'installmentOption';
-            translationObj = { count: value, values: { times: value, partialValue: getPartialAmount(value) } };
-        } else {
-            translationKey = `installmentOptionMonths`;
-            translationObj = { count: value, values: { times: value } };
-        }
-
-        return {
-            id: value,
-            name: amount.value ? i18n.get(translationKey, translationObj) : `${value}`
-        };
     };
 
     useEffect(() => {
@@ -116,8 +100,30 @@ function Installments(props: Readonly<InstallmentsProps>) {
         onChange(hasInstallmentOptions ? state : { value: null });
     }, [onChange, hasRadioButtonUI, installmentAmount, hasInstallmentOptions, selectedRadioValue]);
 
+    // Keep the onChange effect above these returns: the parent relies on it to clear the installments selection when nothing renders
     if (!installmentOptions) return null;
     if (!amount || amount.value === 0) return null;
+
+    // Build the installments maps here to be null safe
+    const installmentItemsMapper = (value: number): InstallmentsItem => {
+        let translationKey;
+        let translationObj;
+
+        if (type === 'amount') {
+            const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
+
+            translationKey = 'installmentOption';
+            translationObj = { count: value, values: { times: value, partialValue: getPartialAmount(value) } };
+        } else {
+            translationKey = `installmentOptionMonths`;
+            translationObj = { count: value, values: { times: value } };
+        }
+
+        return {
+            id: value,
+            name: amount.value ? i18n.get(translationKey, translationObj) : `${value}`
+        };
+    };
 
     if (hasRadioButtonUI) {
         return (
@@ -182,10 +188,5 @@ function Installments(props: Readonly<InstallmentsProps>) {
         </div>
     );
 }
-
-Installments.defaultProps = {
-    brand: '',
-    onChange: () => {}
-};
 
 export default Installments;

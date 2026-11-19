@@ -1,14 +1,14 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import AvailableBrands from './AvailableBrands';
-import { BrandConfiguration } from '../../../../types';
+import type { PaymentMethodBrand } from '../../../../../../types/global-types';
 
-const BRANDS: BrandConfiguration[] = [
+const BRANDS: PaymentMethodBrand[] = [
     { name: 'visa', icon: 'https://example.com/visa.svg' },
     { name: 'mc', icon: 'https://example.com/mc.svg' }
 ];
 
-const renderAvailableBrands = (props: { brands: BrandConfiguration[]; activeBrand: string }) => render(<AvailableBrands {...props} />);
+const renderAvailableBrands = (props: { brands: PaymentMethodBrand[]; activeBrand: string }) => render(<AvailableBrands {...props} />);
 
 describe('AvailableBrands', () => {
     test('renders null when brands array is empty', () => {

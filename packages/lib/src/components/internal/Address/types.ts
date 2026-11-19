@@ -25,7 +25,7 @@ export interface AddressProps {
     addressSearchDebounceMs?: number;
     requiredFields?: readonly string[];
     specifications?: AddressSpecifications;
-    validationRules?: ValidatorRules;
+    validationRules?: ValidatorRules | null;
     visibility?: string;
     overrideSchema?: AddressSpecifications;
     iOSFocusedField?: string;
