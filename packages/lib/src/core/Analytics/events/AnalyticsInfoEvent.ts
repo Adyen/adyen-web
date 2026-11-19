@@ -42,7 +42,9 @@ export enum UiTarget {
     expiryMonth = 'expiry_month',
     expiryYear = 'expiry_year',
     securityCode = 'security_code',
-    donationAmountButton = 'donation_amount_button'
+    donationAmountButton = 'donation_amount_button',
+    emiProvider = 'emi_provider',
+    emiPlan = 'emi_plan'
 }
 
 export enum InfoEventType {

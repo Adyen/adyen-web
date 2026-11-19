@@ -16,6 +16,7 @@ export * from './Donation/types';
 export * from './Dragonpay/types';
 export * from './Dropin/types';
 export * from './Econtext/types';
+export type { EMIConfiguration } from './EMI/types';
 export * from './Giftcard/types';
 export * from './GooglePay/types';
 export * from './Iris/types';
