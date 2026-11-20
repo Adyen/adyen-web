@@ -304,6 +304,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             .onKeyDown((pFeedbackObj: SFFeedbackObj): void => {
                 const { numKey, ...rest } = pFeedbackObj;
                 this.callbacks.onKeyDown(rest);
+            })
+            .suppressCsfConfigFailTimeoutAnalytics((): void => {
+                this.callbacks.suppressCsfConfigFailTimeoutAnalytics();
             });
 
         // Store reference to securedField in this.state (under fieldType)

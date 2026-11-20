@@ -172,6 +172,7 @@ class SecuredField extends AbstractSecuredField {
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
+        // postMessageToIframe(configObj, window, this.loadingContext); // TODO:For testing - to force the configFail error (503)on the SF
         //--
 
         // Callback to say iframe loaded
@@ -318,6 +319,8 @@ class SecuredField extends AbstractSecuredField {
                     feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
                     `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`
                 );
+
+                // TODO - if this fires for codes 608 or 609 then we need a callback on SFP that we can use to stop SFPH's csfLoadFailTimeout from firing
                 break;
 
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
@@ -333,6 +336,8 @@ class SecuredField extends AbstractSecuredField {
                     feedbackObj.code ?? fallbackCode,
                     `${feedbackObj.error ?? fallbackErrorMsg}. Field=${this.sfConfig.fieldType}`
                 );
+
+                this.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
                 break;
             }
 
@@ -349,9 +354,11 @@ class SecuredField extends AbstractSecuredField {
                 const configLogMsg = configLog ? ` Log=${JSON.stringify(configLog)}` : '';
 
                 this.submitFeedbackErrorAnalytics(
-                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_STALLED,
                     `${errorMsg}. Field=${this.sfConfig.fieldType}.${configLogMsg}`
                 );
+
+                this.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
                 break;
             }
 
@@ -481,6 +488,11 @@ class SecuredField extends AbstractSecuredField {
 
     onKeyDown(callbackFn: RtnType_callbackFn): SecuredField {
         this.onKeyDownCallback = callbackFn;
+        return this;
+    }
+
+    suppressCsfConfigFailTimeoutAnalytics(callbackFn: RtnType_noParamVoidFn): SecuredField {
+        this.suppressCsfConfigFailTimeoutAnalyticsCallback = callbackFn;
         return this;
     }
     //------------------------------------

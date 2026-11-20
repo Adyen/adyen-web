@@ -21,7 +21,8 @@ const myCSF = {
     callbacks: {
         onLoad: jest.fn(() => {}),
         onTouchstartIOS: jest.fn(() => {}),
-        onKeyDown: jest.fn(() => {})
+        onKeyDown: jest.fn(() => {}),
+        suppressCsfConfigFailTimeoutAnalytics: jest.fn(() => {})
     },
     createSecuredFields,
     setupSecuredField,
@@ -69,6 +70,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onValidationCallback: null,
             onAutoCompleteCallback: null,
             onKeyDownCallback: null,
+            suppressCsfConfigFailTimeoutAnalyticsCallback: null,
             onIframeLoaded: cbFn => {
                 MySecuredField.onIframeLoadedCallback = cbFn;
                 return MySecuredField;
@@ -107,6 +109,10 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             },
             onKeyDown: cbFn => {
                 MySecuredField.onKeyDownCallback = cbFn;
+                return MySecuredField;
+            },
+            suppressCsfConfigFailTimeoutAnalytics: cbFn => {
+                MySecuredField.suppressCsfConfigFailTimeoutAnalyticsCallback = cbFn;
                 return MySecuredField;
             }
         };

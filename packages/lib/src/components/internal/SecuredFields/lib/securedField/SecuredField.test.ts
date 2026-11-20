@@ -569,7 +569,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
                 action: 'configFailure',
                 fieldType: ENCRYPTED_SECURITY_CODE,
                 numKey: localCard.numKey,
-                code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                code: ErrorEventCode.SECURED_FIELDS_CONFIG_STALLED,
                 error: 'Config failure',
                 configLog: 'some-config-log'
             };
@@ -587,7 +587,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
                 id: expect.any(String),
                 component: 'scheme',
                 errorType: ErrorEventType.internal,
-                code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                code: ErrorEventCode.SECURED_FIELDS_CONFIG_STALLED,
                 message: 'Config failure. Field=encryptedSecurityCode. Log="some-config-log"'
             });
         });
