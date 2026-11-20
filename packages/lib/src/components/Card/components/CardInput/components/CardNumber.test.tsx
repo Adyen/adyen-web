@@ -3,10 +3,13 @@ import { render, screen } from '@testing-library/preact';
 import CardNumber from './CardNumber';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import { BRAND_READABLE_NAME_MAP } from '../../../../internal/SecuredFields/lib/constants';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const renderCardNumber = (props = {}) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <CardNumber
                 label="Card number"
                 error=""
@@ -42,7 +45,7 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
         renderCardNumber();
         expect(screen.getByTestId('encryptedCardNumber')).toBeInTheDocument();
         expect(screen.getByAltText('')).toBeInTheDocument();
-        const images = screen.getAllByRole('img');
+        const images = screen.getAllByRole('presentation');
         expect(images).toHaveLength(1);
     });
 
