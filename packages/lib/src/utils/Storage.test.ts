@@ -70,3 +70,26 @@ describe('Storage implementation - storage fallback', () => {
         expect(idObj).toBe(null);
     });
 });
+
+describe('Storage implementation - storage full', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    test.each(['localStorage', 'sessionStorage'] as const)('Should fall back to memory when %s write throws QuotaExceededError', storageType => {
+        jest.spyOn(window[storageType].__proto__, 'setItem').mockImplementation(() => {
+            throw new DOMException('The quota has been exceeded.', 'QuotaExceededError');
+        });
+
+        const storage = new Storage('checkout-attempt-id', storageType);
+
+        expect(() => storage.set({ id: 'mockId' })).not.toThrow();
+        expect(storage.get()).toEqual({ id: 'mockId' });
+
+        storage.set({ id: 'mockId2' });
+        expect(storage.get()).toEqual({ id: 'mockId2' });
+
+        storage.remove();
+        expect(storage.get()).toBe(null);
+    });
+});
