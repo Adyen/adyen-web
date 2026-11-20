@@ -23,12 +23,15 @@ import {
 } from '../lib/types';
 import { existy } from '../../../../utils/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 /**
  * Emits the onLoad event
  * Here we can assume all securedFields iframes have fired their 'load' event
  */
 function handleOnLoad(cbObj: CardLoadData): void {
+    console.log('### SecuredFieldsProviderHandlers::handleOnLoad:: callback');
+
     // Clear 'loading' timeout
     clearTimeout(this.csfLoadFailTimeout);
     this.csfLoadFailTimeout = null;
@@ -44,11 +47,29 @@ function handleOnLoad(cbObj: CardLoadData): void {
      * - so we need to clear the loading spinner to see if the securedFields are reporting anything
      */
     this.csfConfigFailTimeout = setTimeout(() => {
+        console.log('### SecuredFieldsProviderHandlers::handleOnLoad:: csfConfigFailTimeout this.state.status=', this.state.status);
         if (this.state.status !== 'ready') {
             // Hide the spinner
             this.setState({ status: 'csfConfigFailure' });
             // Report the error
             this.props.onError(new AdyenCheckoutError('ERROR', 'secured fields have failed to configure'));
+
+            console.log(
+                '### SecuredFieldsProviderHandlers::handleOnLoad:: csfConfigFailTimeout suppressing analytics=',
+                this.suppressConfigTimeoutAnalytics
+            );
+
+            if (!this.suppressConfigTimeoutAnalytics) {
+                // Generate analytics error event
+                const errorObj = new AnalyticsErrorEvent({
+                    component: this.props.componentType,
+                    code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILED,
+                    errorType: ErrorEventType.internal,
+                    message: 'secured field iframes have failed to configure'
+                });
+
+                this.props.onSubmitAnalytics?.(errorObj);
+            }
         }
     }, this.csfConfigFailTimeoutMS);
 }
@@ -58,6 +79,8 @@ function handleOnLoad(cbObj: CardLoadData): void {
  * Here we can assume CSF is loaded, configured and ready to be used
  */
 function handleOnConfigSuccess(cbObj: CardConfigSuccessData): void {
+    console.log('### SecuredFieldsProviderHandlers::handleOnConfigSuccess:: ');
+
     // Clear 'config' timeout
     clearTimeout(this.csfConfigFailTimeout);
     this.csfConfigFailTimeout = null;

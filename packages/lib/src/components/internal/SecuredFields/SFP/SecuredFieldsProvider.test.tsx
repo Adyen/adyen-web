@@ -3,6 +3,8 @@ import { render, act } from '@testing-library/preact/pure';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { ENCRYPTED_PWD_FIELD } from '../lib/constants';
+import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -436,5 +438,54 @@ describe('<SecuredFieldsProvider /> checkForKCPFields', () => {
         expect(sfp.state.hasKoreanFields).toBeFalsy();
         expect(sfp.csf.addSecuredField).not.toHaveBeenCalled();
         expect(sfp.csf.removeSecuredField).not.toHaveBeenCalled();
+    });
+});
+
+describe('<SecuredFieldsProvider /> csfLoadFailTimeout', () => {
+    const onSubmitAnalytics = jest.fn();
+
+    beforeEach(() => {
+        nodeHolder.innerHTML = mockNode;
+        onError.mockClear();
+        onSubmitAnalytics.mockClear();
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    test('should generate an analytics error event and call onError when the securedFields have not reported ready before the timeout fires', async () => {
+        renderSFP({ componentType: 'scheme', onSubmitAnalytics });
+
+        await act(async () => {
+            await jest.advanceTimersByTimeAsync(sfp.csfLoadFailTimeoutMS);
+        });
+
+        expect(sfp.state.status).toBe('csfLoadFailure');
+        expect(onError).toHaveBeenCalledWith(expect.any(AdyenCheckoutError));
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            timestamp: expect.any(String),
+            id: expect.any(String),
+            component: 'scheme',
+            errorType: ErrorEventType.internal,
+            code: ErrorEventCode.SECURED_FIELDS_LOAD_FAILURE,
+            message: 'secured field iframes have failed to load'
+        });
+    });
+
+    test('should not generate an analytics error event when the securedFields report ready before the timeout fires', async () => {
+        renderSFP({ componentType: 'scheme', onSubmitAnalytics });
+
+        await act(() => {
+            sfp.handleOnConfigSuccess();
+        });
+
+        await act(async () => {
+            await jest.advanceTimersByTimeAsync(sfp.csfLoadFailTimeoutMS);
+        });
+
+        expect(sfp.state.status).toBe('ready');
+        expect(onSubmitAnalytics).not.toHaveBeenCalled();
     });
 });
