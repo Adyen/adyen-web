@@ -284,8 +284,7 @@ describe('AfterPay', () => {
         });
 
         const termsAndConditionsCheckbox = await screen.findByRole('checkbox', {
-            name: /I agree with the payment conditions of Riverty/i,
-            exact: false
+            name: /I agree with the payment conditions of Riverty/i
         });
         await user.click(termsAndConditionsCheckbox);
         await waitFor(() => {
