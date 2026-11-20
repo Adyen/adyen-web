@@ -76,6 +76,10 @@
         font-size: 0.81em;
     }
 
+    &.adyen-checkout__button--wrap .adyen-checkout__button__text {
+        white-space: normal;
+    }
+
     &.adyen-checkout__button--ghost {
         background: none;
         border: 0;

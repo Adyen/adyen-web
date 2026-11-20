@@ -1,0 +1,57 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: variable-generator.token(spacer-100) variable-generator.token(spacer-080);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
+    border-radius: variable-generator.token(border-radius-m);
+    background: variable-generator.token(color-background-primary);
+    text-align: center;
+
+    @include mixins.media-s-and-up {
+        padding: variable-generator.token(spacer-100) variable-generator.token(spacer-130);
+    }
+}
+
+.icon {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: variable-generator.token(border-radius-m);
+    box-shadow: variable-generator.token(shadow-low);
+}
+
+.title {
+    margin: variable-generator.token(spacer-080) 0 0;
+    color: variable-generator.token(color-label-primary);
+    font-size: variable-generator.token(text-title-l-font-size);
+    font-weight: variable-generator.token(text-title-font-weight);
+}
+
+.description {
+    @include mixins.adyen-checkout-text-body;
+
+    color: variable-generator.token(color-label-primary);
+}
+
+.details,
+.actions {
+    align-self: stretch;
+    margin-top: variable-generator.token(spacer-050);
+}
+
+.details {
+    @include mixins.media-m-and-up {
+        padding: 0 variable-generator.token(spacer-140);
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -12,6 +12,7 @@ export { default as ThreeDS2DeviceFingerprint } from './ThreeDS2/ThreeDS2DeviceF
 /** Direct debit */
 export { default as Ach } from './Ach';
 export { default as BacsDirectDebit } from './BacsDD';
+export { default as BECS } from './BECS';
 export { default as SepaDirectDebit } from './Sepa';
 export { default as PreAuthorizedDebitCanada } from './PreAuthorizedDebitCanada';
 

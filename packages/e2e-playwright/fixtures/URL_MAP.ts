@@ -65,6 +65,12 @@ export const URL_MAP = {
     upiAutoPay: '/iframe.html?globals=&id=components-upi--auto-pay-session&viewMode=story',
 
     /**
+     * BECS Direct Debit
+     */
+    becs: '/iframe.html?globals=&args=&id=components-becs--default&viewMode=story',
+    becsSuccess: '/iframe.html?globals=&args=&id=components-becs--success&viewMode=story',
+
+    /**
      * Vouchers
      */
     boleto: '/iframe.html?globals=&id=components-vouchers-boleto--default&viewMode=story',

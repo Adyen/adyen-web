@@ -43,6 +43,7 @@ import BankTransfer from './BankTransfer';
 import Affirm from './Affirm';
 import Pix from './Pix';
 import BacsDD from './BacsDD';
+import BECS from './BECS';
 import Address from './Address';
 import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
@@ -123,6 +124,7 @@ export const ComponentsMap = {
     /** Direct debit */
     [TxVariants.ach]: Ach,
     [TxVariants.directdebit_GB]: BacsDD,
+    [TxVariants.directdebit_AU]: BECS,
     [TxVariants.sepadirectdebit]: Sepa,
     [TxVariants.eft_directdebit_CA]: PreAuthorizedDebitCanada,
     /** Direct debit */
