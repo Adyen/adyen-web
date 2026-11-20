@@ -28,8 +28,8 @@ describe('Bacs Direct Debit', () => {
         await user.type(sortCodeInput, '560036');
         await user.type(emailInput, 'jon@adyen.com');
 
-        const consentCheckbox = await screen.findByRole('checkbox', { name: /I agree that the above amount/i, exact: false });
-        const accountConsentCheckbox = await screen.findByRole('checkbox', { name: /I confirm the account is in my name/i, exact: false });
+        const consentCheckbox = await screen.findByRole('checkbox', { name: /I agree that the above amount/i });
+        const accountConsentCheckbox = await screen.findByRole('checkbox', { name: /I confirm the account is in my name/i });
 
         await user.click(consentCheckbox);
         await user.click(accountConsentCheckbox);
@@ -37,7 +37,7 @@ describe('Bacs Direct Debit', () => {
         const continueButton = await screen.findByRole('button', { name: 'Continue' });
         await user.click(continueButton);
 
-        const payButton = await screen.findByRole('button', { name: 'Confirm and pay', exact: false });
+        const payButton = await screen.findByRole('button', { name: 'Confirm and pay' });
         await user.click(payButton);
 
         expect(onSubmitMock).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('Bacs Direct Debit', () => {
         expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
         expect(within(<HTMLElement>consentCheckboxContainer).getByAltText('Error')).toBeInTheDocument();
         expect(within(<HTMLElement>accountConsentCheckboxContainer).getByAltText('Error')).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Confirm and pay', exact: false })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Confirm and pay' })).not.toBeInTheDocument();
     });
 
     test('should allow shopper to Edit the details before making the payment', async () => {
@@ -125,8 +125,8 @@ describe('Bacs Direct Debit', () => {
         await user.type(sortCodeInput, '560036');
         await user.type(emailInput, 'jon@adyen.com');
 
-        const consentCheckbox = await screen.findByRole('checkbox', { name: /I agree that the above amount/i, exact: false });
-        const accountConsentCheckbox = await screen.findByRole('checkbox', { name: /I confirm the account is in my name/i, exact: false });
+        const consentCheckbox = await screen.findByRole('checkbox', { name: /I agree that the above amount/i });
+        const accountConsentCheckbox = await screen.findByRole('checkbox', { name: /I confirm the account is in my name/i });
 
         await user.click(consentCheckbox);
         await user.click(accountConsentCheckbox);
@@ -159,7 +159,7 @@ describe('Bacs Direct Debit', () => {
 
         await user.click(continueButton);
 
-        const payButton = await screen.findByRole('button', { name: 'Confirm and pay', exact: false });
+        const payButton = await screen.findByRole('button', { name: 'Confirm and pay' });
         await user.click(payButton);
 
         expect(onSubmitMock).toHaveBeenCalledTimes(1);

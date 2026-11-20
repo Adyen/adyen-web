@@ -34,7 +34,8 @@ const KNOWN_A11Y_VIOLATIONS = {
     'components-issuerlist-onlinebankingcz--default': ['link-in-text-block'], // TODO - the link style needs fixing
     'components-issuerlist-onlinebankingfi--default': ['link-in-text-block'], // TODO - the link style needs fixing
     'components-issuerlist-onlinebankingpl--default': ['link-in-text-block'], // TODO - the link style needs fixing
-    'components-issuerlist-onlinebankingsk--default': ['link-in-text-block'] // TODO - the link style needs fixing
+    'components-issuerlist-onlinebankingsk--default': ['link-in-text-block'], // TODO - the link style needs fixing
+    'components-wallets-paypal--default': ['label-content-name-mismatch'] // PayPal SDK iframe: aria-label "paypal paylater" vs visible "Pay Later"
 };
 
 let storyIds: string[] = [];

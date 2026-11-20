@@ -4,6 +4,9 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import userEvent from '@testing-library/user-event';
 import PhoneInputForm from './PhoneInputForm';
 import { PhoneInputFormProps } from './types';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const items = [{ id: '+44', name: 'United Kingdom', code: 'GB', selectedOptionName: 'United Kingdom' }];
 
@@ -20,7 +23,7 @@ describe('PhoneInput', () => {
     const renderPhoneInput = (props: PhoneInputFormProps = defaultProps) => {
         return render(
             // @ts-ignore ignore
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <PhoneInputForm {...props} />
             </CoreProvider>
         );
@@ -72,8 +75,11 @@ describe('PhoneInput', () => {
         const phoneNumberEle = await screen.findByRole('textbox');
         await user.type(phoneNumberEle, '123456');
         fireEvent.blur(phoneNumberEle);
+        // The phone number field's success checkmark has alt text, while the selected-item
+        // checkmark inside the prefix dropdown list renders alt="" (role presentation).
         const successIcons = await screen.findAllByRole('img');
-        expect(successIcons.length).toBe(2);
+        expect(successIcons.length).toBe(1);
+        expect(screen.getAllByRole('presentation')).toHaveLength(1);
     });
 
     test('should call onChange when the data has been changed', async () => {
