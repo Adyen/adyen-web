@@ -22,6 +22,7 @@ export interface PhoneInputFieldProps {
     showNumber?: boolean;
     canSelectPrefix?: boolean;
     errorLive?: boolean;
+    phoneNumberRequired?: boolean;
 }
 /**
  *
@@ -35,6 +36,7 @@ export default function PhoneInputFields({
     form,
     canSelectPrefix = true,
     errorLive,
+    phoneNumberRequired = true,
     ...props
 }: Readonly<PhoneInputFieldProps>) {
     const { i18n } = useCoreContext();
@@ -95,7 +97,7 @@ export default function PhoneInputFields({
                         onBlur={handleChangeFor('phoneNumber', 'blur')}
                         placeholder={props?.placeholders?.phoneNumber}
                         autoCorrect="off"
-                        required={true}
+                        required={phoneNumberRequired}
                         autocomplete={'tel'}
                     />
                 </Field>
