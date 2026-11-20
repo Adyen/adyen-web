@@ -78,6 +78,64 @@ describe('validatePostalCode', () => {
         expect(result).toBe(false);
     });
 
+    // LV
+    it('should return true for a valid LV postal code without prefix', () => {
+        const result = validatePostalCode('1050', 'LV', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return true for a valid LV postal code with LV- prefix', () => {
+        const result = validatePostalCode('LV-1050', 'LV', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return false for an invalid LV postal code with fewer than 4 digits', () => {
+        const result = validatePostalCode('105', 'LV', validatorRules);
+        expect(result).toBe(false);
+    });
+
+    // MT
+    it('should return true for a valid MT postal code in AAA9999 format', () => {
+        const result = validatePostalCode('VLT1117', 'MT', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return true for a valid MT postal code in AAA 9999 format with space', () => {
+        const result = validatePostalCode('VLT 1117', 'MT', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return true for a valid MT postal code in AA99 format', () => {
+        const result = validatePostalCode('VL11', 'MT', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return true for a valid MT postal code in AA9999 format', () => {
+        const result = validatePostalCode('VL1117', 'MT', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return false for an invalid MT postal code with only digits', () => {
+        const result = validatePostalCode('1117', 'MT', validatorRules);
+        expect(result).toBe(false);
+    });
+
+    // SK
+    it('should return true for a valid SK postal code without space', () => {
+        const result = validatePostalCode('01001', 'SK', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return true for a valid SK postal code with space', () => {
+        const result = validatePostalCode('010 01', 'SK', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return false for an invalid SK postal code with fewer than 5 digits', () => {
+        const result = validatePostalCode('0100', 'SK', validatorRules);
+        expect(result).toBe(false);
+    });
+
     // General
     it('should return null if the postal code is empty', () => {
         const result = validatePostalCode('', 'AT', validatorRules);
