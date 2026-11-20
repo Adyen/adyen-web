@@ -39,6 +39,9 @@ const PaymentMethodList = ({
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
     const hasInstantPaymentMethods = !!instantPaymentMethods?.length;
     const hasStoredPaymentMethods = !!storedPaymentMethods?.length;
+    // If we only have one payment method across both lists we make that payment method not selectable
+    // This fixes a bug where a single stored payment method not having "selectable" markup
+    const isStandalonePaymentMethod = (storedPaymentMethods?.length ?? 0) + (paymentMethods?.length ?? 0) === 1;
     const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
     useEffect(() => {
@@ -87,6 +90,7 @@ const PaymentMethodList = ({
                     {...rest}
                     label={i18n.get('paymentMethodsList.storedPayments.label')}
                     classNameModifiers={['storedPayments']}
+                    standalone={isStandalonePaymentMethod}
                     paymentMethods={storedPaymentMethods}
                     onSelect={onSelect}
                 ></PaymentMethodsContainer>
@@ -97,6 +101,7 @@ const PaymentMethodList = ({
                     {...rest}
                     label={pmListLabel}
                     classNameModifiers={['otherPayments']}
+                    standalone={isStandalonePaymentMethod}
                     paymentMethods={paymentMethods}
                     onSelect={onSelect}
                 ></PaymentMethodsContainer>
