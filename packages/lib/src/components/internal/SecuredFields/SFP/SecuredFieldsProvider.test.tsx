@@ -489,3 +489,78 @@ describe('<SecuredFieldsProvider /> csfLoadFailTimeout', () => {
         expect(onSubmitAnalytics).not.toHaveBeenCalled();
     });
 });
+
+describe('<SecuredFieldsProvider /> csfConfigFailTimeout', () => {
+    const onSubmitAnalytics = jest.fn();
+
+    beforeEach(() => {
+        nodeHolder.innerHTML = mockNode;
+        onError.mockClear();
+        onSubmitAnalytics.mockClear();
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    test('should generate an analytics error event and call onError when the secured fields have not reported being configured before the timeout fires', async () => {
+        renderSFP({ componentType: 'scheme', onSubmitAnalytics });
+
+        await act(() => {
+            sfp.handleOnLoad({ iframesLoaded: true });
+        });
+
+        await act(async () => {
+            await jest.advanceTimersByTimeAsync(sfp.csfConfigFailTimeoutMS);
+        });
+
+        expect(sfp.state.status).toBe('csfConfigFailure');
+        expect(onError).toHaveBeenCalledWith(expect.any(AdyenCheckoutError));
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            timestamp: expect.any(String),
+            id: expect.any(String),
+            component: 'scheme',
+            errorType: ErrorEventType.internal,
+            code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILED,
+            message: 'secured field iframes have failed to configure'
+        });
+    });
+
+    test('should not generate an analytics error event when the secured fields report configured before the timeout fires', async () => {
+        renderSFP({ componentType: 'scheme', onSubmitAnalytics });
+
+        await act(() => {
+            sfp.handleOnLoad({ iframesLoaded: true });
+        });
+
+        await act(() => {
+            sfp.handleOnConfigSuccess();
+        });
+
+        await act(async () => {
+            await jest.advanceTimersByTimeAsync(sfp.csfConfigFailTimeoutMS);
+        });
+
+        expect(sfp.state.status).toBe('ready');
+        expect(onSubmitAnalytics).not.toHaveBeenCalled();
+    });
+
+    test('should call onError but not generate an analytics error event when suppressCsfConfigFailTimeoutAnalytics has been triggered', async () => {
+        renderSFP({ componentType: 'scheme', onSubmitAnalytics });
+
+        await act(() => {
+            sfp.handleOnLoad({ iframesLoaded: true });
+        });
+
+        sfp.suppressCsfConfigFailTimeoutAnalytics();
+
+        await act(async () => {
+            await jest.advanceTimersByTimeAsync(sfp.csfConfigFailTimeoutMS);
+        });
+
+        expect(sfp.state.status).toBe('csfConfigFailure');
+        expect(onError).toHaveBeenCalledWith(expect.any(AdyenCheckoutError));
+        expect(onSubmitAnalytics).not.toHaveBeenCalled();
+    });
+});

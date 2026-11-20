@@ -323,5 +323,11 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
         MySecuredField.onKeyDownCallback(dummyObjWithNumKey);
         expect(myCSF.callbacks.onKeyDown).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
+
+        // suppressCsfConfigFailTimeoutAnalyticsCallback
+        expect(MySecuredField.suppressCsfConfigFailTimeoutAnalyticsCallback).not.toEqual(null);
+
+        MySecuredField.suppressCsfConfigFailTimeoutAnalyticsCallback();
+        expect(myCSF.callbacks.suppressCsfConfigFailTimeoutAnalytics).toHaveBeenCalled();
     });
 });
