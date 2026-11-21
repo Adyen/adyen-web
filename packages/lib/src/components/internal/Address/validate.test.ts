@@ -115,6 +115,11 @@ describe('validatePostalCode', () => {
         expect(result).toBe(true);
     });
 
+    it('should return false for an MT postal code with three digits', () => {
+        const result = validatePostalCode('VLT111', 'MT', validatorRules);
+        expect(result).toBe(false);
+    });
+
     it('should return false for an invalid MT postal code with only digits', () => {
         const result = validatePostalCode('1117', 'MT', validatorRules);
         expect(result).toBe(false);

@@ -61,7 +61,7 @@ const postalCodePatterns = {
     LU: createPatternByDigits(4),
     LV: { pattern: /^(LV-)?\d{4}$/ },
     MC: { pattern: /^980\d{2}$/ },
-    MT: { pattern: /^[A-Za-z]{2,3}\s?\d{2,4}$/ },
+    MT: { pattern: /^[A-Za-z]{2,3}\s?(\d{2}|\d{4})$/ },
     MY: createPatternByDigits(5),
     NL: { pattern: /(?:NL-)?(?:[1-9]\d{3} ?(?:[A-EGHJ-NPRTVWXZ][A-EGHJ-NPRSTVWXZ]|S[BCEGHJ-NPRTVWXZ]))/ },
     NO: createPatternByDigits(4),
