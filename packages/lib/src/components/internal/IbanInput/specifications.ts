@@ -354,9 +354,9 @@ const countries: Record<string, { length: number; structure: string; example: st
         example: 'BF2312345678901234567890123'
     },
     BI: {
-        length: 16,
-        structure: 'F12',
-        example: 'BI41123456789012'
+        length: 27,
+        structure: 'F05F05F11F02',
+        example: 'BI4210000100010000332045181'
     },
     BJ: {
         length: 28,
@@ -422,6 +422,11 @@ const countries: Record<string, { length: number; structure: string; example: st
         length: 29,
         structure: 'F25',
         example: 'UA511234567890123456789012345'
+    },
+    VA: {
+        length: 22,
+        structure: 'F03F15',
+        example: 'VA59001123000012345678'
     }
 };
 
