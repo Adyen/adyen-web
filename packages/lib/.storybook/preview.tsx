@@ -2,7 +2,14 @@ import './main.css';
 import { h, Fragment } from 'preact';
 import { Preview } from '@storybook/preact-vite';
 import { SRPanelDebugger } from '../storybook/components/SRPanelDebugger';
-import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, STORYBOOK_SHOPPERLOCALES } from '../storybook/config/commonConfig';
+import {
+    DEFAULT_COUNTRY_CODE,
+    DEFAULT_SHOPPER_LOCALE,
+    DEFAULT_AMOUNT_VALUE,
+    SHOPPER_REFERENCE,
+    STORYBOOK_SHOPPERLOCALES
+} from '../storybook/config/commonConfig';
+import { getSearchParameter } from '../storybook/utils/get-query-parameters';
 import { setupWorker } from 'msw/browser';
 import { mswLoader } from 'msw-storybook-addon/csf3';
 import { COUNTRY_CODES } from '../storybook/constants/countries';
@@ -74,6 +81,10 @@ const preview: Preview = {
         showPayButton: {
             control: 'boolean'
         },
+        shopperReference: {
+            control: 'text',
+            description: 'Shopper reference sent to /sessions, /paymentMethods and /payments. Stored payment methods are tied to it.'
+        },
         'srConfig.showPanel': {
             control: 'boolean'
         }
@@ -84,6 +95,7 @@ const preview: Preview = {
         shopperLocale: DEFAULT_SHOPPER_LOCALE,
         amount: DEFAULT_AMOUNT_VALUE,
         showPayButton: true,
+        shopperReference: getSearchParameter('shopperReference') || SHOPPER_REFERENCE,
         'srConfig.showPanel': false
     },
     parameters: {

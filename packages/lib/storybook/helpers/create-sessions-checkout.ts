@@ -19,6 +19,7 @@ async function createSessionsCheckout(
         countryCode,
         shopperLocale,
         amount,
+        shopperReference,
         sessionData,
         srConfig = { showPanel: false, moveFocus: true },
         'srConfig.showPanel': showPanelOverride,
@@ -40,7 +41,7 @@ async function createSessionsCheckout(
         countryCode,
         reference: 'ABC123',
         returnUrl: RETURN_URL,
-        shopperReference: SHOPPER_REFERENCE,
+        shopperReference: shopperReference || SHOPPER_REFERENCE,
         shopperEmail: 'shopper.ctp1@adyen.com',
         ...(shopperDetails && { ...shopperDetails }),
         ...sessionData
