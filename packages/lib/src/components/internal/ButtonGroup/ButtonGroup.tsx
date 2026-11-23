@@ -11,13 +11,13 @@ interface ButtonGroupOption {
 }
 
 interface ButtonGroupProps {
-    options?: ButtonGroupOption[];
+    options: ButtonGroupOption[];
     name: string;
-    ariaLabel?: string;
+    ariaLabel: string;
     onChange: JSX.GenericEventHandler<HTMLInputElement>;
 }
 
-const ButtonGroup = ({ options = [], name, ariaLabel, onChange }: Readonly<ButtonGroupProps>) => (
+const ButtonGroup = ({ options, name, ariaLabel, onChange }: Readonly<ButtonGroupProps>) => (
     <div className="adyen-checkout__button-group" role="radiogroup" aria-label={ariaLabel}>
         {options.map(({ label, selected, value, disabled }, index) => (
             <label
