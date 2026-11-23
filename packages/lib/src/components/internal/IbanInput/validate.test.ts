@@ -25,8 +25,10 @@ describe('IBAN Validations', () => {
             expect(isValidIBAN('NL86INGB0002445588')).toBe(true);
         });
 
-        test('should return true for a valid Saint-Lucia IBAN', () => {
-            expect(isValidIBAN('LC55HEMM000100010012001200023015')).toBe(true);
+        test('should return INVALID_COUNTRY for an IBAN from a country not supported by SEPA Direct Debit', () => {
+            const validationStatus = checkIbanStatus('LC55HEMM000100010012001200023015');
+            expect(validationStatus.status).toBe('invalid');
+            expect(validationStatus.code).toBe('INVALID_COUNTRY');
         });
 
         test('should return false for an incorrect check digit', () => {
@@ -91,6 +93,12 @@ describe('IBAN Validations', () => {
             const validationStatusBE = checkIbanStatus('BE15539000000030');
             expect(validationStatusBE.status).toBe('valid');
             expect(validationStatusBE.code).toBe('VALID');
+        });
+
+        test('should return VALID for a VA IBAN', () => {
+            const validationStatus = checkIbanStatus('VA59001123000012345678');
+            expect(validationStatus.status).toBe('valid');
+            expect(validationStatus.code).toBe('VALID');
         });
 
         test('TOO_LONG', () => {

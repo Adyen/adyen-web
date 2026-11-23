@@ -59,19 +59,20 @@ const postalCodePatterns = {
     LI: createPatternByDigits(4),
     LT: { pattern: /^(LT-\d{5}|\d{4,5})$/ },
     LU: createPatternByDigits(4),
-    LV: { pattern: /^(LV-)[0-9]{4}$/ },
+    LV: { pattern: /^(LV-)?[0-9]{4}$/ },
     MC: { pattern: /^980\d{2}$/ },
-    MT: { pattern: /^[A-Za-z]{3}\d{4}$/ },
+    MT: { pattern: /^(?:[A-Za-z]{3}\s?\d{2}(?:\d{2})?|[A-Za-z]{2}\s?\d{2})$/ },
     MY: createPatternByDigits(5),
     NL: { pattern: /(?:NL-)?(?:[1-9]\d{3} ?(?:[A-EGHJ-NPRTVWXZ][A-EGHJ-NPRSTVWXZ]|S[BCEGHJ-NPRTVWXZ]))/ },
     NO: createPatternByDigits(4),
+    NZ: createPatternByDigits(4),
     PL: { pattern: /^\d{2}[-]{0,1}\d{3}$/ },
     PT: { pattern: /^([1-9]\d{3})([- ]?(\d{3})? *)$/ },
     RO: createPatternByDigits(6),
     SI: createPatternByDigits(4),
     SE: createPatternByDigits(5),
     SG: createPatternByDigits(6),
-    SK: createPatternByDigits(5),
+    SK: { pattern: /^(?:SK-)?\d{3} ?\d{2}$/ },
     US: { pattern: /^\d{5}(?:-\d{4})?$/ }
 };
 
