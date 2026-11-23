@@ -55,7 +55,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
         { key: 'totalOverTime', label: i18n.get('emi.totalAmountOverTime'), amount: totalPayableAmount, isStrong: true }
     ];
 
-    const rows = candidateRows.filter((row): row is SummaryRow => row.amount != null);
+    const rows = candidateRows.filter((row): row is SummaryRow => Boolean(row.amount?.value));
 
     return (
         <fieldset className={styles.planSummary} aria-labelledby={labelledBy}>

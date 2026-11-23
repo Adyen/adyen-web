@@ -176,6 +176,35 @@ describe('EMIPlanSummary', () => {
         ]);
     });
 
+    test('should not render the instant discount row when the additional discount is zero', () => {
+        renderPlanSummary({
+            ...noCostPlanWithDiscount,
+            transactionAmounts: { ...noCostPlanWithDiscount.transactionAmounts, additionalDiscountAmount: { value: 0, currency: 'INR' } }
+        });
+
+        expect(labels()).not.toContain('Instant discount');
+        expect(labels()).toContain('Interest discountNo cost');
+    });
+
+    test('should not render the interest discount row when the interest discount is zero', () => {
+        renderPlanSummary({
+            ...noCostPlanWithDiscount,
+            transactionAmounts: { ...noCostPlanWithDiscount.transactionAmounts, interestDiscountAmount: { value: 0, currency: 'INR' } }
+        });
+
+        expect(labels()).not.toContain('Interest discountNo cost');
+        expect(labels()).toContain('Instant discount');
+    });
+
+    test('should not render the interest row when the plan charges no interest', () => {
+        renderPlanSummary({
+            ...standardPlanWithInterest,
+            transactionAmounts: { ...standardPlanWithInterest.transactionAmounts, totalInterestAmount: { value: 0, currency: 'INR' } }
+        });
+
+        expect(labels()).toEqual(['Item price', 'Amount reserved on card', 'Total amount to be paid over time']);
+    });
+
     test('should interpolate the plan interest rate into the interest label', () => {
         renderPlanSummary({ ...standardPlanWithInterest, interestRateBps: 1599 });
 
