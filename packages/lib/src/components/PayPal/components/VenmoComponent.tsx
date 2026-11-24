@@ -9,7 +9,6 @@ import { VenmoButton } from './VenmoButton';
 export const VenmoComponent = ({
     paypalService,
     commit = true,
-    presentationModeOptions,
     vault,
     style,
     onSubmit,
@@ -40,7 +39,6 @@ export const VenmoComponent = ({
     return (
         <VenmoButton
             paypalService={paypalService}
-            presentationModeOptions={presentationModeOptions}
             commit={commit}
             vault={vault}
             onSubmit={onSubmit}

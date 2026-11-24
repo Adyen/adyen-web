@@ -26,7 +26,6 @@ class VenmoElement extends BasePayPalElement<VenmoConfiguration> {
                 paypalService={this.paypalService}
                 commit={this.props.commit}
                 vault={this.props.vault}
-                presentationModeOptions={this.props.presentationModeOptions}
                 environment={this.props.environment}
                 onSubmit={this.handleSubmit}
                 onApprove={this.handleOnApprove}

@@ -67,7 +67,7 @@ const Component = () => {
 
             const paypal = new PayPal(checkout, {
                 isExpress: true,
-                usePayPalV6: {
+                payPalV6Configuration: {
                     blockPayPalVenmoButton: true,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: true,

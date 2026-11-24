@@ -65,8 +65,7 @@ describe('PayPalPaylater', () => {
             commit: false,
             countryCode: 'US',
             hidePayPalMessaging: true,
-            messagingContentOptions,
-            presentationModeOptions: { presentationMode: 'popup' }
+            messagingContentOptions
         });
 
         render(element.render());
@@ -77,7 +76,6 @@ describe('PayPalPaylater', () => {
                 countryCode: 'US',
                 hidePayPalMessaging: true,
                 messagingContentOptions,
-                presentationModeOptions: { presentationMode: 'popup' },
                 paypalService: expect.any(PayPalService),
                 setComponentRef: expect.any(Function),
                 onSubmit: expect.any(Function),

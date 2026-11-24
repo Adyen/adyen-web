@@ -13,7 +13,6 @@ export const PayPalButton = ({
     commit,
     vault,
     style,
-    presentationModeOptions,
     onApprove,
     onShippingAddressChange,
     onShippingOptionsChange,
@@ -43,24 +42,22 @@ export const PayPalButton = ({
     const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
-                presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalOneTimePaymentSession(oneTimeSessionOptions),
                 onSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptions]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError]
         )
     );
 
     const { onClick: savePaymentClick } = usePayPalSaveSession(
         useMemo(
             () => ({
-                presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalSavePaymentSession(saveSessionOptions),
                 onSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptions]
+            [payPalSDKInstance, saveSessionOptions, onSubmit, onError]
         )
     );
 

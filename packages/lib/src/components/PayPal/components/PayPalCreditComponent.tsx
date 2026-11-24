@@ -9,7 +9,6 @@ import { PayPalComponentV6Props } from './types';
 export const PayPalCreditComponent = ({
     paypalService,
     commit = true,
-    presentationModeOptions,
     vault,
     onSubmit,
     onApprove,
@@ -36,7 +35,6 @@ export const PayPalCreditComponent = ({
     return (
         <PayPalCreditButton
             paypalService={paypalService}
-            presentationModeOptions={presentationModeOptions}
             commit={commit}
             vault={vault}
             onSubmit={onSubmit}

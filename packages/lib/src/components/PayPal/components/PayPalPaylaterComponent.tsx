@@ -13,7 +13,6 @@ import styles from './PayPalPaylaterComponent.module.scss';
 export const PayPalPaylaterComponent = ({
     paypalService,
     commit = true,
-    presentationModeOptions,
     hidePayPalMessaging,
     messagingContentOptions,
     countryCode,
@@ -57,7 +56,6 @@ export const PayPalPaylaterComponent = ({
             )}
             <PayPalPayLaterButton
                 paypalService={paypalService}
-                presentationModeOptions={presentationModeOptions}
                 commit={commit}
                 onSubmit={onSubmit}
                 onApprove={handleOnApprove}

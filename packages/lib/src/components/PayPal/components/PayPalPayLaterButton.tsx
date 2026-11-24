@@ -9,7 +9,6 @@ import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility'
 export const PayPalPayLaterButton = ({
     paypalService,
     commit,
-    presentationModeOptions,
     onApprove,
     onShippingAddressChange,
     onShippingOptionsChange,
@@ -35,12 +34,11 @@ export const PayPalPayLaterButton = ({
     const { onClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
-                presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayLaterOneTimePaymentSession(oneTimeSessionOptions),
                 onSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptions]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError]
         )
     );
 

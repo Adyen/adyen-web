@@ -60,7 +60,7 @@ describe('PayPalCredit', () => {
     });
 
     test('should render the PayPalCredit component with the payment options', () => {
-        const element = createElement({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
+        const element = createElement({ commit: false, vault: true });
 
         render(element.render());
 
@@ -68,7 +68,6 @@ describe('PayPalCredit', () => {
             expect.objectContaining({
                 commit: false,
                 vault: true,
-                presentationModeOptions: { presentationMode: 'popup' },
                 paypalService: expect.any(PayPalService),
                 setComponentRef: expect.any(Function),
                 onSubmit: expect.any(Function),

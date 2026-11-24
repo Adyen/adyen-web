@@ -108,7 +108,7 @@ describe('PayPalPaylaterComponent', () => {
     });
 
     test('should forward the payment options and the shipping callbacks to the pay later button', async () => {
-        const props = createProps({ commit: false, presentationModeOptions: { presentationMode: 'popup' } });
+        const props = createProps({ commit: false });
         render(<PayPalPaylaterComponent {...props} />);
 
         await screen.findByTestId('paypal-pay-later-button');
@@ -117,7 +117,6 @@ describe('PayPalPaylaterComponent', () => {
             expect.objectContaining({
                 paypalService: props.paypalService,
                 commit: false,
-                presentationModeOptions: { presentationMode: 'popup' },
                 onSubmit: props.onSubmit,
                 onError: props.onError,
                 onCancel: props.onCancel,

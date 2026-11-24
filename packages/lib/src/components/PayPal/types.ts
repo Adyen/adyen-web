@@ -13,8 +13,7 @@ import type {
     PayPalOrderResponseBody,
     PayPalPageTypes,
     PayPalV6OnShippingAddressChangeData,
-    PayPalV6OnShippingOptionsChangeData,
-    PayPalPresentationModeOptions
+    PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
 import { PayPalOrderDetailsData } from './services/request-paypal-order-details';
 
@@ -96,14 +95,6 @@ type PayPalV6Props<E extends PaypalElement | BasePayPalElement> = {
      * @returns
      */
     onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
-    /**
-     * Configuration for how the payment UI is presented.
-     *
-     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
-     * @default  presentationMode: 'auto'
-     * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Does not yet support 'redirect' mode.
-     */
-    presentationModeOptions?: PayPalPresentationModeOptions;
 };
 
 export interface PayPalConfiguration extends UIElementProps {
@@ -298,7 +289,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * Use PayPal V6 SDK instead of V5
      * @default undefined
      */
-    usePayPalV6?: Omit<PayPalV6Props<PaypalElement>, 'countryCode'> & {
+    payPalV6Configuration?: Omit<PayPalV6Props<PaypalElement>, 'countryCode'> & {
         /**
          * Set to true to force the UI to only render the PayPal button (no variants like Credit, Pay Later, Venmo)
          * @default false
@@ -372,16 +363,9 @@ export type PayPalCreditConfiguration = Omit<BasePayPalConfiguration, 'onCreateP
 
 export type VenmoConfiguration = Omit<
     BasePayPalConfiguration,
-    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange' | 'onCreatePayPalMessages' | 'presentationModeOptions'
+    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange' | 'onCreatePayPalMessages'
 > & {
     style?: PayPalVenmoButtonStyle;
-    /**
-     * Configuration for how the payment UI is presented. Venmo does not support the 'redirect', 'direct-app-switch' and 'payment-handler' modes.
-     *
-     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
-     * @default  presentationMode: 'auto'
-     */
-    presentationModeOptions?: Exclude<PayPalPresentationModeOptions, { presentationMode: 'redirect' | 'direct-app-switch' | 'payment-handler' }>;
 };
 
 /**

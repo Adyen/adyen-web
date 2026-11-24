@@ -10,7 +10,7 @@ import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
 import requestPayPalOrderDetails from '../services/request-paypal-order-details';
 import type { IAnalytics } from '../../../core/Analytics/Analytics';
 import type { PaymentAction } from '../../../types/global-types';
-import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPresentationModeOptions, PayPalV6OnApproveData } from '../paypal-js-types';
+import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalV6OnApproveData } from '../paypal-js-types';
 import type { BasePayPalConfiguration, SupportedPayPalFundingSources } from '../types';
 
 jest.mock('../services/PayPalService');
@@ -159,35 +159,7 @@ describe('BasePayPalElement', () => {
             expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
         });
 
-        test.each([['redirect'], ['direct-app-switch']])(
-            'should throw an implementation error when isExpress is true and the presentation mode is "%s"',
-            presentationMode => {
-                expect(() =>
-                    createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
-                ).toThrow(`paypal - Unsupported presentation mode: ${presentationMode} for express checkout`);
-
-                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
-            }
-        );
-
-        test.each([['popup'], ['modal'], ['payment-handler'], ['auto']])(
-            'should not throw when isExpress is true and the presentation mode is "%s"',
-            presentationMode => {
-                expect(() =>
-                    createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
-                ).not.toThrow();
-
-                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
-            }
-        );
-
-        test('should not throw when an unsupported express presentation mode is used but isExpress is not set', () => {
-            expect(() => createElement({ presentationModeOptions: { presentationMode: 'redirect' } })).not.toThrow();
-
-            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
-        });
-
-        test('should not throw when isExpress is true and no presentation mode is provided', () => {
+        test('should not throw when isExpress is true and no shipping callbacks are provided', () => {
             expect(() => createElement({ isExpress: true })).not.toThrow();
         });
     });

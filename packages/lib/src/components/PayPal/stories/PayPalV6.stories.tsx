@@ -22,10 +22,7 @@ export const Default: Story = {
     ),
     args: {
         componentConfiguration: {
-            usePayPalV6: {
-                presentationModeOptions: {
-                    presentationMode: 'auto'
-                },
+            payPalV6Configuration: {
                 style: {
                     paypal: {
                         type: 'buynow',
@@ -62,7 +59,7 @@ export const ZeroAuth: Story = {
     args: {
         amount: 0,
         componentConfiguration: {
-            usePayPalV6: {}
+            payPalV6Configuration: {}
         },
         paymentsOptions: {
             recurringProcessingModel: 'CardOnFile'
@@ -86,7 +83,7 @@ export const WithPayPalV5: Story = {
                         element={
                             new PayPal(checkout, {
                                 ...componentConfiguration,
-                                usePayPalV6: {}
+                                payPalV6Configuration: {}
                             })
                         }
                     />
@@ -111,7 +108,7 @@ export const ConfigurationUpdate: Story = {
     ),
     args: {
         componentConfiguration: {
-            usePayPalV6: {
+            payPalV6Configuration: {
                 onAuthorized: (data, actions) => {
                     console.log('PayPalV6 onAuthorized data', { data });
                     actions.resolve();
@@ -141,7 +138,7 @@ export const Messaging: Story = {
     ),
     args: {
         componentConfiguration: {
-            usePayPalV6: {
+            payPalV6Configuration: {
                 onCreatePayPalMessages: async createPayPalMessages => {
                     const messagesInstance = createPayPalMessages({
                         buyerCountry: 'US',
