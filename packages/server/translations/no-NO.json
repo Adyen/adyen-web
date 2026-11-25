@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Lagret kort slutter på %@",
     "voucher.entity": "Enhet",
     "donateButton": "Donér",
+    "donation.amount.ariaLabel": "Donasjonsbeløp",
     "donationTermsCondition": "Ved å donere godtar du %#vilkårene%#",
     "donationRoundUpDescription": "%{donationAmount} er en avrunding oppover fra den opprinnelige betalingen din (%{originalPaymentAmount})",
     "notNowButton": "Ikke nå",

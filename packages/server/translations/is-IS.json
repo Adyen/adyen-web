@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Vistað kort endar á %@",
     "voucher.entity": "Aðili",
     "donateButton": "Gefa fjárframlag",
+    "donation.amount.ariaLabel": "Upphæð framlags",
     "donationTermsCondition": "Með því að gefa samþykkir þú %#skilmálana%#",
     "donationRoundUpDescription": "%{donationAmount} er upphækkun af upphaflegu greiðslunni þinni (%{originalPaymentAmount})",
     "notNowButton": "Ekki núna",

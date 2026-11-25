@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Saglabātā karte beidzas ar %@",
     "voucher.entity": "Vienība",
     "donateButton": "Ziedot",
+    "donation.amount.ariaLabel": "Ziedojuma summa",
     "donationTermsCondition": "Ziedojot, jūs piekrītat %#noteikumiem un nosacījumiem%#",
     "donationRoundUpDescription": "%{donationAmount} summa ir noapaļota no jūsu sākotnējā maksājuma (%{originalPaymentAmount})",
     "notNowButton": "Ne tagad",

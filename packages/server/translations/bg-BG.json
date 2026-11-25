@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Съхранената карта завършва с %@",
     "voucher.entity": "Обект",
     "donateButton": "Дарете",
+    "donation.amount.ariaLabel": "Сума на дарението",
     "donationTermsCondition": "Дарявайки, вие се съгласявате с %#правилата и условията%#",
     "donationRoundUpDescription": "%{donationAmount} е кръгло нагоре от първоначалното Ви плащане (%{originalPaymentAmount})",
     "notNowButton": "Не сега",

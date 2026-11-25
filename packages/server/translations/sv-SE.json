@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Sparat kort slutar på %@",
     "voucher.entity": "Enhet",
     "donateButton": "Donera",
+    "donation.amount.ariaLabel": "Donationsbelopp",
     "donationTermsCondition": "Genom att donera godkänner du %#villkoren%#",
     "donationRoundUpDescription": "%{donationAmount} är en avrundning uppåt av din ursprungliga betalning (%{originalPaymentAmount})",
     "notNowButton": "Inte nu",
