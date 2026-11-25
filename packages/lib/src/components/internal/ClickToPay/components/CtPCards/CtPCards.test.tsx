@@ -393,3 +393,42 @@ test('should display empty card list UI if there is no card available', () => {
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 });
+
+test('should render the disclaimer message above the pay button', () => {
+    const ctpService = mock<IClickToPayService>();
+    ctpService.shopperCards = [
+        new ShopperCard(
+            {
+                srcDigitalCardId: 'xxxx-yyyy',
+                panLastFour: '2024',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
+                dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
+                paymentCardDescriptor: 'visa',
+                panExpirationMonth: '12',
+                panExpirationYear: '9999',
+                digitalCardData: {
+                    descriptorName: 'Visa',
+                    artUri: 'http://image.com',
+                    status: 'ACTIVE'
+                },
+                tokenId: 'xxxx-wwww'
+            },
+            'visa',
+            '1234566'
+        )
+    ];
+
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
+    contextProps.clickToPayService = ctpService;
+    contextProps.disclaimerMessage = { message: 'Read the %{linkText}', linkText: 'terms', link: 'https://www.adyen.com' };
+
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
+
+    const termsLink = screen.getByRole('link', { name: 'terms' });
+    expect(termsLink).toHaveAttribute('href', 'https://www.adyen.com');
+
+    const button = screen.getByRole('button', { name: 'Pay €20.00 with •••• 2024' });
+    expect(termsLink.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});

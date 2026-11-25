@@ -1,3 +1,3 @@
 export { default } from './DisclaimerMessage';
-export { formatDisclaimerMessage } from './utils';
+export { formatDisclaimerMessage, getDisclaimerMessageFromConfiguration, hasDisclaimerMessage } from './utils';
 export type { DisclaimerMsgObject } from './DisclaimerMessage';

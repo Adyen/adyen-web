@@ -12,6 +12,7 @@ import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEve
 import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import { render, screen } from '@testing-library/preact';
+import PaymentMethods from '../../../core/ProcessResponse/PaymentMethods';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
 import * as orderStatusModule from '../../../core/Services/order-status';
@@ -1022,6 +1023,60 @@ describe('UIElement', () => {
             render(element.render());
 
             expect(screen.getByRole('button', { name: 'Pay $10.00' })).toBeInTheDocument();
+        });
+
+        describe('disclaimer from the payment method configuration', () => {
+            const setupCoreWithDisclaimer = (configuration: object) =>
+                setupCoreMock({
+                    paymentMethods: new PaymentMethods({
+                        paymentMethods: [{ type: 'super_pay', name: 'SuperPay', configuration }]
+                    })
+                });
+
+            test('should render the backend disclaimer with its link above the pay button', () => {
+                const coreWithDisclaimer = setupCoreWithDisclaimer({
+                    disclaimerMessage: 'Read the %{linkText} first',
+                    disclaimerLinkText: 'terms',
+                    disclaimerLink: 'https://www.adyen.com'
+                });
+                const element = new MyElementWithPayButton(coreWithDisclaimer, { i18n: coreWithDisclaimer.modules.i18n });
+                render(element.render());
+                expect(screen.getByRole('link', { name: 'terms' })).toHaveAttribute('href', 'https://www.adyen.com');
+                expect(screen.getByText(/Read the/)).toBeInTheDocument();
+                expect(screen.getByRole('button')).toBeInTheDocument();
+            });
+
+            test('should give precedence to a merchant configured disclaimerMessage', () => {
+                const coreWithDisclaimer = setupCoreWithDisclaimer({ disclaimerMessage: 'Backend disclaimer' });
+                const element = new MyElementWithPayButton(coreWithDisclaimer, {
+                    i18n: coreWithDisclaimer.modules.i18n,
+                    disclaimerMessage: { message: 'Merchant disclaimer' }
+                });
+                render(element.render());
+                expect(screen.getByText('Merchant disclaimer')).toBeInTheDocument();
+                expect(screen.queryByText('Backend disclaimer')).toBeNull();
+            });
+
+            test('should show the backend disclaimer when the merchant message is blank', () => {
+                const coreWithDisclaimer = setupCoreWithDisclaimer({ disclaimerMessage: 'Backend disclaimer' });
+                const element = new MyElementWithPayButton(coreWithDisclaimer, {
+                    i18n: coreWithDisclaimer.modules.i18n,
+                    disclaimerMessage: { message: '' }
+                });
+                render(element.render());
+                expect(screen.getByText('Backend disclaimer')).toBeInTheDocument();
+            });
+
+            test('should still show the backend disclaimer when showPayButton is false', () => {
+                const coreWithDisclaimer = setupCoreWithDisclaimer({ disclaimerMessage: 'Backend disclaimer' });
+                const element = new MyElementWithPayButton(coreWithDisclaimer, {
+                    i18n: coreWithDisclaimer.modules.i18n,
+                    showPayButton: false
+                });
+                render(element.render());
+                expect(screen.getByText('Backend disclaimer')).toBeInTheDocument();
+                expect(screen.queryByRole('button')).toBeNull();
+            });
         });
     });
 

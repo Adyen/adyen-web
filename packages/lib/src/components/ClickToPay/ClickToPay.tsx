@@ -114,6 +114,7 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
             <ClickToPayProvider
                 isStandaloneComponent={true}
                 configuration={this.ctpConfiguration}
+                disclaimerMessage={this.props.disclaimerMessage}
                 clickToPayService={this.clickToPayService}
                 setClickToPayRef={this.setComponentRef}
                 onSetStatus={this.setElementStatus}

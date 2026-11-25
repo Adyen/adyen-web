@@ -7,6 +7,7 @@ import ShopperCard from '../models/ShopperCard';
 import { ClickToPayProps } from '../types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { ComponentMethodsRef, UIElementStatus } from '../../UIElement/types';
+import type { DisclaimerMsgObject } from '../../DisclaimerMessage';
 
 type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
@@ -16,6 +17,7 @@ export type ClickToPayProviderProps = {
     isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
     configuration: ClickToPayProps;
+    disclaimerMessage?: DisclaimerMsgObject;
     children: ComponentChildren;
     setClickToPayRef(ref: ComponentMethodsRef): void;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
@@ -27,6 +29,7 @@ const ClickToPayProvider = ({
     isStandaloneComponent = false,
     clickToPayService,
     configuration,
+    disclaimerMessage,
     children,
     setClickToPayRef,
     onSubmit,
@@ -106,6 +109,7 @@ const ClickToPayProvider = ({
                 onError,
                 onSetStatus,
                 configuration,
+                disclaimerMessage,
                 isStoringCookies: ctpService?.storeCookies ?? false,
                 isStandaloneComponent,
                 isCtpPrimaryPaymentMethod,

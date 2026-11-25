@@ -5,6 +5,7 @@ import ShopperCard from '../models/ShopperCard';
 import { ClickToPayProps } from '../types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from '../../UIElement/types';
+import type { DisclaimerMsgObject } from '../../DisclaimerMessage';
 
 export interface IClickToPayContext extends Pick<
     IClickToPayService,
@@ -22,6 +23,7 @@ export interface IClickToPayContext extends Pick<
     otpMaskedContact: string | undefined;
     otpNetwork: string | undefined;
     configuration: ClickToPayProps;
+    disclaimerMessage?: DisclaimerMsgObject;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;

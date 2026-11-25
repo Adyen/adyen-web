@@ -414,6 +414,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             <ClickToPayWrapper
                 configuration={this.props.clickToPayConfiguration}
+                disclaimerMessage={this.props.disclaimerMessage}
                 clickToPayService={this.clickToPayService}
                 isStandaloneComponent={false}
                 setClickToPayRef={this.setClickToPayRef}

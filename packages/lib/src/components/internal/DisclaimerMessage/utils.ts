@@ -1,6 +1,22 @@
 import type { DisclaimerMessageProps, DisclaimerMsgObject } from './DisclaimerMessage';
 
 /**
+ * Whether the given disclaimer holds a message the merchant configured.
+ */
+export const hasDisclaimerMessage = (disclaimer?: DisclaimerMsgObject): disclaimer is DisclaimerMsgObject =>
+    typeof disclaimer?.message === 'string' && disclaimer.message.trim() !== '';
+
+/**
+ * Maps the flat disclaimer keys of the `configuration` object to a DisclaimerMsgObject.
+ */
+export function getDisclaimerMessageFromConfiguration(configuration: object = {}): DisclaimerMsgObject | undefined {
+    const { disclaimerMessage: message, disclaimerLinkText: linkText, disclaimerLink: link } = configuration as Record<string, unknown>;
+    if (typeof message !== 'string' || !message.trim()) return undefined;
+
+    return { message, ...(typeof linkText === 'string' && { linkText }), ...(typeof link === 'string' && { link }) };
+}
+
+/**
  * Matches a `%{placeholder}` link slot. Placeholder names are irrelevant, only their order matters.
  */
 const LINK_SLOT_REGEX = /%\{[^}]*\}/g;

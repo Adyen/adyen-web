@@ -44,7 +44,7 @@ function getPayButtonLabel(i18n: Language, amount: PaymentAmount | undefined, ch
 const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const { cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
+    const { cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError, disclaimerMessage } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard | undefined>(cards.find(card => !card.isExpired) || cards[0]);
     const [errorCode, setErrorCode] = useState<string | null>(null);
     const isEveryCardExpired = cards.every(card => card.isExpired);
@@ -121,6 +121,7 @@ const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
 
                     <PayButton
                         disabled={isEveryCardExpired}
+                        disclaimerMessage={disclaimerMessage}
                         label={getPayButtonLabel(i18n, amount, checkoutCard)}
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}

@@ -5,6 +5,7 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
+import { getDisclaimerMessageFromConfiguration, hasDisclaimerMessage } from '../DisclaimerMessage';
 import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
 
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
@@ -159,11 +160,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         };
 
         const isDropinInstance = assertIsDropin(this);
+        const configurationDisclaimer = getDisclaimerMessageFromConfiguration(paymentMethodFromResponse?.configuration);
+        const disclaimerMessage = hasDisclaimerMessage(finalProps.disclaimerMessage) ? finalProps.disclaimerMessage : configurationDisclaimer;
 
         this.props = this.formatProps({
             ...this.constructor['defaultProps'], // component defaults
             ...getRegulatoryDefaults(this.core.options.countryCode, isDropinInstance), // regulatory defaults
-            ...finalProps // the rest (inc. merchant defined config)
+            ...finalProps, // the rest (inc. merchant defined config)
+            ...(disclaimerMessage !== undefined && { disclaimerMessage })
         });
     }
 
