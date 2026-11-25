@@ -289,3 +289,6 @@ is `threeDS2Fingerprint`. Both enum members exist; don't "fix" one to match the 
 - Never read iframe content or log authentication data and challenge responses.
 - Handle shopper abandonment — the challenge can time out. Test both frictionless and challenge
   paths.
+- When changing listeners or timeouts, verify that removed instances do not deliver stale
+  callbacks and attached shadow-tree instances still deliver success, error, and timeout
+  callbacks.
