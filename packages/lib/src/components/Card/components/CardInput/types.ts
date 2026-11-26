@@ -44,13 +44,13 @@ export interface CardInputValidState {
 }
 
 export interface CardInputErrorState {
-    holderName?: ValidationRuleResult;
-    billingAddress?: ValidationRuleResult;
-    socialSecurityNumber?: ValidationRuleResult;
+    holderName?: ValidationRuleResult | null;
+    billingAddress?: ValidationRuleResult | null;
+    socialSecurityNumber?: ValidationRuleResult | null;
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
-    taxNumber?: ValidationRuleResult;
+    taxNumber?: ValidationRuleResult | null;
     encryptedPassword?: boolean;
 }
 
@@ -71,7 +71,7 @@ export interface CardInputProps {
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
-    billingAddressMode?: AddressModeOptions;
+    billingAddressMode: AddressModeOptions;
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
@@ -97,7 +97,7 @@ export interface CardInputProps {
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;
-    loadingContext?: string;
+    loadingContext: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     modules?: {
@@ -111,13 +111,13 @@ export interface CardInputProps {
     onAllValid?: (o: CardAllValidData) => void;
     onAutoComplete?: (o: CardAutoCompleteData) => void;
     onBinValue?: (o: CardBinValueData) => void;
-    onBlur?: (e) => void;
-    onBrand?: (o: CardBrandData) => void;
+    onBlur: (e) => void;
+    onBrand: (o: CardBrandData) => void;
     onConfigSuccess?: (O: CardConfigSuccessData) => void;
     onChange: (state) => void;
     onError?: (e: AdyenCheckoutError) => void;
     onFieldValid?: (o: CardFieldValidData) => void;
-    onFocus?: (e) => void;
+    onFocus: (e) => void;
     onLoad?: (o: CardLoadData) => void;
     onSubmitAnalytics: (event: AbstractAnalyticsEvent) => void;
     handleKeyDown?: (event: KeyboardEvent) => void;
@@ -125,11 +125,11 @@ export interface CardInputProps {
     onAddressSelected?: OnAddressSelectedType;
     onSubmit?: () => void;
     addressSearchDebounceMs?: number;
-    payButton?: (props: PayButtonProps) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     placeholders?: CardPlaceholders;
     positionHolderNameOnTop?: boolean;
     resources: Resources;
-    setComponentRef?: (ref) => void;
+    setComponentRef: (ref) => void;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
     showStoreDetailsCheckbox?: boolean;
@@ -165,7 +165,7 @@ export interface CardInputState {
 export interface CardInputRef extends ComponentMethodsRef {
     sfp?: SecuredFieldsProviderRef;
     setFocusOn?: (field: string) => void;
-    processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
+    processBinLookupResponse?: (binLookupResponse: BinLookupResponse | null, isReset: boolean) => void;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CardErrorData) => boolean;
 }

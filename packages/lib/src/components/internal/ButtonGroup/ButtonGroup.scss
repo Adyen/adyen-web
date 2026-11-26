@@ -16,6 +16,7 @@
         margin-right: variable-generator.token(spacer-040);
         height: variable-generator.token(spacer-110);
         padding: 0;
+        position: relative;
         text-align: center;
 
         &:last-child {
@@ -55,10 +56,21 @@
             }
         }
 
+        &:has(.adyen-checkout__button-group__input:focus-visible) {
+            box-shadow:
+                0 0 0 variable-generator.token(focus-ring-spacer) variable-generator.token(color-background-primary),
+                0 0 0 variable-generator.token(focus-ring-outline) variable-generator.token(focus-ring-color);
+        }
+
+        // The input covers the whole label so the screen reader focus box matches the visible button
         .adyen-checkout__button-group__input {
+            height: 100%;
+            inset: 0;
+            margin: 0;
             opacity: 0;
             pointer-events: none;
             position: absolute;
+            width: 100%;
         }
     }
 }

@@ -28,6 +28,7 @@ export default function FixedAmounts(props: Readonly<FixedAmountsProps>) {
                         selected: value === selectedAmount
                     }))}
                     name="amount"
+                    ariaLabel={i18n.get('donation.amount.ariaLabel')}
                     onChange={onAmountSelected}
                 />
             </div>

@@ -68,7 +68,10 @@ export interface SFPProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type: string;
-    render?: (helpers: { setRootNode: (input: HTMLElement) => void; setFocusOn: (fieldName: string) => void }, state: SFPState) => ComponentChildren;
+    render?: (
+        helpers: { setRootNode: (input: HTMLElement | null) => void; setFocusOn: (fieldName: string) => void },
+        state: SFPState
+    ) => ComponentChildren;
     resources?: Resources;
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
@@ -85,14 +88,14 @@ export interface SFPState {
     errors?: SFPErrorMap;
     valid: SFPValid;
     data: object;
-    cvcPolicy?: CVCPolicyType;
+    cvcPolicy: CVCPolicyType;
     isSfpValid: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressData;
     detectedUnsupportedBrands?: string[] | null;
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
-    expiryDatePolicy?: DatePolicyType;
+    expiryDatePolicy: DatePolicyType;
     socialSecurityNumber?: string;
 }
 

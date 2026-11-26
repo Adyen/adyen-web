@@ -50,7 +50,7 @@ export const CardFieldsWrapper = ({
     billingAddressRequired,
     billingAddressRequiredFields,
     billingAddressAllowedCountries,
-    billingAddressValidationRules = null,
+    billingAddressValidationRules,
     brandsConfiguration,
     showStoreDetailsCheckbox,
     hasCVC,

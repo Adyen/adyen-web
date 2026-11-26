@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Išsaugota kortelė baigiasi %@",
     "voucher.entity": "Subjektas",
     "donateButton": "Aukoti",
+    "donation.amount.ariaLabel": "Aukos suma",
     "donationTermsCondition": "Aukodami sutinkate su %#sąlygomis%#",
     "donationRoundUpDescription": "%{donationAmount} yra pirminio mokėjimo (%{originalPaymentAmount}) suapvalinta suma",
     "notNowButton": "Ne dabar",

@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "Salvestatud kaardi lõpus on %@",
     "voucher.entity": "Ettevõte",
     "donateButton": "Anneta",
+    "donation.amount.ariaLabel": "Annetuse summa",
     "donationTermsCondition": "Annetades nõustute %#tingimustega%#",
     "donationRoundUpDescription": "%{donationAmount} on ümardus ülespoole teie algsest maksest (%{originalPaymentAmount})",
     "notNowButton": "Mitte praegu",

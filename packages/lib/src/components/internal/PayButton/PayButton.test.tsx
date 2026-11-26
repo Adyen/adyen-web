@@ -229,12 +229,12 @@ describe('PayButton', () => {
 
     test('should not render icon when showReview is true', () => {
         renderPayButton({ showReview: true, payButtonProps: { icon: 'https://example.com/icon.svg' } });
-        expect(screen.queryByRole('img')).not.toBeInTheDocument();
+        expect(screen.queryByRole('presentation', { hidden: true })).not.toBeInTheDocument();
     });
 
     test('should render icon when showReview is false', () => {
         renderPayButton({ showReview: false, payButtonProps: { icon: 'https://example.com/icon.svg' } });
-        expect(screen.getByRole('img', { hidden: true })).toHaveAttribute('src', 'https://example.com/icon.svg');
+        expect(screen.getByRole('presentation', { hidden: true })).toHaveAttribute('src', 'https://example.com/icon.svg');
     });
 
     test('should not call onClick handler when button is disabled', async () => {

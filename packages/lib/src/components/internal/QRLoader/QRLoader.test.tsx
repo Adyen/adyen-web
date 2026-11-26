@@ -12,6 +12,8 @@ import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../../core/Services/payment-status');
 
+const core = setupCoreMock();
+
 const TIMEOUT_OFFSET = 200;
 
 const renderQRLoader = ({
@@ -23,7 +25,7 @@ const renderQRLoader = ({
     amountProviderProps?: Partial<AmountProviderProps>;
     srPanel?: SRPanel;
 }) => {
-    const srPanel = externalSrPanel ?? new SRPanel(global.core);
+    const srPanel = externalSrPanel ?? new SRPanel(core);
     const defaultProps: QRLoaderProps = {
         type: 'pix',
         brandLogo: 'logo.png',
@@ -31,7 +33,7 @@ const renderQRLoader = ({
         onComplete: jest.fn(),
         onError: jest.fn(),
         paymentData: 'initial-payment-data',
-        i18n: global.i18n,
+        i18n: core.modules.i18n,
         loadingContext: 'test',
         clientKey: 'test_key'
     };
@@ -39,7 +41,7 @@ const renderQRLoader = ({
     const mergedProps = { ...defaultProps, ...qrLoaderProps };
 
     render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <SRPanelProvider srPanel={srPanel}>
                 <AmountProvider {...amountProviderProps} providerRef={createRef()}>
                     <QRLoader {...mergedProps} />
@@ -89,7 +91,7 @@ describe('QRLoader', () => {
         expect(onCompleteMock).toHaveBeenCalledWith(expectedOnCompleteData);
         expect(onErrorMock).not.toHaveBeenCalled();
 
-        expect(screen.getByTestId('Payment Successful')).toBeInTheDocument();
+        expect(await screen.findByTestId('Payment Successful')).toBeInTheDocument();
 
         // Verify that polling has stopped
         jest.runAllTimers();
@@ -160,10 +162,13 @@ describe('QRLoader', () => {
 
         // Polling should start immediately on render
         expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
+        await screen.findByText('Scan QR code');
 
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(2), { timeout: delay + TIMEOUT_OFFSET });
-        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3), { timeout: throttledInterval + TIMEOUT_OFFSET });
-        expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttledInterval);
+
+        await waitFor(() => expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttledInterval));
+        jest.advanceTimersByTime(throttledInterval);
+        expect(checkPaymentStatus).toHaveBeenCalledTimes(3);
     });
 
     test('should render every brand logo when brandLogo is an array', async () => {
@@ -242,8 +247,9 @@ describe('QRLoader', () => {
             expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
 
             // The SR panel is not cleared on unmount, so 'Loading…' would otherwise be left
-            // on display next to the QR code.
-            expect(setMessagesSpy).toHaveBeenLastCalledWith('Loaded');
+            // on display next to the QR code. The message is written from a useEffect, which
+            // fires on a timer once the QR code has rendered.
+            await waitFor(() => expect(setMessagesSpy).toHaveBeenLastCalledWith('Loaded'));
         });
 
         /**
@@ -261,7 +267,8 @@ describe('QRLoader', () => {
 
             await waitFor(() => expect(onCompleteMock).toHaveBeenCalledTimes(1));
 
-            expect(setMessagesSpy).toHaveBeenLastCalledWith('Payment Successful');
+            // The message is written from a useEffect, which fires on a timer after onComplete.
+            await waitFor(() => expect(setMessagesSpy).toHaveBeenLastCalledWith('Payment Successful'));
         });
     });
 });

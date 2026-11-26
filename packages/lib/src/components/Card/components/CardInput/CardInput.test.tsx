@@ -1,4 +1,4 @@
-import { createRef, h } from 'preact';
+import { createRef, Fragment, h } from 'preact';
 import { render, screen, fireEvent, act } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { AddressModeOptions, CardInputDataState, CardInputValidState } from './types';
@@ -26,7 +26,8 @@ const cardInputRequiredProps = {
     loadingContext: 'test',
     resources: global.resources,
     brandsIcons: [],
-    onSubmitAnalytics: jest.fn()
+    onSubmitAnalytics: jest.fn(),
+    payButton: () => <Fragment />
 };
 
 const renderCardInput = ui => {

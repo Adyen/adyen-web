@@ -115,6 +115,7 @@
     "creditCard.storedCard.description.ariaLabel": "La targeta emmagatzemada acaba en %@",
     "voucher.entity": "Entitat",
     "donateButton": "Donar",
+    "donation.amount.ariaLabel": "Import de la donació",
     "donationTermsCondition": "En fer una donació, accepteu els %#termes i condicions%#",
     "donationRoundUpDescription": "%{donationAmount} és un arrodoniment del pagament original (%{originalPaymentAmount})",
     "notNowButton": "Ara no",
