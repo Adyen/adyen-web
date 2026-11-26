@@ -312,16 +312,22 @@ class SecuredField extends AbstractSecuredField {
                 this.onKeyDownCallback(feedbackObj);
                 break;
 
-            case 'encryptionError':
-                // Strictly speaking code could be 608, 609 or 610. But it *will* always be present, so falling back to 610
-                // (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
-                this.submitFeedbackErrorAnalytics(
-                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
-                    `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`
-                );
+            case 'encryptionError': {
+                // Strictly speaking code could be 608, 609 or 610.
+                // But it *will* always be present, so falling back to 610 (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
+                const errorCode = (feedbackObj.code as ErrorEventCode) ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR;
 
-                // TODO - if this fires for codes 608 or 609 then we need a callback on SFP that we can use to stop SFPH's csfLoadFailTimeout from firing
+                this.submitFeedbackErrorAnalytics(errorCode, `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`);
+
+                // If this fires for codes 608 or 609 then we need to stop SFPH's csfLoadFailTimeout from firing
+                if (
+                    errorCode === ErrorEventCode.SECURED_FIELDS_KEY_NOT_FOUND ||
+                    errorCode === ErrorEventCode.SECURED_FIELDS_ENCRYPTION_KEY_GEN_FAILED
+                ) {
+                    this.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
+                }
                 break;
+            }
 
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
