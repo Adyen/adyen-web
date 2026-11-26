@@ -98,7 +98,7 @@ class SecuredField extends AbstractSecuredField {
         return this.init(i18n, iframeSrc, placeholders, showContextualElement);
     }
 
-    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean | undefined): SecuredField {
+    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean | undefined): this {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
@@ -446,57 +446,57 @@ class SecuredField extends AbstractSecuredField {
     }
 
     // /////// ALLOCATE CALLBACKS /////////
-    onIframeLoaded(callbackFn: RtnType_noParamVoidFn): SecuredField {
+    onIframeLoaded(callbackFn: RtnType_noParamVoidFn): this {
         this.onIframeLoadedCallback = callbackFn;
         return this;
     }
 
-    onEncryption(callbackFn: RtnType_callbackFn): SecuredField {
+    onEncryption(callbackFn: RtnType_callbackFn): this {
         this.onEncryptionCallback = callbackFn;
         return this;
     }
 
-    onValidation(callbackFn: RtnType_callbackFn): SecuredField {
+    onValidation(callbackFn: RtnType_callbackFn): this {
         this.onValidationCallback = callbackFn;
         return this;
     }
 
-    onConfig(callbackFn: RtnType_callbackFn): SecuredField {
+    onConfig(callbackFn: RtnType_callbackFn): this {
         this.onConfigCallback = callbackFn;
         return this;
     }
 
-    onFocus(callbackFn: RtnType_callbackFn): SecuredField {
+    onFocus(callbackFn: RtnType_callbackFn): this {
         this.onFocusCallback = callbackFn;
         return this;
     }
 
-    onBinValue(callbackFn: RtnType_callbackFn): SecuredField {
+    onBinValue(callbackFn: RtnType_callbackFn): this {
         this.onBinValueCallback = callbackFn;
         return this;
     }
 
-    onTouchstart(callbackFn: RtnType_callbackFn): SecuredField {
+    onTouchstart(callbackFn: RtnType_callbackFn): this {
         this.onTouchstartCallback = callbackFn;
         return this;
     }
 
-    onShiftTab(callbackFn: RtnType_callbackFn): SecuredField {
+    onShiftTab(callbackFn: RtnType_callbackFn): this {
         this.onShiftTabCallback = callbackFn;
         return this;
     }
 
-    onAutoComplete(callbackFn: RtnType_callbackFn): SecuredField {
+    onAutoComplete(callbackFn: RtnType_callbackFn): this {
         this.onAutoCompleteCallback = callbackFn;
         return this;
     }
 
-    onKeyDown(callbackFn: RtnType_callbackFn): SecuredField {
+    onKeyDown(callbackFn: RtnType_callbackFn): this {
         this.onKeyDownCallback = callbackFn;
         return this;
     }
 
-    suppressCsfConfigFailTimeoutAnalytics(callbackFn: RtnType_noParamVoidFn): SecuredField {
+    suppressCsfConfigFailTimeoutAnalytics(callbackFn: RtnType_noParamVoidFn): this {
         this.suppressCsfConfigFailTimeoutAnalyticsCallback = callbackFn;
         return this;
     }
