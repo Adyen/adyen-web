@@ -1,5 +1,41 @@
 # @adyen/adyen-web
 
+## 6.49.0-alpha.4230828
+
+### Minor Changes
+
+- New: In the sessions flow, the Donation component now cancels the donation token when the shopper declines, and calls `onDonationSuccess({ didDonate: false })` once that request completes. ([#4325](https://github.com/Adyen/adyen-web/pull/4325))
+
+- Improved: Detecting a new configuration failure from SecuredFields and generating an analytics error events for it (code: 503) ([#4339](https://github.com/Adyen/adyen-web/pull/4339))
+
+- New: PayPal component support for SDK v6, Venmo component, PayPal Credit component and Pay Later component ([#4124](https://github.com/Adyen/adyen-web/pull/4124))
+
+### Patch Changes
+
+- Fixed: Google Pay now handles a missing wallet SDK safely and reports missing required configuration as an `IMPLEMENTATION_ERROR`. ([#4310](https://github.com/Adyen/adyen-web/pull/4310))
+
+- Fixed: Calling `actions.reject()` in `beforeSubmit` no longer triggers `onPaymentFailed` for Apple Pay, Google Pay, Amazon Pay and ANCV. (thanks to @24tiy) ([#4331](https://github.com/Adyen/adyen-web/pull/4331))
+
+- Fixed: Types were made more strict within the Apple Pay component. ([#4314](https://github.com/Adyen/adyen-web/pull/4314))
+
+- Fixed: ANCV no longer makes the payments call when the order could not be created, and its pay button is re-enabled so the shopper can try again. (thanks to @24tiy) ([#4331](https://github.com/Adyen/adyen-web/pull/4331))
+
+- Fixed: Calling `checkout.update({ secondaryAmount }, { shouldReinitializeCheckout: false })` without an `amount` now falls back to the current amount instead of cancelling the update with an "Invalid amount object" warning. ([#4306](https://github.com/Adyen/adyen-web/pull/4306))
+
+- Fixed: copying to the clipboard no longer raises an unhandled error when the fallback copy input cannot be created ([#4319](https://github.com/Adyen/adyen-web/pull/4319))
+
+- Improved: Null-safety in Drop-in and hide the deducted balance of a partial payment when its amount is missing. ([#4318](https://github.com/Adyen/adyen-web/pull/4318))
+
+- Fixed: Null-safety in the SDK core, analytics and payment-methods processing, and `onAdditionalDetails` now types `component` as possibly `undefined` since it is not passed when called via `checkout.submitDetails()`. ([#4306](https://github.com/Adyen/adyen-web/pull/4306))
+
+- Fixed: Strict nul checks, and improved unit test coverage in the Securedfields dir ([#4307](https://github.com/Adyen/adyen-web/pull/4307))
+
+- Fixed: iOS keypadFix no longer steals focus from unrelated elements when no SecuredField has focus ([#4296](https://github.com/Adyen/adyen-web/pull/4296))
+
+- Fixed: Setting `risk.onComplete`, `risk.onError` or `srConfig.node` to `undefined` no longer throws. ([#4321](https://github.com/Adyen/adyen-web/pull/4321))
+
+- Improved: UIElement.onComplete is renamed to UIElement.onActionComplete ([#4289](https://github.com/Adyen/adyen-web/pull/4289))
+
 ## 6.48.1
 
 ### Patch Changes
