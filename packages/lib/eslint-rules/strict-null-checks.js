@@ -83,7 +83,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Doku/components/DokuVoucherResult/DokuVoucherResult.tsx',
     // src/components/Donation (4 errors)
     'src/components/Donation/components/DonationComponent.tsx',
-    'src/components/Donation/components/FixedAmounts.tsx',
     // src/components/Dragonpay (7 errors)
     'src/components/Dragonpay/components/DragonpayInput/DragonpayInput.tsx',
     'src/components/Dragonpay/components/DragonpayVoucherResult/DragonpayVoucherResult.tsx',

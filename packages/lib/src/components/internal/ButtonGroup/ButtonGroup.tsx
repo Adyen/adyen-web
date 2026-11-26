@@ -1,9 +1,24 @@
 import cx from 'classnames';
 import './ButtonGroup.scss';
 import { h } from 'preact';
+import type { JSX } from 'preact';
 
-const ButtonGroup = ({ options = [], name, onChange }) => (
-    <div className="adyen-checkout__button-group">
+interface ButtonGroupOption {
+    label: string;
+    value: string | number;
+    selected?: boolean;
+    disabled?: boolean;
+}
+
+interface ButtonGroupProps {
+    options: ButtonGroupOption[];
+    name: string;
+    ariaLabel: string;
+    onChange: JSX.GenericEventHandler<HTMLInputElement>;
+}
+
+const ButtonGroup = ({ options, name, ariaLabel, onChange }: Readonly<ButtonGroupProps>) => (
+    <div className="adyen-checkout__button-group" role="radiogroup" aria-label={ariaLabel}>
         {options.map(({ label, selected, value, disabled }, index) => (
             <label
                 key={`${name}${index}`}
@@ -16,6 +31,7 @@ const ButtonGroup = ({ options = [], name, onChange }) => (
                 <input
                     type="radio"
                     className="adyen-checkout__button-group__input"
+                    name={name}
                     value={value}
                     checked={selected}
                     onChange={onChange}

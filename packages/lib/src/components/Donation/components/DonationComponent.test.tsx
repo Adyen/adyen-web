@@ -90,6 +90,11 @@ describe('DonationComponent', () => {
             expect(screen.getAllByRole('radio')).toHaveLength(3);
         });
 
+        test('Should group the amount options in a labelled radio group', () => {
+            renderComponent();
+            expect(screen.getByRole('radiogroup', { name: 'Donation amount' })).toBeTruthy();
+        });
+
         test('Should return isValid true when an amount is selected and call onAmountSelected', async () => {
             renderComponent({ onChange });
             await userEvent.click(screen.getByLabelText('€0.50'));
