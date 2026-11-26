@@ -17,6 +17,7 @@ const EXCLUDED_STORIES: string[] = [
     'components-paybybankpix--hosted-page-enrollment',
     'components-paybybankpix--hosted-page-payment',
     'components-paybybankpix--simulate-issuer-page',
+    'components-wallets-paypal-v6--with-pay-pal-v-5',
     /**
      * Demos
      */
