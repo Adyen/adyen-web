@@ -276,8 +276,8 @@ All paths are under `packages/lib/src/components/KlarnaNetwork/`.
 | Klarna SDK error                              | `handleKlarnaError`                                                                                       | `KlarnaNetwork.tsx`                                                                    |
 | Public config                                 | `KlarnaNetworkConfiguration` (regular), `KlarnaNetworkExpressConfiguration` (`shippingConfig`, callbacks) | `types.ts`                                                                             |
 | Web SDK shapes                                | `KlarnaInitiateResult`, `KlarnaShippingConfig`, `KlarnaSelectedShippingOption`                            | `klarna-web-sdk-types.ts`                                                              |
-| Demo merchant pricing                         | `createMerchantCallbacks`, `buildShippingUpdate`                                                          | `stories/klarna-express-stories-utils.ts`                                              |
-| Express story body (event log)                | `renderKlarnaExpressStory`                                                                                | `stories/KlarnaExpressStory.tsx`                                                       |
+| Demo merchant pricing                         | `ON_SHIPPING_ADDRESS_CHANGE_DATA`, `createShippingCallbacks`                                              | `stories/klarna-express-stories-utils.ts`                                              |
+| Express story body (console log)              | `renderKlarnaExpressStory`                                                                                | `stories/KlarnaExpressStory.tsx`                                                       |
 
 `authorize` calls `makePaymentsCall` directly and skips `handleResponse`, so Adyen Web does not run the redirect action. The Klarna Web SDK opens the purchase journey instead.
 

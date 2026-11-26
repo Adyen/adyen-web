@@ -15,7 +15,7 @@ const meta: Meta<ExpressStoryProps> = {
                     'The button and the on-site message come from `Payment.presentation()`.',
                     '',
                     'After `/payments`, `initiate` returns `{ paymentRequestId, shippingConfig }`, and the shipping events',
-                    'from Klarna reach the merchant callbacks. Every step shows up in the event log.',
+                    'from Klarna reach the merchant callbacks. Every step is logged to the browser console with the "[KlarnaExpress]" prefix.',
                     '',
                     'See KlarnaNetwork-Express-Checkout-TDD.md for the full flow and what the backend needs.'
                 ].join('\n')

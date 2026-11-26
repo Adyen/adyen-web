@@ -1,11 +1,11 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { handleFinalState } from '../../../../storybook/helpers/checkout-handlers';
 import { KlarnaCredentialsGate } from './KlarnaCredentialsForm';
-import { KlarnaExpressPlayground, useKlarnaExpressLog } from './KlarnaExpressPlayground';
-import { SUPPORTED_SHIPPING_COUNTRY, createMerchantCallbacks } from './klarna-express-stories-utils';
+import { ON_SHIPPING_ADDRESS_CHANGE_DATA, createShippingCallbacks, logKlarnaEvent } from './klarna-express-stories-utils';
+import type { OnShippingAddressChangeData } from './klarna-express-stories-utils';
 
 import type { StoryObj } from '@storybook/preact-vite';
 import type { GlobalStoryProps } from '../../../../storybook/types';
@@ -16,20 +16,26 @@ import type KlarnaNetworkExpress from '../KlarnaNetworkExpress';
 
 export type ShippingModeArg = KlarnaShippingMode | 'none';
 
-export type ExpressStoryProps = GlobalStoryProps & { shippingMode: ShippingModeArg };
+export type ExpressStoryProps = GlobalStoryProps & { shippingMode: ShippingModeArg; onShippingAddressChangeData: OnShippingAddressChangeData };
 
 type ExpressElementClass = typeof KlarnaNetworkExpress;
 
 export const EXPRESS_STORY_ARGS: StoryObj<ExpressStoryProps>['args'] = {
     // Klarna sends the shopper to returnUrl without a redirectResult; the result comes from the Adyen notification.
     useSessions: false,
-    shippingMode: 'EDITABLE'
+    shippingMode: 'EDITABLE',
+    // Only feeds the shipping callbacks; the /payments amount still comes from the `amount` control
+    onShippingAddressChangeData: ON_SHIPPING_ADDRESS_CHANGE_DATA
 };
 
 export const EXPRESS_STORY_ARG_TYPES: StoryObj<ExpressStoryProps>['argTypes'] = {
     shippingMode: {
         control: 'select',
         options: ['EDITABLE', 'READ_ONLY', 'none']
+    },
+    onShippingAddressChangeData: {
+        control: 'object',
+        description: 'Cart and shipping options the shipping callbacks send to Klarna'
     }
 };
 
@@ -38,39 +44,35 @@ interface KlarnaExpressDemoProps {
     checkout: ICore;
     credentials: KlarnaCredentials;
     shippingMode: ShippingModeArg;
+    onShippingAddressChangeData: OnShippingAddressChangeData;
 }
 
-function KlarnaExpressDemo({ ElementClass, checkout, credentials, shippingMode }: Readonly<KlarnaExpressDemoProps>) {
-    const { entries, log, clear } = useKlarnaExpressLog();
-
+function KlarnaExpressDemo({ ElementClass, checkout, credentials, shippingMode, onShippingAddressChangeData }: Readonly<KlarnaExpressDemoProps>) {
     const element = useMemo(
         () =>
             new ElementClass(checkout, {
                 ...credentials,
-                ...(shippingMode !== 'none' && { shippingConfig: { mode: shippingMode, supportedCountries: [SUPPORTED_SHIPPING_COUNTRY] } }),
-                ...createMerchantCallbacks(log),
+                ...(shippingMode !== 'none' && {
+                    shippingConfig: { mode: shippingMode, supportedCountries: [onShippingAddressChangeData.shipsToCountry] }
+                }),
+                ...createShippingCallbacks(onShippingAddressChangeData),
                 onPaymentCompleted(result, component) {
-                    log('onPaymentCompleted', result);
+                    logKlarnaEvent('onPaymentCompleted', result);
                     if (component) handleFinalState(result, component);
                 },
                 onPaymentFailed(result, component) {
-                    log('onPaymentFailed', result);
+                    logKlarnaEvent('onPaymentFailed', result);
                     if (component) handleFinalState(result, component);
                 }
             }),
-        [ElementClass, checkout, credentials, shippingMode, log]
+        [ElementClass, checkout, credentials, shippingMode, onShippingAddressChangeData]
     );
 
-    return (
-        <Fragment>
-            <KlarnaExpressPlayground entries={entries} onClear={clear} />
-            <ComponentContainer element={element} />
-        </Fragment>
-    );
+    return <ComponentContainer element={element} />;
 }
 
 export function renderKlarnaExpressStory(ElementClass: ExpressElementClass): StoryObj<ExpressStoryProps>['render'] {
-    return function RenderKlarnaExpressStory({ shippingMode, ...checkoutConfig }) {
+    return function RenderKlarnaExpressStory({ shippingMode, onShippingAddressChangeData, ...checkoutConfig }) {
         return (
             <Checkout checkoutConfig={checkoutConfig}>
                 {checkout => (
@@ -81,6 +83,7 @@ export function renderKlarnaExpressStory(ElementClass: ExpressElementClass): Sto
                                 checkout={checkout}
                                 credentials={credentials}
                                 shippingMode={shippingMode}
+                                onShippingAddressChangeData={onShippingAddressChangeData}
                             />
                         )}
                     </KlarnaCredentialsGate>

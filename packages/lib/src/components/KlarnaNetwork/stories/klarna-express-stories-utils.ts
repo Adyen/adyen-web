@@ -1,110 +1,88 @@
 /**
- * We are handling delivery methods update, validations, and final amount calculation on the UI side for DEMO purposes.
- * This must be implemented on the backend side by the merchant for safety reasons.
+ * Mock merchant data for the shipping callbacks of the Klarna Express story.
+ *
+ * Everything here runs in the browser for demo purposes only. A real merchant must do this on its backend:
+ * validate the shipping address, price the shipping and return the new order total.
  */
-import type { KlarnaNetworkExpressConfiguration, KlarnaNetworkDeliveryMethod, KlarnaNetworkShippingUpdate, LineItem } from '../types';
+import type { KlarnaNetworkDeliveryMethod, KlarnaNetworkExpressConfiguration, KlarnaNetworkShippingUpdate, LineItem } from '../types';
 
-export type KlarnaExpressLog = (step: string, payload?: unknown) => void;
-
-export const EXPRESS_CURRENCY = 'USD';
-export const SUPPORTED_SHIPPING_COUNTRY = 'US';
-
-// Totals 25900, matching the default storybook amount sent in /payments
-export const CART_LINE_ITEMS: LineItem[] = [
-    {
-        id: 'sneakers-001',
-        description: 'Running sneakers',
-        quantity: 1,
-        amountIncludingTax: 12100,
-        amountExcludingTax: 10000,
-        taxAmount: 2100,
-        taxPercentage: 2100
-    },
-    {
-        id: 'socks-002',
-        description: 'Sport socks',
-        quantity: 2,
-        amountIncludingTax: 6900,
-        amountExcludingTax: 6000,
-        taxAmount: 900,
-        taxPercentage: 1500
-    }
-];
-
-const DELIVERY_METHODS_US: ReadonlyArray<Omit<KlarnaNetworkDeliveryMethod, 'selected'>> = [
-    { reference: 'standard', description: 'Standard Ground', type: 'Shipping', amount: { value: 500, currency: EXPRESS_CURRENCY } },
-    { reference: 'express', description: 'Express Shipping', type: 'Shipping', amount: { value: 1599, currency: EXPRESS_CURRENCY } },
-    { reference: 'teleport', description: 'Teleport Shipping Ultra fast', type: 'Shipping', amount: { value: 5000, currency: EXPRESS_CURRENCY } }
-];
-
-export const DEFAULT_DELIVERY_METHOD = 'standard';
-export const UNSUPPORTED_DELIVERY_METHOD = 'teleport';
-
-export function getDeliveryMethods(country: string, selectedRef: string): KlarnaNetworkDeliveryMethod[] {
-    if (country !== SUPPORTED_SHIPPING_COUNTRY) throw new Error(`Unsupported shipping country: ${country}`);
-    return DELIVERY_METHODS_US.map(method => ({ ...method, selected: method.reference === selectedRef }));
+/** Filter the browser console by "[KlarnaExpress]" to follow the flow. */
+export function logKlarnaEvent(step: string, payload?: unknown): void {
+    console.info('[KlarnaExpress]', step, payload);
 }
 
-function getCartTotal(): number {
-    return CART_LINE_ITEMS.reduce((total, item) => total + item.amountIncludingTax * item.quantity, 0);
-}
+export const ON_SHIPPING_ADDRESS_CHANGE_DATA = {
+    currency: 'USD',
+    shipsToCountry: 'US',
 
-export function buildShippingUpdate(country: string, selectedRef: string): Required<KlarnaNetworkShippingUpdate> {
-    const deliveryMethods = getDeliveryMethods(country, selectedRef);
-    const selected = deliveryMethods.find(method => method.selected);
-    if (!selected) throw new Error(`Unknown delivery method: ${selectedRef}`);
+    //cart: [{ id: 'sneakers-001', description: 'Running sneakers', quantity: 1, amountIncludingTax: 9500 }] satisfies LineItem[],
+    cart: [{ id: 'sneakers-001', description: 'Running sneakers', quantity: 1, amountIncludingTax: 25900 }] satisfies LineItem[],
+
+    shippingOptions: [
+        { reference: 'standard', description: 'Standard Ground', price: 500 },
+        { reference: 'express', description: 'Express Shipping', price: 1599 }
+    ],
+
+    // Preselected after an address change
+    defaultShippingOption: 'standard'
+};
+
+export type OnShippingAddressChangeData = typeof ON_SHIPPING_ADDRESS_CHANGE_DATA;
+
+/** Cart + selected shipping as one more line item, and the new total. */
+function priceOrder(
+    shippingData: OnShippingAddressChangeData,
+    shippingReference: string
+): Required<Pick<KlarnaNetworkShippingUpdate, 'amount' | 'lineItems'>> {
+    const shipping = shippingData.shippingOptions.find(option => option.reference === shippingReference);
+    if (!shipping) throw new Error(`Unknown shipping option: ${shippingReference}`);
 
     const shippingLine: LineItem = {
-        id: `shipping-${selected.reference}`,
-        description: selected.description,
+        id: `shipping-${shipping.reference}`,
+        description: shipping.description,
         quantity: 1,
-        amountIncludingTax: selected.amount.value,
+        amountIncludingTax: shipping.price,
         taxAmount: 0,
         taxPercentage: 0
     };
+    const lineItems = [...shippingData.cart, shippingLine];
+    const total = lineItems.reduce((sum, item) => sum + item.amountIncludingTax * item.quantity, 0);
 
-    return {
-        amount: { value: getCartTotal() + selected.amount.value, currency: EXPRESS_CURRENCY },
-        lineItems: [...CART_LINE_ITEMS, shippingLine],
-        deliveryMethods
-    };
+    return { amount: { value: total, currency: shippingData.currency }, lineItems };
 }
 
-export function createMerchantCallbacks(
-    log: KlarnaExpressLog
+/** The shipping options in Adyen's delivery method format, with one of them selected. */
+function deliveryMethods(shippingData: OnShippingAddressChangeData, selectedReference: string): KlarnaNetworkDeliveryMethod[] {
+    return shippingData.shippingOptions.map(option => ({
+        reference: option.reference,
+        description: option.description,
+        type: 'Shipping',
+        amount: { value: option.price, currency: shippingData.currency },
+        selected: option.reference === selectedReference
+    }));
+}
+
+export function createShippingCallbacks(
+    shippingData: OnShippingAddressChangeData = ON_SHIPPING_ADDRESS_CHANGE_DATA
 ): Required<Pick<KlarnaNetworkExpressConfiguration, 'onShippingAddressChange' | 'onShippingOptionSelected'>> {
-    let shippingCountry = SUPPORTED_SHIPPING_COUNTRY;
-
     return {
+        // Klarna sent the shopper's address: answer with the new total and the shipping options
         onShippingAddressChange(data, actions) {
-            log('onShippingAddressChange: received', data);
-            const country = data.shippingAddress.country;
+            logKlarnaEvent('onShippingAddressChange: received', data);
 
-            if (country !== SUPPORTED_SHIPPING_COUNTRY) {
-                log('onShippingAddressChange: rejected', { reason: 'COUNTRY_NOT_SUPPORTED', country });
-                actions.reject('COUNTRY_NOT_SUPPORTED');
-                return;
-            }
-
-            shippingCountry = country;
-            const update = buildShippingUpdate(country, DEFAULT_DELIVERY_METHOD);
-            log('onShippingAddressChange: resolved', update);
+            const update = {
+                ...priceOrder(shippingData, shippingData.defaultShippingOption),
+                deliveryMethods: deliveryMethods(shippingData, shippingData.defaultShippingOption)
+            };
+            logKlarnaEvent('onShippingAddressChange: resolved', update);
             actions.resolve(update);
         },
 
+        // The shopper picked a shipping option: Klarna only sends its reference, so look up the price again
         onShippingOptionSelected(data, actions) {
-            log('onShippingOptionSelected: received', data);
-            const { reference } = data.selectedDeliveryMethod;
-
-            if (reference === UNSUPPORTED_DELIVERY_METHOD) {
-                log('onShippingOptionSelected: rejected', { reason: 'INVALID_OPTION', reference });
-                actions.reject('INVALID_OPTION');
-                return;
-            }
-
-            const { amount, lineItems } = buildShippingUpdate(shippingCountry, reference);
-            const update = { amount, lineItems };
-            log('onShippingOptionSelected: resolved', update);
+            logKlarnaEvent('onShippingOptionSelected: received', data);
+            const update = priceOrder(shippingData, data.selectedDeliveryMethod.reference);
+            logKlarnaEvent('onShippingOptionSelected: resolved', update);
             actions.resolve(update);
         }
     };
