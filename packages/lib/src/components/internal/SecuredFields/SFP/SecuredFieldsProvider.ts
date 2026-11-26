@@ -214,14 +214,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
          * So we need to clear the loading spinner to see if the securedFields are reporting anything
          */
         this.csfLoadFailTimeout = setTimeout(() => {
-            console.log('### SecuredFieldsProvider:: LOAD TIMEOUT fired:: this.state.status=', this.state.status);
             if (this.state.status !== 'ready') {
                 // Hide the spinner
                 this.setState({ status: 'csfLoadFailure' });
                 // Report the error
                 this.props.onError?.(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
-
-                console.log('### SecuredFieldsProvider::LOAD TIMEOUT:: sending analytics error 504');
 
                 // Generate analytics error event
                 const errorObj = new AnalyticsErrorEvent({
