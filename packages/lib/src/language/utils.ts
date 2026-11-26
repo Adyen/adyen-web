@@ -102,7 +102,15 @@ export function resolveFormattingLocale(locale?: string): string {
 }
 
 export function parseLocale(locale: string, supportedLocales: readonly string[]): string {
-    if (!isLocaleLenghtValid(locale)) return DEFAULT_LOCALE;
+    if (!isLocaleLenghtValid(locale)) {
+        // A script subtag can qualify an existing language-region catalog.
+        const scriptLocale = /^([a-z]{2})[-_][a-z]{4}[-_]([a-z]{2})$/i.exec(locale);
+        if (!scriptLocale) return DEFAULT_LOCALE;
+
+        const [, language, region] = scriptLocale;
+        const catalogLocale = `${language.toLowerCase()}-${region.toUpperCase()}`;
+        return supportedLocales.includes(catalogLocale) ? catalogLocale : DEFAULT_LOCALE;
+    }
 
     const formattedLocale = formatLocaleToLanguageCountryLocale(locale);
     const hasMatch = formattedLocale && supportedLocales.includes(formattedLocale);

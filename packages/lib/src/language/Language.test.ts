@@ -135,6 +135,18 @@ describe('Language', () => {
             expect(fetchSpy).toHaveBeenCalledTimes(1);
         });
 
+        test('should load Traditional Chinese translations for zh-Hant-TW and keep the formatting locale', async () => {
+            const fetchSpy = jest.fn().mockImplementation((locale: string) => Promise.resolve(locale === 'zh-TW' ? { payButton: '支付' } : {}));
+            const service: ILanguageService = { fetchTranslationsFromCdn: fetchSpy };
+            const language = new Language({ locale: 'zh-Hant-TW', service });
+
+            await language.requestTranslations();
+
+            expect(fetchSpy).toHaveBeenCalledWith('zh-TW');
+            expect(language.get('payButton')).toBe('支付');
+            expect(language.locale).toBe('zh-Hant-TW');
+        });
+
         test('should merge the fetched locale with the built-in english locale', async () => {
             const fetchedTranslations = {
                 payButton: 'Pagar',
