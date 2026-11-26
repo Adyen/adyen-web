@@ -1,6 +1,6 @@
 import { createSecuredFields, setupSecuredField } from './createSecuredFields';
 import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, SF_CONFIG_TIMEOUT } from '../../constants';
-import { SecuredFields } from '../../types';
+import { RtnType_noParamVoidFn, SecuredFields } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
 
 jest.useFakeTimers();
@@ -12,7 +12,35 @@ const mockedSecuredField = SecuredField as jest.Mock;
 
 window._b$dl = true; // to cover some missing lines
 
-let MySecuredField;
+type MockFeedbackCallbackFn = (feedbackObj: Record<string, unknown>) => void;
+
+interface MockSecuredField {
+    fieldType: string;
+    onIframeLoadedCallback: RtnType_noParamVoidFn | null;
+    onConfigCallback: MockFeedbackCallbackFn | null;
+    onFocusCallback: MockFeedbackCallbackFn | null;
+    onBinValueCallback: MockFeedbackCallbackFn | null;
+    onTouchstartCallback: MockFeedbackCallbackFn | null;
+    onShiftTabCallback: MockFeedbackCallbackFn | null;
+    onEncryptionCallback: MockFeedbackCallbackFn | null;
+    onValidationCallback: MockFeedbackCallbackFn | null;
+    onAutoCompleteCallback: MockFeedbackCallbackFn | null;
+    onKeyDownCallback: MockFeedbackCallbackFn | null;
+    suppressCsfConfigFailTimeoutAnalyticsCallback: RtnType_noParamVoidFn | null;
+    onIframeLoaded: (cbFn: RtnType_noParamVoidFn) => MockSecuredField;
+    onConfig: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onFocus: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onBinValue: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onTouchstart: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onShiftTab: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onEncryption: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onValidation: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onAutoComplete: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    onKeyDown: (cbFn: MockFeedbackCallbackFn) => MockSecuredField;
+    suppressCsfConfigFailTimeoutAnalytics: (cbFn: RtnType_noParamVoidFn) => MockSecuredField;
+}
+
+let MySecuredField: MockSecuredField;
 
 const myCSF = {
     state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields, iframeCount: 0, originalNumIframes: 2, numIframes: 2 },
@@ -161,7 +189,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             const prom = myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
-            MySecuredField.onIframeLoadedCallback();
+            MySecuredField.onIframeLoadedCallback?.();
 
             expect(myCSF.state.iframeCount).toEqual(1);
             expect(myCSF.callbacks.onLoad).not.toHaveBeenCalled();
@@ -183,7 +211,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
-            MySecuredField.onIframeLoadedCallback();
+            MySecuredField.onIframeLoadedCallback?.();
 
             expect(myCSF.state.iframeCount).toEqual(2);
             expect(myCSF.callbacks.onLoad).toHaveBeenCalledWith({ iframesLoaded: true });
@@ -199,7 +227,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
 
-            expect(() => MySecuredField.onIframeLoadedCallback()).toThrow(
+            expect(() => MySecuredField.onIframeLoadedCallback?.()).toThrow(
                 'One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.\n                        iframe load count=3. Expected count:2'
             );
 
@@ -217,7 +245,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             // onConfigCallback
             expect(MySecuredField.onConfigCallback).not.toEqual(null);
 
-            MySecuredField.onConfigCallback(dummyObj);
+            MySecuredField.onConfigCallback?.(dummyObj);
             expect(myCSF.handleIframeConfigFeedback).toHaveBeenCalledWith(dummyObj);
 
             return expect(prom).resolves.toBe(dummyObj);
@@ -235,7 +263,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
-            MySecuredField.onTouchstartCallback({ fieldType: ENCRYPTED_CARD_NUMBER });
+            MySecuredField.onTouchstartCallback?.({ fieldType: ENCRYPTED_CARD_NUMBER });
 
             expect(myCSF.callbacks.onTouchstartIOS).not.toHaveBeenCalled();
 
@@ -253,7 +281,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
-            MySecuredField.onTouchstartCallback({ fieldType: ENCRYPTED_CARD_NUMBER });
+            MySecuredField.onTouchstartCallback?.({ fieldType: ENCRYPTED_CARD_NUMBER });
 
             expect(myCSF.callbacks.onTouchstartIOS).toHaveBeenCalledWith({ fieldType: ENCRYPTED_CARD_NUMBER });
 
@@ -271,7 +299,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
-            MySecuredField.onTouchstartCallback({ fieldType: ENCRYPTED_EXPIRY_DATE, hasGenuineTouchEvents: true });
+            MySecuredField.onTouchstartCallback?.({ fieldType: ENCRYPTED_EXPIRY_DATE, hasGenuineTouchEvents: true });
 
             expect(myCSF.callbacks.onTouchstartIOS).toHaveBeenCalledWith({ fieldType: ENCRYPTED_EXPIRY_DATE });
 
@@ -285,49 +313,49 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         // onFocusCallback;
         expect(MySecuredField.onFocusCallback).not.toEqual(null);
 
-        MySecuredField.onFocusCallback(dummyObj);
+        MySecuredField.onFocusCallback?.(dummyObj);
         expect(myCSF.handleFocus).toHaveBeenCalledWith(dummyObj);
 
         // onBinValueCallback
         expect(MySecuredField.onBinValueCallback).not.toEqual(null);
 
-        MySecuredField.onBinValueCallback(dummyObj);
+        MySecuredField.onBinValueCallback?.(dummyObj);
         expect(myCSF.handleBinValue).toHaveBeenCalledWith(dummyObj);
 
         // onShiftTabCallback
         expect(MySecuredField.onShiftTabCallback).not.toEqual(null);
 
-        MySecuredField.onShiftTabCallback({ fieldType: ENCRYPTED_CARD_NUMBER });
+        MySecuredField.onShiftTabCallback?.({ fieldType: ENCRYPTED_CARD_NUMBER });
         expect(myCSF.handleSFShiftTab).toHaveBeenCalledWith(ENCRYPTED_CARD_NUMBER);
 
         // onEncryptionCallback
         expect(MySecuredField.onEncryptionCallback).not.toEqual(null);
 
-        MySecuredField.onEncryptionCallback(dummyObj);
+        MySecuredField.onEncryptionCallback?.(dummyObj);
         expect(myCSF.handleEncryption).toHaveBeenCalledWith(dummyObj);
 
         // onValidationCallback
         expect(MySecuredField.onValidationCallback).not.toEqual(null);
 
-        MySecuredField.onValidationCallback(dummyObj);
+        MySecuredField.onValidationCallback?.(dummyObj);
         expect(myCSF.handleValidation).toHaveBeenCalledWith(dummyObj);
 
         // onAutoCompleteCallback
         expect(MySecuredField.onAutoCompleteCallback).not.toEqual(null);
 
-        MySecuredField.onAutoCompleteCallback(dummyObj);
+        MySecuredField.onAutoCompleteCallback?.(dummyObj);
         expect(myCSF.processAutoComplete).toHaveBeenCalledWith(dummyObj);
 
         // onKeyDownCallback
         expect(MySecuredField.onKeyDownCallback).not.toEqual(null);
 
-        MySecuredField.onKeyDownCallback(dummyObjWithNumKey);
+        MySecuredField.onKeyDownCallback?.(dummyObjWithNumKey);
         expect(myCSF.callbacks.onKeyDown).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
 
         // suppressCsfConfigFailTimeoutAnalyticsCallback
         expect(MySecuredField.suppressCsfConfigFailTimeoutAnalyticsCallback).not.toEqual(null);
 
-        MySecuredField.suppressCsfConfigFailTimeoutAnalyticsCallback();
+        MySecuredField.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
         expect(myCSF.callbacks.suppressCsfConfigFailTimeoutAnalytics).toHaveBeenCalled();
     });
 });

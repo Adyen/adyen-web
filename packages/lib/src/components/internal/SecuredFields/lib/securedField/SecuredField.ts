@@ -319,7 +319,7 @@ class SecuredField extends AbstractSecuredField {
 
                 this.submitFeedbackErrorAnalytics(errorCode, `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`);
 
-                // If this fires for codes 608 or 609 then we need to stop SFPH's csfLoadFailTimeout from firing
+                // If this fires for codes 608 or 609 then we need to stop SFPH's configFail timeout from sending analytics
                 if (
                     errorCode === ErrorEventCode.SECURED_FIELDS_KEY_NOT_FOUND ||
                     errorCode === ErrorEventCode.SECURED_FIELDS_ENCRYPTION_KEY_GEN_FAILED
