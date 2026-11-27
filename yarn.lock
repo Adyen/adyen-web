@@ -71,7 +71,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web@workspace:packages/lib"
   dependencies:
-    "@adyen/bento-design-tokens": "npm:1.10.0"
+    "@adyen/bento-design-tokens": "npm:2.8.0"
     "@eslint/js": "npm:10.0.1"
     "@paypal/paypal-js": "npm:11.3.0"
     "@preact/preset-vite": "npm:2.10.6"
@@ -134,10 +134,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adyen/bento-design-tokens@npm:1.10.0":
-  version: 1.10.0
-  resolution: "@adyen/bento-design-tokens@npm:1.10.0"
-  checksum: 10c0/0da79cf007965ceaddc1ebe7882ed9f56512f8d5b245f38fb162782b8673e7c3666cc53b1bb8897af4b0f7e0e238fabe0de6b6686587863c5b8ed7363c31a8a6
+"@adyen/bento-design-tokens@npm:2.8.0":
+  version: 2.8.0
+  resolution: "@adyen/bento-design-tokens@npm:2.8.0"
+  checksum: 10c0/06c9663fb5d1e7a72e95d2a41c8bc24a24265b77c35cc8238cd5256e6b65ebe1286d9533c64a7141cebb2b6d44f5ca7cca91dbdccd874c3fec01a7c344851a08
   languageName: node
   linkType: hard
 

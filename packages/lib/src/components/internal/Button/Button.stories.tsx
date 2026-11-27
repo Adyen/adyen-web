@@ -10,6 +10,7 @@ import { Resources } from '../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
 import { ILanguageService } from '../../../language/LanguageService';
+import './Button.stories.scss';
 
 const languageServiceStub: ILanguageService = {
     fetchTranslationsFromCdn: () => Promise.resolve({})
@@ -17,7 +18,6 @@ const languageServiceStub: ILanguageService = {
 
 const meta: Meta<typeof Button> = {
     title: 'Internal Elements/Button',
-    tags: ['no-automated-visual-test'],
     component: Button,
     argTypes: {
         status: {
@@ -47,12 +47,13 @@ i18n['_translations'] = {
 };
 
 const coreProps = {
-    loadingContext: process.env.CLIENT_ENV,
+    loadingContext: process.env.CLIENT_ENV ?? 'test',
     i18n,
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
 
 export const Default: StoryObj<ButtonProps> = {
+    tags: ['automated-visual-test-full-width'],
     render: args => {
         return (
             <CoreProvider {...coreProps}>
@@ -122,6 +123,32 @@ export const AnchorTagButton: StoryObj<ButtonProps> = {
         label: 'Go to Adyen',
         variant: 'primary',
         target: '_blank'
+    }
+};
+
+const CustomizedButtons = ({ modifier }: { readonly modifier: 'css-variables' | 'deprecated-css-variables' }) => (
+    <CoreProvider {...coreProps}>
+        <div className={`button-story-customization button-story-customization--${modifier}`}>
+            <Button variant="primary" label="Pay €10.00" onClick={() => console.log('Primary button clicked')} />
+            <Button variant="action" label="Action" onClick={() => console.log('Action button clicked')} />
+            <CopyIconButton text={'Text to be copied'} />
+        </div>
+    </CoreProvider>
+);
+
+export const CustomizedWithCssVariables: StoryObj<ButtonProps> = {
+    render: () => <CustomizedButtons modifier="css-variables" />,
+    parameters: {
+        controls: { disable: true },
+        docs: { description: { story: 'Customized with the Bento v2 CSS variables the button uses.' } }
+    }
+};
+
+export const CustomizedWithDeprecatedCssVariables: StoryObj<ButtonProps> = {
+    render: () => <CustomizedButtons modifier="deprecated-css-variables" />,
+    parameters: {
+        controls: { disable: true },
+        docs: { description: { story: 'Customized with the deprecated pre-Bento v2 CSS variables, which still apply to the button as fallbacks.' } }
     }
 };
 
