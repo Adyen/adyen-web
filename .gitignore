@@ -35,20 +35,16 @@ stats.html
 Vagrantfile
 .vagrant
 
-# Certifictes
+# Certificates
 cert
 *.pem
 
 # Local Netlify folder
 .netlify
 
-# Windsurf
-.windsurf/workflows/
-.windsurf/skills/
-
-# Devin
-.devin/workflows/
-
 # AI agents
+.agents
+.devin
 .claude
+.windsurf
 .factory
