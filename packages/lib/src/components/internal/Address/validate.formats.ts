@@ -68,13 +68,13 @@ export const countrySpecificFormatters = asCountryFormatRules({
                 const maxlength = nuVal.includes('-') ? 9 : 8;
                 return nuVal.substring(0, maxlength);
             },
-            format: '12345678 or 12345-678',
+            format: '12345678, 12345-678',
             maxlength: 9
         }
     },
     CA: {
         postalCode: {
-            format: 'A9A 9A9 or A9A9A9',
+            format: 'A9A 9A9, A9A9A9, A9A-9A9',
             maxlength: 7
         }
     },
@@ -86,7 +86,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     CZ: {
         postalCode: {
-            format: '999 99',
+            format: '999 99, 99999',
             maxlength: 6
         }
     },
@@ -95,7 +95,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     DK: {
         postalCode: {
-            format: '9999',
+            format: '9999, DK-9999',
             maxlength: 7
         }
     },
@@ -114,13 +114,16 @@ export const countrySpecificFormatters = asCountryFormatRules({
     GB: {
         postalCode: {
             formatterFn: val => stripInvalidChars(val).substring(0, 8),
-            format: 'AA99 9AA or A99 9AA or A9 9AA',
+            format: 'AA99 9AA, AA9A 9AA, A99 9AA, A9A 9AA, A9 9AA',
             maxlength: 8
         }
     },
+    GE: {
+        postalCode: createFormatByDigits(4)
+    },
     GR: {
         postalCode: {
-            format: '999 99',
+            format: '999 99, 99999',
             maxlength: 6
         }
     },
@@ -150,7 +153,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     LT: {
         postalCode: {
-            format: '9999 or 99999 or LT-99999',
+            format: '9999, 99999, LT-99999',
             maxlength: 8
         }
     },
@@ -159,7 +162,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     LV: {
         postalCode: {
-            format: '9999 or LV-9999',
+            format: '9999, LV-9999',
             maxlength: 7
         }
     },
@@ -171,7 +174,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     MT: {
         postalCode: {
-            format: 'AA99 or AAA99 or AA9999 or AAA9999',
+            format: 'AA99, AA 99, AAA99, AAA 99, AAA9999, AAA 9999',
             maxlength: 8
         }
     },
@@ -180,7 +183,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     NL: {
         postalCode: {
-            format: '9999AA',
+            format: '9999AA, 9999 AA',
             maxlength: 7
         }
     },
@@ -198,7 +201,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
                 const maxlength = nuVal.includes('-') ? 6 : 5;
                 return nuVal.substring(0, maxlength);
             },
-            format: '99999 or 99-999',
+            format: '99999, 99-999',
             maxlength: 6
         }
     },
@@ -208,7 +211,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 return nuVal.substring(0, 8);
             },
-            format: '9999-999',
+            format: '9999-999, 9999999, 9999',
             maxlength: 8
         }
     },
@@ -217,7 +220,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     SI: {
         postalCode: {
-            format: '9999 or SI-9999',
+            format: '9999, SI-9999',
             maxlength: 7
         }
     },
@@ -229,8 +232,8 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     SK: {
         postalCode: {
-            format: '99999 or SK-99999',
-            maxlength: 8
+            format: '99999, 999 99, SK-99999, SK-999 99',
+            maxlength: 9
         }
     },
     JP: {
@@ -238,7 +241,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
             // Formatter - converts full-width characters (common on Japanese keyboards, e.g. '１０７－００５２') to their
             // half-width equivalent, then strips any remaining non-digit/hyphen characters (e.g. the postal mark '〒')
             formatterFn: val => convertFullToHalf(val).replace(getFormattingRegEx('^\\d-', 'g'), '').substring(0, 8),
-            format: '999-9999',
+            format: '999-9999, 9999999',
             maxlength: 8
         }
     },
@@ -249,7 +252,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
                 const maxlength = nuVal.includes('-') ? 10 : 5;
                 return nuVal.substring(0, maxlength);
             },
-            format: '99999 or 99999-9999'
+            format: '99999, 99999-9999'
         }
     }
 });

@@ -82,7 +82,7 @@ describe('CardInput - partial billing address', () => {
 
         fireEvent.blur(screen.getByLabelText('Zip code'), { target: { value: '1' } });
 
-        expect(screen.getByText('Invalid format. Expected format: 99999 or 99999-9999')).toBeInTheDocument();
+        expect(screen.getByText('Invalid format. Expected format: 99999, 99999-9999')).toBeInTheDocument();
     });
 });
 

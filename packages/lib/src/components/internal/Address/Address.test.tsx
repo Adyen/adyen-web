@@ -345,7 +345,7 @@ describe('Address', () => {
             const newCountry = 'Canada';
             await user.type(countryDropdown, `${'[Backspace]'.repeat(oldCountry.length)}${newCountry}[Enter]`);
             await waitFor(() => {
-                expect(screen.getByText('Invalid format. Expected format: A9A 9A9 or A9A9A9')).toBeInTheDocument();
+                expect(screen.getByText('Invalid format. Expected format: A9A 9A9, A9A9A9, A9A-9A9')).toBeInTheDocument();
             });
         });
 
@@ -362,7 +362,7 @@ describe('Address', () => {
             await user.type(postCode, '1');
             await user.tab();
             await waitFor(() => {
-                expect(screen.getByText('Invalid format. Expected format: 99999 or 99999-9999')).toBeInTheDocument();
+                expect(screen.getByText('Invalid format. Expected format: 99999, 99999-9999')).toBeInTheDocument();
             });
         });
 
