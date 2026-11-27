@@ -26,6 +26,7 @@ import { resolveCVCErrorKey } from '../../../Card/components/CardInput/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { TxVariants } from '../../../tx-variants';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 /**
  * SecuredFieldsProvider:
@@ -40,6 +41,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private rootNode: HTMLElement;
     private numDateFields: number;
     private csf: CSFReturnObject | null;
+    private suppressConfigTimeoutAnalytics: boolean;
     private readonly handleOnLoad: (obj: CardLoadData) => void;
     private readonly handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
     private readonly handleOnFieldValid: (obj: CardFieldValidData) => void;
@@ -78,6 +80,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.csfConfigFailTimeoutMS = 15000;
 
         this.numCharsInField = {};
+
+        this.suppressConfigTimeoutAnalytics = false;
 
         // Handlers
         this.handleOnLoad = handlers.handleOnLoad.bind(this);
@@ -187,7 +191,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
                 onTouchstartIOS: this.handleOnTouchstartIOS,
-                onKeyDown: this.handleKeyDown
+                onKeyDown: this.handleKeyDown,
+                suppressCsfConfigFailTimeoutAnalytics: this.suppressCsfConfigFailTimeoutAnalytics
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
@@ -214,6 +219,16 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 this.setState({ status: 'csfLoadFailure' });
                 // Report the error
                 this.props.onError?.(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
+
+                // Generate analytics error event
+                const errorObj = new AnalyticsErrorEvent({
+                    component: this.props.componentType,
+                    code: ErrorEventCode.SECURED_FIELDS_LOAD_FAILURE,
+                    errorType: ErrorEventType.internal,
+                    message: 'secured field iframes have failed to load'
+                });
+
+                this.props.onSubmitAnalytics?.(errorObj);
             }
         }, this.csfLoadFailTimeoutMS);
     }
@@ -403,6 +418,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     private readonly setRootNode = (input: HTMLElement): void => {
         this.rootNode = input;
+    };
+
+    private readonly suppressCsfConfigFailTimeoutAnalytics = (): void => {
+        this.suppressConfigTimeoutAnalytics = true;
     };
 
     public render(props, state: SFPState) {

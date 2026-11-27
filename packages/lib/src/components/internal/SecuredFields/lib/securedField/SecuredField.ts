@@ -98,7 +98,7 @@ class SecuredField extends AbstractSecuredField {
         return this.init(i18n, iframeSrc, placeholders, showContextualElement);
     }
 
-    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean | undefined): SecuredField {
+    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean | undefined): this {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
@@ -311,14 +311,22 @@ class SecuredField extends AbstractSecuredField {
                 this.onKeyDownCallback(feedbackObj);
                 break;
 
-            case 'encryptionError':
-                // Strictly speaking code could be 608, 609 or 610. But it *will* always be present, so falling back to 610
-                // (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
-                this.submitFeedbackErrorAnalytics(
-                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
-                    `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`
-                );
+            case 'encryptionError': {
+                // Strictly speaking code could be 608, 609 or 610.
+                // But it *will* always be present, so falling back to 610 (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
+                const errorCode = (feedbackObj.code as ErrorEventCode) ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR;
+
+                this.submitFeedbackErrorAnalytics(errorCode, `${feedbackObj.error ?? 'Encryption error'}. Field= ${this.sfConfig.fieldType}`);
+
+                // If this fires for codes 608 or 609 then we need to stop SFPH's configFail timeout from sending analytics
+                if (
+                    errorCode === ErrorEventCode.SECURED_FIELDS_KEY_NOT_FOUND ||
+                    errorCode === ErrorEventCode.SECURED_FIELDS_ENCRYPTION_KEY_GEN_FAILED
+                ) {
+                    this.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
+                }
                 break;
+            }
 
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
@@ -333,6 +341,8 @@ class SecuredField extends AbstractSecuredField {
                     feedbackObj.code ?? fallbackCode,
                     `${feedbackObj.error ?? fallbackErrorMsg}. Field=${this.sfConfig.fieldType}`
                 );
+
+                this.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
                 break;
             }
 
@@ -349,9 +359,11 @@ class SecuredField extends AbstractSecuredField {
                 const configLogMsg = configLog ? ` Log=${JSON.stringify(configLog)}` : '';
 
                 this.submitFeedbackErrorAnalytics(
-                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_STALLED,
                     `${errorMsg}. Field=${this.sfConfig.fieldType}.${configLogMsg}`
                 );
+
+                this.suppressCsfConfigFailTimeoutAnalyticsCallback?.();
                 break;
             }
 
@@ -434,53 +446,58 @@ class SecuredField extends AbstractSecuredField {
     }
 
     // /////// ALLOCATE CALLBACKS /////////
-    onIframeLoaded(callbackFn: RtnType_noParamVoidFn): SecuredField {
+    onIframeLoaded(callbackFn: RtnType_noParamVoidFn): this {
         this.onIframeLoadedCallback = callbackFn;
         return this;
     }
 
-    onEncryption(callbackFn: RtnType_callbackFn): SecuredField {
+    onEncryption(callbackFn: RtnType_callbackFn): this {
         this.onEncryptionCallback = callbackFn;
         return this;
     }
 
-    onValidation(callbackFn: RtnType_callbackFn): SecuredField {
+    onValidation(callbackFn: RtnType_callbackFn): this {
         this.onValidationCallback = callbackFn;
         return this;
     }
 
-    onConfig(callbackFn: RtnType_callbackFn): SecuredField {
+    onConfig(callbackFn: RtnType_callbackFn): this {
         this.onConfigCallback = callbackFn;
         return this;
     }
 
-    onFocus(callbackFn: RtnType_callbackFn): SecuredField {
+    onFocus(callbackFn: RtnType_callbackFn): this {
         this.onFocusCallback = callbackFn;
         return this;
     }
 
-    onBinValue(callbackFn: RtnType_callbackFn): SecuredField {
+    onBinValue(callbackFn: RtnType_callbackFn): this {
         this.onBinValueCallback = callbackFn;
         return this;
     }
 
-    onTouchstart(callbackFn: RtnType_callbackFn): SecuredField {
+    onTouchstart(callbackFn: RtnType_callbackFn): this {
         this.onTouchstartCallback = callbackFn;
         return this;
     }
 
-    onShiftTab(callbackFn: RtnType_callbackFn): SecuredField {
+    onShiftTab(callbackFn: RtnType_callbackFn): this {
         this.onShiftTabCallback = callbackFn;
         return this;
     }
 
-    onAutoComplete(callbackFn: RtnType_callbackFn): SecuredField {
+    onAutoComplete(callbackFn: RtnType_callbackFn): this {
         this.onAutoCompleteCallback = callbackFn;
         return this;
     }
 
-    onKeyDown(callbackFn: RtnType_callbackFn): SecuredField {
+    onKeyDown(callbackFn: RtnType_callbackFn): this {
         this.onKeyDownCallback = callbackFn;
+        return this;
+    }
+
+    suppressCsfConfigFailTimeoutAnalytics(callbackFn: RtnType_noParamVoidFn): this {
+        this.suppressCsfConfigFailTimeoutAnalyticsCallback = callbackFn;
         return this;
     }
     //------------------------------------

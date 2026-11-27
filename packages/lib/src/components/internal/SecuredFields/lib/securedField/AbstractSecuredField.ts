@@ -38,6 +38,7 @@ abstract class AbstractSecuredField {
     protected onShiftTabCallback: RtnType_callbackFn;
     protected onAutoCompleteCallback: RtnType_callbackFn;
     protected onKeyDownCallback: RtnType_callbackFn;
+    protected suppressCsfConfigFailTimeoutAnalyticsCallback: RtnType_noParamVoidFn;
 
     protected constructor() {
         this.sfConfig = {};

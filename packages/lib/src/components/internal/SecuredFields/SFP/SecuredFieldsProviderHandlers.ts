@@ -23,6 +23,7 @@ import {
 } from '../lib/types';
 import { existy } from '../../../../utils/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 /**
  * Emits the onLoad event
@@ -49,6 +50,18 @@ function handleOnLoad(cbObj: CardLoadData): void {
             this.setState({ status: 'csfConfigFailure' });
             // Report the error
             this.props.onError(new AdyenCheckoutError('ERROR', 'secured fields have failed to configure'));
+
+            if (!this.suppressConfigTimeoutAnalytics) {
+                // Generate analytics error event
+                const errorObj = new AnalyticsErrorEvent({
+                    component: this.props.componentType,
+                    code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILED,
+                    errorType: ErrorEventType.internal,
+                    message: 'secured field iframes have failed to configure'
+                });
+
+                this.props.onSubmitAnalytics?.(errorObj);
+            }
         }
     }, this.csfConfigFailTimeoutMS);
 }
