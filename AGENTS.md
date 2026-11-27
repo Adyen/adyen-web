@@ -76,6 +76,10 @@ visual suite needs platform-matched screenshots you won't have. On a PR, E2E is 
 becomes blocking in the merge queue alongside unit tests, a11y, visual, locales, and the strict
 scan.
 
+When changing DOM queries or lifecycle guards, test normal DOM, an attached shadow tree, and
+removal without SDK unmount. Use real nodes and `attachShadow()`; check the affected behavior,
+not just the helper's return value.
+
 ## Contribution Workflow
 
 ### Changesets
@@ -147,6 +151,17 @@ awaiting migration, not precedent.
 Every payment component extends `UIElement` and provides `static type` (a `TxVariants` value),
 `formatProps()`, `isValid`, and `submit()`. Never make API calls from a constructor — use
 `isAvailable()`. See `src/components/AGENTS.md`.
+
+### Shadow DOM
+
+Merchants may mount Drop-in and Components inside a shadow tree.
+
+- Use `node.isConnected` to check attachment, not `document.contains(node)`, which does not
+  cross shadow boundaries.
+- Use component refs or container-scoped queries to find component nodes, not global document
+  queries.
+- Attachment does not mean an instance owns the current payment. Do not use `isConnected`
+  alone to identify the active payment attempt.
 
 ### Localization
 
