@@ -29,7 +29,6 @@ export const CardEmi: EMIStory = {
         <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new EMI(checkout, componentConfiguration)} />}</Checkout>
     ),
     args: {
-        useSessions: false,
         countryCode: 'IN',
         amount: EMI_STORY_AMOUNT,
         componentConfiguration: {
@@ -60,7 +59,6 @@ export const CardEmiWithCustomButton: EMIStory = {
         </Checkout>
     ),
     args: {
-        useSessions: false,
         countryCode: 'IN',
         amount: EMI_STORY_AMOUNT,
         componentConfiguration: {
