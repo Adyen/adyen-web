@@ -88,7 +88,7 @@ describe('PreAuthorizedDebitCanada', () => {
             await user.type(screen.getByLabelText(/Account number/i), '1234567');
             await user.type(screen.getByLabelText(/Institution number/), '123');
             await user.type(screen.getByLabelText(/Transit number/i), '12345');
-            await user.click(screen.getByLabelText(/Save for my next payment/i));
+            await user.click(screen.getByLabelText(/Remember these details for future payments/i));
 
             // Avoid race condition that asserting the onSubmit too early,
             // before the component's state has been fully updated

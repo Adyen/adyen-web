@@ -80,7 +80,7 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Account number/), '1234567890');
             await user.type(screen.getByLabelText(/Verify account number/i), '1234567890');
 
-            await user.click(screen.getByLabelText(/Save for my next payment/i));
+            await user.click(screen.getByLabelText(/Remember these details for future payments/i));
 
             await waitFor(() => {
                 expect(ach.state.storePaymentMethod).toBe(true);
