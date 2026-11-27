@@ -93,6 +93,18 @@ describe('IBAN Validations', () => {
             expect(validationStatusBE.code).toBe('VALID');
         });
 
+        test('VALID for VA (Vatican City) IBAN', () => {
+            const validationStatus = checkIbanStatus('VA59001123000012345678');
+            expect(validationStatus.status).toBe('valid');
+            expect(validationStatus.code).toBe('VALID');
+        });
+
+        test('VALID for BI (Burundi) 27-character IBAN', () => {
+            const validationStatus = checkIbanStatus('BI4210000100010000332045181');
+            expect(validationStatus.status).toBe('valid');
+            expect(validationStatus.code).toBe('VALID');
+        });
+
         test('TOO_LONG', () => {
             const validationStatus = checkIbanStatus('NL13 TEST 0123 4567 891');
             expect(validationStatus.status).toBe('invalid');
