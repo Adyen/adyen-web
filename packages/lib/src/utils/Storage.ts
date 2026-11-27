@@ -57,7 +57,16 @@ class Storage<T> {
     }
 
     public set(value: T): void {
-        this.storage.setItem(this.key, JSON.stringify(value));
+        const serializedValue = JSON.stringify(value);
+        try {
+            this.storage.setItem(this.key, serializedValue);
+        } catch (e) {
+            // Writing can fail on an accessible storage (e.g. QuotaExceededError when it is full)
+            if (!(this.storage instanceof NonPersistentStorage)) {
+                this.storage = new NonPersistentStorage();
+                this.storage.setItem(this.key, serializedValue);
+            }
+        }
     }
 
     public remove(): void {
