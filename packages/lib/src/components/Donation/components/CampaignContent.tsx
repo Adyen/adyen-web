@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import CampaignInfo from './CampaignInfo';
+import { isValidHttpUrl } from '../../../utils/isValidURL';
 
 export interface CampaignContentProps {
     logoUrl?: string;
@@ -20,7 +21,7 @@ export default function CampaignContent({
 }: Readonly<CampaignContentProps>) {
     return (
         <div className="adyen-checkout__campaign">
-            {nonprofitUrl ? (
+            {isValidHttpUrl(nonprofitUrl) ? (
                 <a href={nonprofitUrl} className="adyen-checkout__campaign-link" target="_blank" rel="noopener noreferrer">
                     <CampaignInfo logoUrl={logoUrl} nonprofitName={nonprofitName} causeName={causeName} bannerUrl={bannerUrl} />
                 </a>
