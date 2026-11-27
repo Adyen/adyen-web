@@ -1,5 +1,5 @@
 import { Intent } from '../types';
-import { SUPPORTED_LOCALES } from '../config';
+import { SUPPORTED_LOCALES_PAYPAL_V5, SUPPORTED_LOCALES_PAYPAL_V6 } from '../config';
 
 export interface PaypalSettings {
     'merchant-id'?: string;
@@ -16,4 +16,5 @@ export interface PaypalSettings {
     components: string;
 }
 
-export type PayPalSupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+export type PayPalV5SupportedLocale = (typeof SUPPORTED_LOCALES_PAYPAL_V5)[number];
+export type PayPalV6SupportedLocale = (typeof SUPPORTED_LOCALES_PAYPAL_V6)[number];

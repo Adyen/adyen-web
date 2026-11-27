@@ -1,14 +1,14 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect, useRef } from 'preact/hooks';
+import { PayPal } from '@adyen/adyen-web';
 import { handleSubmit } from '../../../../storybook/helpers/checkout-handlers';
 import { patchPaypalOrder } from '../../../../storybook/helpers/checkout-api-calls';
 import { createAdvancedFlowCheckout } from '../../../../storybook/helpers/create-advanced-checkout';
 import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-stories-utils';
-import { PayPal } from '@adyen/adyen-web';
 
 const meta: Meta = {
-    title: 'Components/Wallets/Paypal',
+    title: 'Components/Wallets/Paypal/Express',
     tags: ['no-automated-visual-test']
 };
 export default meta;
@@ -26,7 +26,7 @@ let SHOPPER_SHIPPING_COUNTRY_CODE = '';
  * This must be implemented on the backend side by the merchant for safety reasons.
  */
 
-export const ExpressWithReviewPage: StoryObj = {
+export const WithReviewPage: StoryObj = {
     render: () => {
         return <Component />;
     },
@@ -70,7 +70,7 @@ const Component = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        async function createPaypalComponent() {
+        async function createPayPalComponent() {
             const checkout = await createAdvancedFlowCheckout({
                 showPayButton: true,
                 amount: AMOUNT.value,
@@ -181,7 +181,7 @@ const Component = () => {
             }
         }
 
-        void createPaypalComponent();
+        void createPayPalComponent();
     }, []);
 
     return <div ref={container} id="component-root" className="component-wrapper" />;

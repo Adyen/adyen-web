@@ -8,7 +8,30 @@ import type {
     OnShippingOptionsChangeActions,
     OnInitActions
 } from '@paypal/paypal-js';
+import type {
+    SdkInstance,
+    EligiblePaymentMethodsOutput,
+    CreateInstanceOptions,
+    PaymentFlow,
+    OnShippingAddressChangeData as OnShippingAddressChangeDataV6,
+    OnShippingOptionsChangeData as OnShippingOptionsChangeDataV6,
+    OnApproveDataSavePayments,
+    OnErrorData,
+    SavePaymentSessionOptions,
+    OnApproveDataOneTimePayments,
+    OneTimePaymentSession,
+    PayPalOneTimePaymentSessionOptions,
+    SavePaymentSession,
+    VenmoSavePaymentSessionOptions,
+    PageTypes,
+    FetchContentOptions,
+    PayPalMessagesSession,
+    PayPalMessageElement as PayPalMessageElementV6
+} from '@paypal/paypal-js/sdk-v6';
 
+export type { PayPalOneTimePaymentSessionOptions, PayPalMessagesOptions, PayPalMessagesSession } from '@paypal/paypal-js/sdk-v6';
+
+// Paypal SDK V5 types
 export type PayPalOrderResponseBody = OrderResponseBody;
 export type PayPalOnApproveData = OnApproveData;
 export type PayPalOnApproveActions = OnApproveActions;
@@ -21,3 +44,46 @@ export type PayPalOnShippingOptionsChangeData = OnShippingOptionsChangeData & {
 };
 export type PayPalOnShippingOptionsChangeActions = OnShippingOptionsChangeActions;
 export type PayPalOnInitActions = OnInitActions;
+
+// End of Paypal SDK V5 types
+
+// Paypal SDK V6 types
+export type PayPalPageTypes = PageTypes;
+export type PayPaylComponent = 'paypal-payments' | 'venmo-payments' | 'paypal-messages';
+export type PayPalComponents = Array<PayPaylComponent>;
+export type PayPalSdkInstance = SdkInstance<PayPalComponents>;
+export type PayPalCreateInstanceOptions = CreateInstanceOptions<PayPalComponents>;
+export type PayPalEligiblePaymentMethods = EligiblePaymentMethodsOutput;
+export type PayPalPaymentFlow = PaymentFlow;
+export type PayPalV6OnShippingAddressChangeData = OnShippingAddressChangeDataV6;
+export type PayPalV6OnShippingOptionsChangeData = OnShippingOptionsChangeDataV6;
+export type PayPalV6OnApproveData = OnApproveDataOneTimePayments | OnApproveDataSavePayments;
+/**
+ * Error rejected by the PayPal SDK. It extends `Error` with the PayPal specific `code`, `name` and `isRecoverable` fields.
+ */
+export type PayPalError = OnErrorData;
+/**
+ * One-time session options with a required `onApprove`, so they can be passed to both the PayPal and the Venmo session factories.
+ */
+export type PayPalV6OneTimePaymentSessionOptions = PayPalOneTimePaymentSessionOptions &
+    Required<Pick<PayPalOneTimePaymentSessionOptions, 'onApprove'>>;
+export type PayPalSavePaymentSessionOptions = SavePaymentSessionOptions;
+export type PayPalOneTimePaymentSession = OneTimePaymentSession;
+export type PayPalSavePaymentSession = SavePaymentSession;
+export type PayPalVenmoSavePaymentSessionOptions = VenmoSavePaymentSessionOptions;
+export type PayPalFetchContentOptions = FetchContentOptions;
+export type PayPalMessageContent = NonNullable<Awaited<ReturnType<PayPalMessagesSession['fetchContent']>>>;
+/**
+ * The `<paypal-message>` custom element. The PayPal SDK types omit the `setContent` method,
+ * which is the method used to render the content resolved by `fetchContent` into the element.
+ */
+export type PayPalMessageElement = PayPalMessageElementV6 & {
+    setContent(content: PayPalMessageContent): void;
+};
+/**
+ * Options passed when starting a payment session. The presentation mode is always 'auto', letting the PayPal SDK decide how to present the payment flow.
+ */
+export type PayPalSessionStartOptions = {
+    presentationMode: 'auto';
+    sandboxSupport?: { enabled: boolean };
+};
